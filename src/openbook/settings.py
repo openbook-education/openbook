@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     # django-allauth
     "allauth",
     "allauth.account",
+    "allauth.headless",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.saml",
 

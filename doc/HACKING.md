@@ -169,7 +169,9 @@ plus it fully automates the usage of virtual environments. The most important co
 * `poetry add xyz` - Add another dependency to library `xyz`
 * `poetry remove xyz` - Remove dependency to library `xyz` again
 * `poetry show --tree` - Show all direct and indirect dependencies
-* `poetry shell` - Start a new shell with the Python environment enabled
+* `poetry env activate` - Show the shell command to activate the Python environment
+* `$(poetry env activate)` - Run the command to activate the Python environment
+* `deactivate` - Deactivate the Python environment
 * `poetry run xyz` - Run console command `xyz` in the Python environment
 * `poetry list` - Show all available sub-commands
 * `poetry env use $(which python)` - Create new virtual Python environment

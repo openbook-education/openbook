@@ -29,6 +29,9 @@ in the `src` directory), the API specification is available at the following URL
 
 Use the HTML link to view the API in ReDoc.
 
+Use the linked documentation as the actual full reference and the documentation contained in this
+repository as an addendum based on manual test cases.
+
 Response Format
 ---------------
 
@@ -155,7 +158,7 @@ CSRF Token Handling in Browser Clients
 --------------------------------------
 
 For the client type `browser` Django's built-in CSRF token handling is active. When implementing
-of testing the API this must be handled like this:
+or testing the API this must be handled like this:
 
 1. API responses set a `csrftoken` cookie.
 1. Followup requests must be sent value in HTTP header `X-CSRFToken`.

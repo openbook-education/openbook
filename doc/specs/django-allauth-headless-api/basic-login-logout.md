@@ -199,14 +199,110 @@ Login via e-mail one-time code
 
 ![Send login code page](img/send-login-code-page.png)
 
-### Enter code
+__API: Request code for email__
+
+```http
+POST /auth-api/browser/v1/auth/code/request HTTP/1.1
+Origin: http://localhost:8000
+X-Csrftoken: rgSxJU7NYCmOzV6c03pGQcgWLsKYMlTf
+Content-Type: application/json
+Host: localhost:8000
+Content-Length: 31
+
+{
+  "email": "test@admin.com"
+}
+```
+
+Instead of `"email"` a code can also be requested for a phone number via the
+`"phone"` property, but not for both at the same time.
+
+Status code 401: Unauthorized (code was sent)
+
+A bit counterintuitively status code 401 will also be sent, when the request was
+actually sucessfull and a one-time login code has been sent to the e-mail address.
+This endpoint only returns status 400 (error) or 401 (not authenticated).
+
+```json
+{
+  "status": 401,
+  "data": {
+    "flows": [
+      {
+        "id": "login"
+      },
+      {
+        "id": "login_by_code",
+        "is_pending": true
+      },
+      {
+        "id": "signup"
+      },
+      {
+        "id": "provider_redirect",
+        "providers": [
+          "urn:mocksaml.com"
+        ]
+      }
+    ]
+  },
+  "meta": {
+    "is_authenticated": false
+  }
+}
+```
+
+### Enter/Confirm code
 
 * URL: `/accounts/login/code/confirm/`
 * Show a message when an invalid code is entered.
 
 ![Enter login code page](img/enter-login-code-page.png)
 
-TODO: API Calls
+__API: Login with code__
+
+```http
+POST /auth-api/browser/v1/auth/code/confirm HTTP/1.1
+Origin: http://localhost:8000
+X-Csrftoken: VkEDcfF3zvULj9PZ3e1ZfvU53QoE90s8
+Content-Type: application/json
+Host: localhost:8000
+Content-Length: 25
+
+{
+  "code": "TTHD-HGMP"
+}
+```
+
+Status code 200: Login successful
+
+```json
+{
+  "status": 200,
+  "data": {
+    "user": {
+      "id": 11,
+      "display": "test9",
+      "email": "test@admin.com",
+      "has_usable_password": false,
+      "username": "test9"
+    },
+    "methods": [
+      {
+        "method": "code",
+        "at": 1776971187.9882576,
+        "email": "test@admin.com"
+      }
+    ]
+  },
+  "meta": {
+    "is_authenticated": true
+  }
+}
+```
+
+Status 409 means, that the login was unsuccessful, e.g. because the token expired
+or the user is already logged in.
 
 Logout
 ------
