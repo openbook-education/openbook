@@ -9,7 +9,7 @@
  */
 
 import {parseArgs}   from "node:util";
-import {startServer} from 'mock-saml-idp';
+import {startServer} from "mock-saml-idp";
 
 /**
  * Configure and start mock SAML IDP server to local testing and unit tests.
@@ -23,7 +23,7 @@ const args = parseArgs({
 
 const config = {
     host: args.values.h || "localhost",
-    port: args.values.p || 7000,            // mock-saml-idp default port is 7000
+    port: parseInt(args.values.p || "7000"),    // mock-saml-idp default port is 7000
 }
 
 if (Number.isNaN(config.port)) {
