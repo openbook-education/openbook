@@ -67,7 +67,7 @@
     is_active: true
     name: 'Mock SAML: Admin (@admin.com)'
     description: "Mock SAML IdP: Users with @admin.com e-mail address.\r\nAssign full
-      admin persmissions!!"
+      admin permissions!!"
     text_format: MD
     site: null
     social_app: 1

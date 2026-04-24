@@ -68,7 +68,7 @@ logged in. To keep bandwidth low, it should be called:
 1. When another API call fails
 1. In a timer every five minutes
     - Site-wide admin setting for the interval
-    - Site-wide admin setting to disable the timer (intervall = 0)
+    - Site-wide admin setting to disable the timer (interval = 0)
 
 ```http
 GET /auth-api/browser/v1/auth/session HTTP/1.1

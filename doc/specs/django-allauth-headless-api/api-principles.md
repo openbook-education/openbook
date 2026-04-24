@@ -8,7 +8,7 @@ or social authentication with different types of identity providers. It also pro
 API (the so-called Allauth Headless API) for the frontend SPA and other clients to authenticate.
 
 This document collects some general information about the API that must be understood to
-successfully implement it an a client. Some information is copied from the OpenAPI specification.
+successfully implement it in a client. Some information is copied from the OpenAPI specification.
 The rest is based on direct experimentation with the API.
 
 1. [Local OpenAPI Specification](#local-openapi-specification)

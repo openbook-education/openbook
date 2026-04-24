@@ -111,8 +111,8 @@ Location: http://localhost:8886/sso?SAMLRequest=...
 
 __API: Get authentication status__
 
-After returning from the IdP, the app must call the get authantication status endpoint
-to check if the user is already logged in or another flow like e-mail verifiaction
+After returning from the IdP, the app must call the get authentication status endpoint
+to check if the user is already logged in or another flow like e-mail verification
 shall be started.
 
 ```http
@@ -122,7 +122,7 @@ X-Csrftoken: cQKGBJEFPHCwSr9ZKgipmL4leUtwO4F7
 Host: localhost:8000
 ```
 
-Below example does not quite fite. The flows would normally include values such as
+Below example does not quite fit. The flows would normally include values such as
 `verify_email`.
 
 ```json

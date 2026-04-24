@@ -175,7 +175,7 @@ REST_FRAMEWORK = {
     ],
 
     "DEFAULT_FILTER_BACKENDS": (
-        "rest_flex_fields2.filter_backends.FlexFieldsFilterBackend",    # (Not possible here due to circular import): drf-flex-fields2: Automatic query optimization
+        "rest_flex_fields2.filter_backends.FlexFieldsFilterBackend",    # Automatic query optimization
         "django_filters.rest_framework.DjangoFilterBackend",            # Query filters
         "rest_framework.filters.SearchFilter",                          # _search query parameter
         "openbook.drf.filters.DjangoObjectPermissionsFilter",           # Object-permission based filter
@@ -198,9 +198,8 @@ SPECTACULAR_SETTINGS = {
         "url": "https://www.gnu.org/licenses/agpl-3.0.html.en",
     },
     "SERVERS": [
-        # This surpresses a warnign durign OpenAPI generation. But we need to be careful to
-        # manually set the base URL when instantiating the generated API client classes in
-        # the frontend.
+        # This suppresses a warning during OpenAPI generation. However, we need to manually
+        # set the base URL when instantiating the generated API client classes in the front end.
         {
             "url": f"http://localhost:8000",
             "description": "Local Development"
