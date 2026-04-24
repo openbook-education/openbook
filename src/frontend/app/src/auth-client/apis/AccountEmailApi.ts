@@ -123,7 +123,7 @@ export class AccountEmailApi extends runtime.BaseAPI {
     }
 
     /**
-     * Retrieves the list of email addreses of the account. 
+     * Retrieves the list of email addresses of the account. 
      * List email addresses
      */
     async authApiClientV1AccountEmailGetRaw(requestParameters: AuthApiClientV1AccountEmailGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AuthApiClientV1AccountEmailGet200Response>> {
@@ -153,7 +153,7 @@ export class AccountEmailApi extends runtime.BaseAPI {
     }
 
     /**
-     * Retrieves the list of email addreses of the account. 
+     * Retrieves the list of email addresses of the account. 
      * List email addresses
      */
     async authApiClientV1AccountEmailGet(requestParameters: AuthApiClientV1AccountEmailGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AuthApiClientV1AccountEmailGet200Response> {

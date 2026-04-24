@@ -23,7 +23,6 @@ import yaml    from "yaml";
  */
 export function getOptions() {
     const cwd  = process.cwd();
-    const name = path.basename(cwd);
 
     return {
         infile: path.join(cwd, "src", "index.ts"),

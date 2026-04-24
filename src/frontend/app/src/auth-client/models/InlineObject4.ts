@@ -20,6 +20,13 @@ import {
     TOTPAuthenticatorToJSON,
     TOTPAuthenticatorToJSONTyped,
 } from './TOTPAuthenticator';
+import type { InlineObject4Meta } from './InlineObject4Meta';
+import {
+    InlineObject4MetaFromJSON,
+    InlineObject4MetaFromJSONTyped,
+    InlineObject4MetaToJSON,
+    InlineObject4MetaToJSONTyped,
+} from './InlineObject4Meta';
 import type { StatusOK } from './StatusOK';
 import {
     StatusOKFromJSON,
@@ -40,6 +47,12 @@ export interface InlineObject4 {
      * @memberof InlineObject4
      */
     status: StatusOK;
+    /**
+     * 
+     * @type {InlineObject4Meta}
+     * @memberof InlineObject4
+     */
+    meta?: InlineObject4Meta;
     /**
      * 
      * @type {TOTPAuthenticator}
@@ -70,6 +83,7 @@ export function InlineObject4FromJSONTyped(json: any, ignoreDiscriminator: boole
     return {
         
         'status': StatusOKFromJSON(json['status']),
+        'meta': json['meta'] == null ? undefined : InlineObject4MetaFromJSON(json['meta']),
         'data': TOTPAuthenticatorFromJSON(json['data']),
     };
 }
@@ -86,6 +100,7 @@ export function InlineObject4ToJSONTyped(value?: InlineObject4 | null, ignoreDis
     return {
         
         'status': StatusOKToJSON(value['status']),
+        'meta': InlineObject4MetaToJSON(value['meta']),
         'data': TOTPAuthenticatorToJSON(value['data']),
     };
 }

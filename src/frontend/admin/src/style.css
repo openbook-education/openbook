@@ -13,6 +13,7 @@
     height: auto !important;
     padding: 0.5em;
     outline: none;
+    line-height: normal !important;
 }
 
 .djangoql-toggle {

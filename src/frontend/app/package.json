@@ -1,15 +1,18 @@
 {
-  "name": "@openbook-studio/frontend-website",
+  "name": "@openbook-studio/frontend-app",
   "private": true,
   "type": "module",
   "packageManager": "npm@11.x",
   "scripts": {
     "clean": "node ../../../_scripts/frontend/clean.js",
-    "watch": "node ../../../_scripts/frontend/watch.js",
-    "build": "npm run build:api-client && npm run build:auth-client && npm run build:webapp",
+    "watch:tailwind": "tailwindcss -i tailwind.css -o src/tailwind.css --watch",
+    "watch:src": "node ../../../_scripts/frontend/watch.js",
+    "watch": "npm run build:tailwind && conc -n tailwind,src -c auto \"npm run watch:tailwind\" \"npm run watch:src\"",
+    "build:tailwind": "tailwindcss -i tailwind.css -o src/tailwind.css",
     "build:api-client": "openapi-generator-cli generate -i http://localhost:8000/api/schema/ -g typescript-fetch -o ./src/api-client/",
     "build:auth-client": "openapi-generator-cli generate -i http://localhost:8000/auth-api/openapi.json -g typescript-fetch -o ./src/auth-client/",
-    "build:webapp": "node ../../../_scripts/frontend/build.js",
+    "build:src": "node ../../../_scripts/frontend/build.js",
+    "build": "npm run build:tailwind && npm run build:api-client && npm run build:auth-client && npm run build:src",
     "lint": "eslint \"./**/*.{ts,tsx}\"",
     "lintfix": "eslint --fix \"./**/*.{ts,tsx}\"",
     "prettier": "prettier --ignore-path ../../.gitignore \"**/*.+(ts|tsx)\"",
@@ -17,10 +20,10 @@
     "check": "npm run lint && tsc"
   },
   "devDependencies": {
-    "@openapitools/openapi-generator-cli": "^2.30.2",
-    "svelte-spa-router": "^5.0.0"
-  },
-  "dependencies": {
-    "maildev": "2.2.1"
+    "@openapitools/openapi-generator-cli": "^2.31.1",
+    "@tailwindcss/cli": "^4.2.4",
+    "daisyui": "^5.5.19",
+    "svelte-spa-router": "^5.0.1",
+    "tailwindcss": "^4.2.4"
   }
 }

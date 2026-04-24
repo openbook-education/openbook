@@ -27,6 +27,7 @@ class SignupGroupAssignmentResource(ImportExportModelResource):
             "id", "delete",
             "site", "social_app", "groups",
             "name", "description", "text_format",
+            "is_staff", "is_superuser",
         ]
 
     @classmethod
@@ -89,5 +90,9 @@ class SignupGroupAssignmentAdmin(CustomModelAdmin):
         (_("Groups"), {
             "classes": ["tab"],
             "fields": ["groups"],
+        }),
+        (_("Global Permissions"), {
+            "classes": ["tab"],
+            "fields": ["is_staff", "is_superuser"],
         }),
     ]

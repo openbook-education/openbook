@@ -13,14 +13,6 @@
  */
 
 import { mapValues } from '../runtime';
-import type { UserId } from './UserId';
-import {
-    UserIdFromJSON,
-    UserIdFromJSONTyped,
-    UserIdToJSON,
-    UserIdToJSONTyped,
-} from './UserId';
-
 /**
  * 
  * @export
@@ -28,45 +20,44 @@ import {
  */
 export interface User {
     /**
-     * 
-     * @type {UserId}
+     * The user ID.
+     * @type {number}
      * @memberof User
      */
-    id?: UserId;
+    id?: number;
     /**
      * The display name for the user.
-     * 
      * @type {string}
      * @memberof User
      */
-    display?: string;
-    /**
-     * Whether or not the account has a password set.
-     * 
-     * @type {boolean}
-     * @memberof User
-     */
-    hasUsablePassword?: boolean;
+    display: string;
     /**
      * The email address.
-     * 
      * @type {string}
      * @memberof User
      */
     email?: string;
     /**
+     * Whether or not the account has a password set.
+     * @type {boolean}
+     * @memberof User
+     */
+    hasUsablePassword: boolean;
+    /**
      * The username.
-     * 
      * @type {string}
      * @memberof User
      */
-    username?: string;
+    username: string;
 }
 
 /**
  * Check if a given object implements the User interface.
  */
 export function instanceOfUser(value: object): value is User {
+    if (!('display' in value) || value['display'] === undefined) return false;
+    if (!('hasUsablePassword' in value) || value['hasUsablePassword'] === undefined) return false;
+    if (!('username' in value) || value['username'] === undefined) return false;
     return true;
 }
 
@@ -80,11 +71,11 @@ export function UserFromJSONTyped(json: any, ignoreDiscriminator: boolean): User
     }
     return {
         
-        'id': json['id'] == null ? undefined : UserIdFromJSON(json['id']),
-        'display': json['display'] == null ? undefined : json['display'],
-        'hasUsablePassword': json['has_usable_password'] == null ? undefined : json['has_usable_password'],
+        'id': json['id'] == null ? undefined : json['id'],
+        'display': json['display'],
         'email': json['email'] == null ? undefined : json['email'],
-        'username': json['username'] == null ? undefined : json['username'],
+        'hasUsablePassword': json['has_usable_password'],
+        'username': json['username'],
     };
 }
 
@@ -99,10 +90,10 @@ export function UserToJSONTyped(value?: User | null, ignoreDiscriminator: boolea
 
     return {
         
-        'id': UserIdToJSON(value['id']),
+        'id': value['id'],
         'display': value['display'],
-        'has_usable_password': value['hasUsablePassword'],
         'email': value['email'],
+        'has_usable_password': value['hasUsablePassword'],
         'username': value['username'],
     };
 }

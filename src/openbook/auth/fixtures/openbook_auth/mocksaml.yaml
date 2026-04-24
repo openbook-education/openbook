@@ -3,17 +3,17 @@
   fields:
     provider: saml
     provider_id: urn:mocksaml.com
-    name: Mock SAML
+    name: Mock SAML IdP
     client_id: mocksaml
     secret: ''
     key: ''
     settings:
       attribute_mapping:
-        uid: http://schemas.auth0.com/clientID
-        email_verified: http://schemas.auth0.com/email_verified
-        email: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress
+        email: email
+        first_name: firstName
+        last_name: lastName
       idp:
-        entity_id: https://saml.example.com/entityid
-        metadata_url: https://mocksaml.com/api/saml/metadata
+        entity_id: http://localhost:8886/metadata
+        metadata_url: http://localhost:8886/metadata
     sites:
     - - openbook.studio

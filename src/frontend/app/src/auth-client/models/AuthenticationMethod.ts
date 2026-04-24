@@ -12,6 +12,27 @@
  * Do not edit the class manually.
  */
 
+import type { AuthenticatedAfterPasswordReset } from './AuthenticatedAfterPasswordReset';
+import {
+    instanceOfAuthenticatedAfterPasswordReset,
+    AuthenticatedAfterPasswordResetFromJSON,
+    AuthenticatedAfterPasswordResetFromJSONTyped,
+    AuthenticatedAfterPasswordResetToJSON,
+} from './AuthenticatedAfterPasswordReset';
+import type { AuthenticatedByConfirmingACodeSentByEmail } from './AuthenticatedByConfirmingACodeSentByEmail';
+import {
+    instanceOfAuthenticatedByConfirmingACodeSentByEmail,
+    AuthenticatedByConfirmingACodeSentByEmailFromJSON,
+    AuthenticatedByConfirmingACodeSentByEmailFromJSONTyped,
+    AuthenticatedByConfirmingACodeSentByEmailToJSON,
+} from './AuthenticatedByConfirmingACodeSentByEmail';
+import type { AuthenticatedByConfirmingACodeSentByPhone } from './AuthenticatedByConfirmingACodeSentByPhone';
+import {
+    instanceOfAuthenticatedByConfirmingACodeSentByPhone,
+    AuthenticatedByConfirmingACodeSentByPhoneFromJSON,
+    AuthenticatedByConfirmingACodeSentByPhoneFromJSONTyped,
+    AuthenticatedByConfirmingACodeSentByPhoneToJSON,
+} from './AuthenticatedByConfirmingACodeSentByPhone';
 import type { AuthenticatedByThirdPartyProvider } from './AuthenticatedByThirdPartyProvider';
 import {
     instanceOfAuthenticatedByThirdPartyProvider,
@@ -46,7 +67,7 @@ import {
  * 
  * @export
  */
-export type AuthenticationMethod = AuthenticatedByThirdPartyProvider | AuthenticatedByUsernameEmailLogin | ReAuthenticatedBy2FA | ReauthenticatedByPassword;
+export type AuthenticationMethod = AuthenticatedAfterPasswordReset | AuthenticatedByConfirmingACodeSentByEmail | AuthenticatedByConfirmingACodeSentByPhone | AuthenticatedByThirdPartyProvider | AuthenticatedByUsernameEmailLogin | ReAuthenticatedBy2FA | ReauthenticatedByPassword;
 
 export function AuthenticationMethodFromJSON(json: any): AuthenticationMethod {
     return AuthenticationMethodFromJSONTyped(json, false);
@@ -58,6 +79,15 @@ export function AuthenticationMethodFromJSONTyped(json: any, ignoreDiscriminator
     }
     if (typeof json !== 'object') {
         return json;
+    }
+    if (instanceOfAuthenticatedAfterPasswordReset(json)) {
+        return AuthenticatedAfterPasswordResetFromJSONTyped(json, true);
+    }
+    if (instanceOfAuthenticatedByConfirmingACodeSentByEmail(json)) {
+        return AuthenticatedByConfirmingACodeSentByEmailFromJSONTyped(json, true);
+    }
+    if (instanceOfAuthenticatedByConfirmingACodeSentByPhone(json)) {
+        return AuthenticatedByConfirmingACodeSentByPhoneFromJSONTyped(json, true);
     }
     if (instanceOfAuthenticatedByThirdPartyProvider(json)) {
         return AuthenticatedByThirdPartyProviderFromJSONTyped(json, true);
@@ -85,6 +115,15 @@ export function AuthenticationMethodToJSONTyped(value?: AuthenticationMethod | n
     }
     if (typeof value !== 'object') {
         return value;
+    }
+    if (instanceOfAuthenticatedAfterPasswordReset(value)) {
+        return AuthenticatedAfterPasswordResetToJSON(value as AuthenticatedAfterPasswordReset);
+    }
+    if (instanceOfAuthenticatedByConfirmingACodeSentByEmail(value)) {
+        return AuthenticatedByConfirmingACodeSentByEmailToJSON(value as AuthenticatedByConfirmingACodeSentByEmail);
+    }
+    if (instanceOfAuthenticatedByConfirmingACodeSentByPhone(value)) {
+        return AuthenticatedByConfirmingACodeSentByPhoneToJSON(value as AuthenticatedByConfirmingACodeSentByPhone);
     }
     if (instanceOfAuthenticatedByThirdPartyProvider(value)) {
         return AuthenticatedByThirdPartyProviderToJSON(value as AuthenticatedByThirdPartyProvider);

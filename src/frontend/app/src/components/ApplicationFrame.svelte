@@ -14,7 +14,7 @@ Root component of the application which defines the global application UI.
 -->
 
 <script lang="ts">
-    import Router from 'svelte-spa-router'
+    import Router from "svelte-spa-router";
     import routes from "./routes.js";
 </script>
 

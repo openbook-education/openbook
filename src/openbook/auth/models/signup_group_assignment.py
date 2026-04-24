@@ -44,6 +44,19 @@ class SignupGroupAssignment(UUIDMixin, ActiveInactiveMixin, NameDescriptionMixin
     groups = models.ManyToManyField(
         to           = "openbook_auth.group",
         related_name = "+",
+        blank        = True,
+    )
+
+    is_staff = models.BooleanField(
+        verbose_name = _("staff status"),   # Django name is lower-case
+        default      = False,
+        help_text    = _("BE CAREFUL: Allows the user to login to the admin site!"),
+    )
+
+    is_superuser = models.BooleanField(
+        verbose_name = _("superuser status"),   # Django name is lower-case
+        default      = False,
+        help_text    = _("BE CAREFUL: Makes the user have all permissions without explicitly assigning them!"),
     )
 
     class Meta:

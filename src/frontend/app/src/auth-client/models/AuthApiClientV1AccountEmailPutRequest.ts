@@ -20,7 +20,7 @@ import { mapValues } from '../runtime';
  */
 export interface AuthApiClientV1AccountEmailPutRequest {
     /**
-     * An email address.
+     * The email address.
      * 
      * @type {string}
      * @memberof AuthApiClientV1AccountEmailPutRequest

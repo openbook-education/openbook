@@ -6,15 +6,14 @@
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
 
-from collections                      import defaultdict
-from drf_spectacular.utils            import extend_schema
-from drf_spectacular.types            import OpenApiTypes
-from drf_spectacular.utils            import OpenApiParameter
-from rest_flex_fields.filter_backends import FlexFieldsFilterBackend
-from rest_framework                   import status
-from rest_framework.permissions       import AllowAny
-from rest_framework.response          import Response
-from rest_framework.settings          import api_settings
+from collections                import defaultdict
+from drf_spectacular.utils      import extend_schema
+from drf_spectacular.types      import OpenApiTypes
+from drf_spectacular.utils      import OpenApiParameter
+from rest_framework             import status
+from rest_framework.permissions import AllowAny
+from rest_framework.response    import Response
+from rest_framework.settings    import api_settings
 
 class ModelViewSetMixin:
     """
@@ -31,9 +30,6 @@ class ModelViewSetMixin:
         pass
     ```
     """
-
-    # Add FlexFieldsFilterBackend here to avoid circular import when doing in settings.py
-    filter_backends = (FlexFieldsFilterBackend, *api_settings.DEFAULT_FILTER_BACKENDS)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

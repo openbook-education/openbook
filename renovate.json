@@ -30,12 +30,12 @@
         "automerge": true,
         "platformAutomerge": true,
         "addLabels": [
-            "weekly-update"
+            "minor-update"
         ]
     },
     "packageRules": [
         {
-            "description": "Bump declared minimums for npm and Poetry dependencies instead of only refreshing lock files",
+            "description": "Bump declared minimums for npm and Poetry dependencies",
             "matchManagers": [
                 "npm",
                 "poetry"
@@ -52,7 +52,7 @@
             ]
         },
         {
-            "description": "Automerge non-major dependency updates",
+            "description": "Automerge minor dependency updates",
             "matchUpdateTypes": [
                 "digest",
                 "minor",
@@ -63,7 +63,7 @@
             "automerge": true,
             "platformAutomerge": true,
             "addLabels": [
-                "weekly-update"
+                "minor-update"
             ]
         },
         {

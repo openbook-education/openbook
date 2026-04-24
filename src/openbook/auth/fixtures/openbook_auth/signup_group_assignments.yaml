@@ -12,48 +12,65 @@
     groups:
     - - Student
 
-# Mock SAML: Students
+# Mock SAML IdP: Students
 - model: openbook_auth.signupgroupassignment
   pk: ee099ee6-fc7e-4b6c-b07e-ea7d0ea61c42
   fields:
     is_active: true
-    name: 'Mock SAML: Student (example.com)'
-    description: "Mock SAML supports users with two e-mail domains: example.com and
-      example.org. For testing we use this to distinguish whether students or teachers
-      sign-up.\r\n\r\n* `example.com`: Student\r\n* `example.org`: Teacher"
+    name: 'Mock SAML: Student (@student.com)'
+    description: "Mock SAML IdP: Users with @student.com e-mail address.\r\n\r\n
+      Assign default student permissions."
     text_format: MD
     site: null
     social_app: 1
     groups:
     - - Student
+    is_staff: false
+    is_superuser: false
 
 - model: openbook_auth.securityassertion
   pk: 0477b9b1-a344-489c-8801-14e9dab9e63c
   fields:
     parent: ee099ee6-fc7e-4b6c-b07e-ea7d0ea61c42
     name: email
-    value: '@example.com'
+    value: '@student.com'
     match_strategy: ends-with
 
-# Mock SAML: Teachers
+# Mock SAML IdP: Teachers
 - model: openbook_auth.signupgroupassignment
   pk: 57f8c693-5ec2-4d70-b4e1-7c38b277f222
   fields:
     is_active: true
-    name: 'Mock SAML: Teacher (example.org)'
-    description: "Mock SAML supports users with two e-mail domains: example.com and
-      example.org. For testing we use this to distinguish whether students or teachers
-      sign-up.\r\n\r\n* `example.com`: Student\r\n* `example.org`: Teacher"
+    name: 'Mock SAML: Teacher (@teacher.com)'
+    description: "Mock SAML IdP: Users with @teacher.com e-mail address.\r\n\r\n
+      Assign default teacher permissions."
     text_format: MD
     site: null
     social_app: 1
     groups:
     - - Teacher
+    is_staff: false
+    is_superuser: false
 
 - model: openbook_auth.securityassertion
   pk: 37157ed6-cdf2-467a-a27f-d4b80c3e6b99
   fields:
     parent: 57f8c693-5ec2-4d70-b4e1-7c38b277f222
     name: email
-    value: '@example.org'
+    value: '@teacher.com'
     match_strategy: ends-with
+
+# Mock SAML IdP: Administrators
+- model: openbook_auth.signupgroupassignment
+  pk: e8324ceb-cb32-4b5b-9712-398559f90999
+  fields:
+    is_active: true
+    name: 'Mock SAML: Admin (@admin.com)'
+    description: "Mock SAML IdP: Users with @admin.com e-mail address.\r\nAssign full
+      admin permissions!!"
+    text_format: MD
+    site: null
+    social_app: 1
+    is_staff: true
+    is_superuser: true
+    groups: []

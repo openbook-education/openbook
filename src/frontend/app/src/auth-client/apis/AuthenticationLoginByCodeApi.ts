@@ -15,6 +15,8 @@
 
 import * as runtime from '../runtime';
 import type {
+  AuthApiClientV1AuthEmailVerifyResendPost200Response,
+  AuthApiClientV1AuthEmailVerifyResendPost429Response,
   AuthenticatedResponse,
   AuthenticationResponse,
   ConfirmLoginCode,
@@ -23,6 +25,10 @@ import type {
   RequestLoginCode,
 } from '../models/index';
 import {
+    AuthApiClientV1AuthEmailVerifyResendPost200ResponseFromJSON,
+    AuthApiClientV1AuthEmailVerifyResendPost200ResponseToJSON,
+    AuthApiClientV1AuthEmailVerifyResendPost429ResponseFromJSON,
+    AuthApiClientV1AuthEmailVerifyResendPost429ResponseToJSON,
     AuthenticatedResponseFromJSON,
     AuthenticatedResponseToJSON,
     AuthenticationResponseFromJSON,
@@ -45,6 +51,11 @@ export interface AuthApiClientV1AuthCodeConfirmPostRequest {
 export interface AuthApiClientV1AuthCodeRequestPostRequest {
     client: AuthApiClientV1AuthCodeRequestPostClientEnum;
     requestLoginCode: RequestLoginCode;
+}
+
+export interface AuthApiClientV1AuthCodeResendPostRequest {
+    client: AuthApiClientV1AuthCodeResendPostClientEnum;
+    xSessionToken?: string;
 }
 
 /**
@@ -141,6 +152,45 @@ export class AuthenticationLoginByCodeApi extends runtime.BaseAPI {
         await this.authApiClientV1AuthCodeRequestPostRaw(requestParameters, initOverrides);
     }
 
+    /**
+     * Requests a new login code. Requires `ACCOUNT_LOGIN_BY_CODE_SUPPORTS_RESEND = True`. 
+     * Resend login code
+     */
+    async authApiClientV1AuthCodeResendPostRaw(requestParameters: AuthApiClientV1AuthCodeResendPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AuthApiClientV1AuthEmailVerifyResendPost200Response>> {
+        if (requestParameters['client'] == null) {
+            throw new runtime.RequiredError(
+                'client',
+                'Required parameter "client" was null or undefined when calling authApiClientV1AuthCodeResendPost().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (requestParameters['xSessionToken'] != null) {
+            headerParameters['X-Session-Token'] = String(requestParameters['xSessionToken']);
+        }
+
+        const response = await this.request({
+            path: `/auth-api/{client}/v1/auth/code/resend`.replace(`{${"client"}}`, encodeURIComponent(String(requestParameters['client']))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => AuthApiClientV1AuthEmailVerifyResendPost200ResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Requests a new login code. Requires `ACCOUNT_LOGIN_BY_CODE_SUPPORTS_RESEND = True`. 
+     * Resend login code
+     */
+    async authApiClientV1AuthCodeResendPost(requestParameters: AuthApiClientV1AuthCodeResendPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AuthApiClientV1AuthEmailVerifyResendPost200Response> {
+        const response = await this.authApiClientV1AuthCodeResendPostRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
 }
 
 /**
@@ -159,3 +209,11 @@ export const AuthApiClientV1AuthCodeRequestPostClientEnum = {
     Browser: 'browser'
 } as const;
 export type AuthApiClientV1AuthCodeRequestPostClientEnum = typeof AuthApiClientV1AuthCodeRequestPostClientEnum[keyof typeof AuthApiClientV1AuthCodeRequestPostClientEnum];
+/**
+ * @export
+ */
+export const AuthApiClientV1AuthCodeResendPostClientEnum = {
+    App: 'app',
+    Browser: 'browser'
+} as const;
+export type AuthApiClientV1AuthCodeResendPostClientEnum = typeof AuthApiClientV1AuthCodeResendPostClientEnum[keyof typeof AuthApiClientV1AuthCodeResendPostClientEnum];

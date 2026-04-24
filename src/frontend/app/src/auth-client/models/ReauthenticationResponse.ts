@@ -13,13 +13,6 @@
  */
 
 import { mapValues } from '../runtime';
-import type { Authenticated } from './Authenticated';
-import {
-    AuthenticatedFromJSON,
-    AuthenticatedFromJSONTyped,
-    AuthenticatedToJSON,
-    AuthenticatedToJSONTyped,
-} from './Authenticated';
 import type { AuthenticatedMeta } from './AuthenticatedMeta';
 import {
     AuthenticatedMetaFromJSON,
@@ -27,6 +20,13 @@ import {
     AuthenticatedMetaToJSON,
     AuthenticatedMetaToJSONTyped,
 } from './AuthenticatedMeta';
+import type { ReauthenticationRequired } from './ReauthenticationRequired';
+import {
+    ReauthenticationRequiredFromJSON,
+    ReauthenticationRequiredFromJSONTyped,
+    ReauthenticationRequiredToJSON,
+    ReauthenticationRequiredToJSONTyped,
+} from './ReauthenticationRequired';
 
 /**
  * A response indicating reauthentication is required.
@@ -43,10 +43,10 @@ export interface ReauthenticationResponse {
     status: ReauthenticationResponseStatusEnum;
     /**
      * 
-     * @type {Authenticated}
+     * @type {ReauthenticationRequired}
      * @memberof ReauthenticationResponse
      */
-    data: Authenticated;
+    data: ReauthenticationRequired;
     /**
      * 
      * @type {AuthenticatedMeta}
@@ -86,7 +86,7 @@ export function ReauthenticationResponseFromJSONTyped(json: any, ignoreDiscrimin
     return {
         
         'status': json['status'],
-        'data': AuthenticatedFromJSON(json['data']),
+        'data': ReauthenticationRequiredFromJSON(json['data']),
         'meta': AuthenticatedMetaFromJSON(json['meta']),
     };
 }
@@ -103,7 +103,7 @@ export function ReauthenticationResponseToJSONTyped(value?: ReauthenticationResp
     return {
         
         'status': value['status'],
-        'data': AuthenticatedToJSON(value['data']),
+        'data': ReauthenticationRequiredToJSON(value['data']),
         'meta': AuthenticatedMetaToJSON(value['meta']),
     };
 }

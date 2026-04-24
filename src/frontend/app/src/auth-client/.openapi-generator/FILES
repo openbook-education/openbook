@@ -8,9 +8,13 @@ apis/AuthenticationLoginByCodeApi.ts
 apis/AuthenticationPasswordResetApi.ts
 apis/AuthenticationProvidersApi.ts
 apis/ConfigurationApi.ts
+apis/TokensApi.ts
 apis/index.ts
 index.ts
 models/AccountConfiguration.ts
+models/AuthApiAppV1TokensRefreshPost200Response.ts
+models/AuthApiAppV1TokensRefreshPost200ResponseData.ts
+models/AuthApiAppV1TokensRefreshPostRequest.ts
 models/AuthApiClientV1AccountEmailGet200Response.ts
 models/AuthApiClientV1AccountEmailPatchRequest.ts
 models/AuthApiClientV1AccountEmailPost401Response.ts
@@ -26,6 +30,9 @@ models/AuthApiClientV1AuthPasswordResetGet200ResponseData.ts
 models/AuthApiClientV1AuthProviderSignupGet200Response.ts
 models/AuthApiClientV1AuthProviderSignupGet200ResponseData.ts
 models/Authenticated.ts
+models/AuthenticatedAfterPasswordReset.ts
+models/AuthenticatedByConfirmingACodeSentByEmail.ts
+models/AuthenticatedByConfirmingACodeSentByPhone.ts
 models/AuthenticatedByThirdPartyProvider.ts
 models/AuthenticatedByUsernameEmailLogin.ts
 models/AuthenticatedMeta.ts
@@ -57,6 +64,7 @@ models/InlineObject1.ts
 models/InlineObject2.ts
 models/InlineObject3.ts
 models/InlineObject4.ts
+models/InlineObject4Meta.ts
 models/InlineObject5.ts
 models/InlineObject5Meta.ts
 models/InlineObject6.ts
@@ -81,6 +89,7 @@ models/ProviderTokenToken.ts
 models/ReAuthenticatedBy2FA.ts
 models/Reauthenticate.ts
 models/ReauthenticatedByPassword.ts
+models/ReauthenticationRequired.ts
 models/ReauthenticationResponse.ts
 models/RecoveryCodesAuthenticator.ts
 models/RequestLoginCode.ts
@@ -97,7 +106,6 @@ models/StatusAccepted.ts
 models/StatusOK.ts
 models/TOTPAuthenticator.ts
 models/User.ts
-models/UserId.ts
 models/UserSessionsConfiguration.ts
 models/VerifyEmail.ts
 models/VerifyPhone.ts

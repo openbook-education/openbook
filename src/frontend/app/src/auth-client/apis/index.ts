@@ -10,3 +10,4 @@ export * from './AuthenticationLoginByCodeApi';
 export * from './AuthenticationPasswordResetApi';
 export * from './AuthenticationProvidersApi';
 export * from './ConfigurationApi';
+export * from './TokensApi';

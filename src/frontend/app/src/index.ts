@@ -1,6 +1,6 @@
 /*
  * OpenBook: Interactive Online Textbooks - Server
- * © 2024 Dennis Schulmeister-Zimolong <dennis@wpvs.de>
+ * © 2026 Dennis Schulmeister-Zimolong <dennis@wpvs.de>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -8,6 +8,7 @@
  * License, or (at your option) any later version.
  */
 
+import "./tailwind.css";
 import "./index.css";
 import "./global.js";
 

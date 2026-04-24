@@ -9,7 +9,6 @@
  */
 
 import concurrently from "concurrently";
-import path         from "node:path";
 import url          from "node:url";
 
 const __dirname = url.fileURLToPath(new url.URL(".", import.meta.url));

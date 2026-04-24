@@ -9,7 +9,7 @@
 from django.utils.translation           import gettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
 from drf_spectacular.utils              import extend_schema_field
-from rest_flex_fields                   import FlexFieldsModelSerializer
+from rest_flex_fields2.serializers      import FlexFieldsModelSerializer
 from rest_framework.serializers         import PrimaryKeyRelatedField
 from rest_framework.serializers         import RelatedField
 
@@ -49,7 +49,7 @@ class ScopedRolesSerializerMixin(FlexFieldsModelSerializer):
     def validate(self, attributes):
         """
         Check that only allowed permissions are assigned.
-        """        
+        """
         scope_type = ContentType.objects.get_for_model(self.Meta.model)
         public_permissions = attributes.get("public_permissions", None)
 
@@ -79,7 +79,7 @@ class ScopeTypeField(RelatedField):
             scope_type = content_type_for_model_string(data)
         except ContentType.DoesNotExist:
             self.fail("not_found", value=data)
-        
+
         validate_scope_type(scope_type)
         return scope_type
 

@@ -13,6 +13,13 @@
  */
 
 import { mapValues } from '../runtime';
+import type { AuthenticatorType } from './AuthenticatorType';
+import {
+    AuthenticatorTypeFromJSON,
+    AuthenticatorTypeFromJSONTyped,
+    AuthenticatorTypeToJSON,
+    AuthenticatorTypeToJSONTyped,
+} from './AuthenticatorType';
 import type { Provider } from './Provider';
 import {
     ProviderFromJSON,
@@ -45,6 +52,12 @@ export interface Flow {
      * @memberof Flow
      */
     isPending?: boolean;
+    /**
+     * Matches `settings.MFA_SUPPORTED_TYPES`.
+     * @type {Array<AuthenticatorType>}
+     * @memberof Flow
+     */
+    types?: Array<AuthenticatorType>;
 }
 
 
@@ -53,6 +66,7 @@ export interface Flow {
  */
 export const FlowIdEnum = {
     Login: 'login',
+    LoginByCode: 'login_by_code',
     MfaAuthenticate: 'mfa_authenticate',
     MfaReauthenticate: 'mfa_reauthenticate',
     ProviderRedirect: 'provider_redirect',
@@ -87,6 +101,7 @@ export function FlowFromJSONTyped(json: any, ignoreDiscriminator: boolean): Flow
         'id': json['id'],
         'provider': json['provider'] == null ? undefined : ProviderFromJSON(json['provider']),
         'isPending': json['is_pending'] == null ? undefined : json['is_pending'],
+        'types': json['types'] == null ? undefined : ((json['types'] as Array<any>).map(AuthenticatorTypeFromJSON)),
     };
 }
 
@@ -104,6 +119,7 @@ export function FlowToJSONTyped(value?: Flow | null, ignoreDiscriminator: boolea
         'id': value['id'],
         'provider': ProviderToJSON(value['provider']),
         'is_pending': value['isPending'],
+        'types': value['types'] == null ? undefined : ((value['types'] as Array<any>).map(AuthenticatorTypeToJSON)),
     };
 }
 

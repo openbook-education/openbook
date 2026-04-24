@@ -42,7 +42,7 @@ class AllowedRolePermission_Model_Tests(AllowedRolePermissionTextest_Mixin, Test
         Validation must only whitelisted permissions for roles or scopes.
 
         NOTE: Calling `add()` or `set()` on a relationship field automatically saves the relationship.
-        Validation must therefor be handled by higher levels, which is why only the implementation of
+        Validation must therefore be handled by higher levels, which is why only the implementation of
         it is tested here.
         """
         allowed = [

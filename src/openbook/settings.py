@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     "channels",
 
     # Django REST framework
-    "rest_wind",
+    #"rest_wind",
     "rest_framework",
 
     "django_filters",
@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     # django-allauth
     "allauth",
     "allauth.account",
+    "allauth.headless",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.saml",
 
@@ -79,13 +80,9 @@ INSTALLED_APPS = [
     "import_export",                        # Django Import/Export: Import and export data in the Django Admin
     "djangoql",                             # Django QL: Advanced search language for Django
     "colorfield",                           # Django Color Field: Color field for models with color-picker in the admin
-    "debug_toolbar",                        # Django Debug Toolbar: See SQL queries and more
 ]
 
 MIDDLEWARE = [
-    # Django Debug Toolbar
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
-
     # Django
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -178,7 +175,7 @@ REST_FRAMEWORK = {
     ],
 
     "DEFAULT_FILTER_BACKENDS": (
-        #"rest_flex_fields.filter_backends.FlexFieldsFilterBackend",    # (Not possible here due to circular import): drf-flex-fields: Automatic query optimization
+        "rest_flex_fields2.filter_backends.FlexFieldsFilterBackend",    # Automatic query optimization
         "django_filters.rest_framework.DjangoFilterBackend",            # Query filters
         "rest_framework.filters.SearchFilter",                          # _search query parameter
         "openbook.drf.filters.DjangoObjectPermissionsFilter",           # Object-permission based filter
@@ -196,6 +193,18 @@ SPECTACULAR_SETTINGS = {
     "TITLE": "OpenBook API",
     "DESCRIPTION": "Beautiful and Engaging Learning Materials",
     "VERSION": "1.0.0",
+    "LICENSE": {
+        "name": "GNU Affero General Public License, Version 3 (or later)",
+        "url": "https://www.gnu.org/licenses/agpl-3.0.html.en",
+    },
+    "SERVERS": [
+        # This suppresses a warning during OpenAPI generation. However, we need to manually
+        # set the base URL when instantiating the generated API client classes in the front end.
+        {
+            "url": f"http://localhost:8000",
+            "description": "Local Development"
+        }
+    ],
     "SERVE_INCLUDE_SCHEMA": False,
 
     # Self-serve Swagger and Redoc instead of loading from CDN
@@ -214,9 +223,9 @@ SPECTACULAR_SETTINGS = {
     ],
 }
 
-# See: https://github.com/rsinger86/drf-flex-fields?tab=readme-ov-file#customization
-# Must be defined before the first import of rest_flex_field!
-REST_FLEX_FIELDS = {
+# See: https://github.com/openbook-education/drf-flex-fields2/blob/master/docs/guide/advanced.rst
+# Must be defined before the first import of rest_flex_fields2!
+REST_FLEX_FIELDS2 = {
     "EXPAND_PARAM": "_expand",
     "FIELDS_PARAM": "_fields",
     "OMIT_PARAM": "_omit",
@@ -258,14 +267,17 @@ ACCOUNT_USERNAME_MIN_LENGTH = 5
 
 SOCIALACCOUNT_ADAPTER = "openbook.auth.allauth.adapter.SocialAccountAdapter"
 
-# Allauith - Headless API
+# Allauth - Headless API
 # See: https://docs.allauth.org/en/latest/headless/configuration.html
 HEADLESS_ONLY = False
+HEADLESS_ADAPTER = "allauth.headless.adapter.DefaultHeadlessAdapter"
 HEADLESS_SERVE_SPECIFICATION = True
 HEADLESS_FRONTEND_URLS = {
-    # "account_confirm_email": "https://app.project.org/account/verify-email/{key}",
-    # "account_reset_password_from_key": "https://app.org/account/password/reset/key/{key}",
-    # "account_signup": "https://app.org/account/signup",
+    #"account_confirm_email": "https://app.project.org/account/verify-email/{key}",
+    #"account_reset_password": "https://app.project.org/account/password/reset",
+    #"account_reset_password_from_key": "https://app.project.org/account/password/reset/key/{key}",
+    #"account_signup": "https://app.project.org/account/signup",
+    #"socialaccount_login_error": "https://app.project.org/account/provider/callback",
 }
 
 # Recommended settings for SAML behind a reverse proxy
@@ -525,6 +537,7 @@ STATIC_ROOT = BASE_DIR / "_static"
 
 STATICFILES_DIRS = [
     BASE_DIR / "frontend" / "admin" / "dist",
+    BASE_DIR / "frontend" / "allauth" / "dist",
     BASE_DIR / "frontend" / "app" / "dist",
 ]
 

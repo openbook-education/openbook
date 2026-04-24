@@ -80,12 +80,15 @@ class AccountAdapter(DefaultAccountAdapter):
         """
         Only allow human users to authenticate. App users need to authenticate with an
         authentication token, instead. This is an extra security measure, since normally
-        app users should not have a passwort set and thus should not be ably to login
+        app users should not have a passwort set and thus should not be able to login
         with username/password, anyway.
         """
         user = super().authenticate(request, **credentials)
 
-        if not user.user_type == user.UserType.HUMAN:
+        if not user:
+            return user
+        
+        if hasattr(user, "user_type") and not user.user_type == user.UserType.HUMAN:
             # Cannot raise exception here
             return None
 
@@ -130,7 +133,14 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
                 if group_assignment.match(sociallogin.account.extra_data):
                     for group in group_assignment.groups.all():
                         groups.append(group)
+                    
+                    if group_assignment.is_staff:
+                        saved_user.is_staff = True
+                    
+                    if group_assignment.is_superuser:
+                        saved_user.is_superuser = True
             
+            saved_user.save()
             saved_user.groups.set(groups)
 
         return saved_user

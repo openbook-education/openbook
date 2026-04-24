@@ -6,9 +6,9 @@
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
 
-from django.core.exceptions     import ValidationError as DjangoValidationError
-from rest_flex_fields           import FlexFieldsModelSerializer as RFFFlexFieldsModelSerializer
-from rest_framework.exceptions  import ValidationError as DRFValidationError
+from django.core.exceptions        import ValidationError as DjangoValidationError
+from rest_flex_fields2.serializers import FlexFieldsModelSerializer as RFFFlexFieldsModelSerializer
+from rest_framework.exceptions     import ValidationError as DRFValidationError
 
 class FlexFieldsModelSerializer(RFFFlexFieldsModelSerializer):
     """

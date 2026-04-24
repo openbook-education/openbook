@@ -20,5 +20,6 @@
         "Zimolong"
     ],
     "python.analysis.typeCheckingMode": "off",
-    "debugpy.debugJustMyCode": false
+    "debugpy.debugJustMyCode": false,
+    "cSpell.language": "en,de,en-GB,de-DE"
 }

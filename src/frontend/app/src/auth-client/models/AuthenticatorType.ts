@@ -20,7 +20,8 @@
  */
 export const AuthenticatorType = {
     RecoveryCodes: 'recovery_codes',
-    Totp: 'totp'
+    Totp: 'totp',
+    Webauthn: 'webauthn'
 } as const;
 export type AuthenticatorType = typeof AuthenticatorType[keyof typeof AuthenticatorType];
 

@@ -703,7 +703,7 @@ class ModelViewSetTestMixin:
 
     def assertFieldsExpanded(self, response: Response, expandable_fields: Iterable[str]):
         """
-        Assert the the given fields have been to objects or lists with objects.
+        Assert that the given fields have been expanded to objects or lists with objects.
         """
         for fieldname in expandable_fields:
             if fieldname.endswith("[]"):
@@ -718,9 +718,9 @@ class ModelViewSetTestMixin:
                 self.assertTrue(len(expanded_field) > 0, f"Expanded list {fieldname} has no entries")
 
                 for child in expanded_field:
-                    self.assertIsInstance(child, (dict, type(None)), f"Value {child} in expanded list {fieldname} is no object")
+                    self.assertIsInstance(child, (dict, type(None)), f"Value {child} in expanded list {fieldname} is not an object")
             else:
-                self.assertIsInstance(expanded_field, (dict, type(None)), f"Value {expanded_field} of expanded field {fieldname} is no object")
+                self.assertIsInstance(expanded_field, (dict, type(None)), f"Value {expanded_field} of expanded field {fieldname} is not an object")
 
     def assertObjectCreated(self, response: Response, pk_field: str, pk_found: str):
         """
