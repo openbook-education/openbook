@@ -14,7 +14,6 @@ It is mainly used to pull external libraries from the NPM package index and buil
 distribution bundle. The source code is split between two distinct directories:
 
 * `admin`: JS/CSS bundle for the Django Admin
-* `allauth`: JS/CSS bundle for the Django Allauth provided screens
 * `website`: JS/CSS bundle for the public website
 
 The admin bundle is used in a few templates that extend the Django Admin. It is separate from
