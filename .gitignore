@@ -4,11 +4,14 @@
 
 TODO
 
+.coverage
+.nox
+
 # Node.js
 node_modules/
 
-*.rdb
 # Redis
+*.rdb
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
