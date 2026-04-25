@@ -1,7 +1,7 @@
 name: "Setup CI environment"
 description: "Set up Python, Poetry, and optionally Node.js for CI workflows"
 
-inputs:   
+inputs:
     # ====== #
     # Python #
     # ====== #
@@ -13,7 +13,8 @@ inputs:
     python-version:
         description: "Python version to install"
         required: false
-        default: "3.12"
+        # renovate: datasource=python-version depName=python versioning=pep440
+        default: "3.14"
 
     poetry-version:
         description: "Poetry version to install"
@@ -69,5 +70,5 @@ runs:
 
         - name: "Install Node.js dependencies"
           if: ${{ inputs.setup-node == 'true' }}
-          run: npm install --legacy-peer-deps
+          run: npm install
           shell: bash

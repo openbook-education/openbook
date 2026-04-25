@@ -21,5 +21,14 @@
     ],
     "python.analysis.typeCheckingMode": "off",
     "debugpy.debugJustMyCode": false,
-    "cSpell.language": "en,de,en-GB,de-DE"
+    "cSpell.language": "en,de,en-GB,de-DE",
+    "python-envs.defaultEnvManager": "ms-python.python:poetry",
+    "python-envs.defaultPackageManager": "ms-python.python:poetry",
+    "files.associations": {
+        "renovate.json": "jsonc",
+        "renovate.json5": "jsonc",
+        ".renovaterc": "jsonc",
+        ".renovaterc.json": "jsonc",
+        ".renovaterc.json5": "jsonc"
+    }
 }

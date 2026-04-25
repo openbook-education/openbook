@@ -24,7 +24,7 @@
         "lint:frontend": "cd src/frontend && npm run lint",
         "lint:libraries": "cd src/libraries && npm run lint",
         "lint": "npm run lint:frontend && npm run lint:libraries",
-        "fix:frontend-install": "rimraf src/frontend/node_modules && npm install --legacy-peer-deps",
+        "fix:frontend-install": "rimraf src/frontend/node_modules && npm install",
         "init:db": "cd src && python manage.py migrate && python manage.py load_initial_data && python manage.py install_html_library && python manage.py createsuperuser",
         "test:backend": "cd src && poetry run python manage.py test",
         "test": "npm run test:backend",

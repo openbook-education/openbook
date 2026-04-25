@@ -65,7 +65,7 @@ Then you can install all dependent libraries:
 
 ```sh
 poetry install
-npm install --legacy-peer-deps
+npm install
 ```
 
 Always run `npm install` from the repository root. Do not run `npm install`
@@ -78,17 +78,6 @@ If this already happened, clean up with:
 ```sh
 npm run fix:frontend-install
 ```
-
-> 2026-03-16: The `--legacy-peer-deps` flag is currently required because
-> `eslint-plugin-import` has not yet updated its peer dependency metadata
-> for ESLint 10, even though the installed version seems to work with this
-> repository's lint configuration.
-> See https://github.com/import-js/eslint-plugin-import/issues/3227
-> for progress on full ESLint 10 compatibility.
->
-> Once we can remove the flag, it must also be removed in the GH action
-> `.github/actions/setup-ci-environment/action.yml` file and the `renovate-*.yml`
-> workflows.
 
 To run all components locally:
 

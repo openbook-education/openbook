@@ -2,7 +2,7 @@
   "name": "OpenBook Dev Container",
   "dockerFile": "Dockerfile",
   "forwardPorts": [3000, 8000, 8886, 8887, 6379],
-  "postCreateCommand": "npm install --legacy-peer-deps && poetry install --with dev,docs",
+  "postCreateCommand": "npm install && poetry install --with dev,docs",
   "mounts": [
     "source=${localWorkspaceFolder},target=/workspace,type=bind"
   ],
