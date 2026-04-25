@@ -1,0 +1,42 @@
+{
+  "name": "OpenBook Dev Container",
+  "dockerFile": "Dockerfile",
+  "forwardPorts": [3000, 8000, 8886, 8887, 6379],
+  "postCreateCommand": "npm install --legacy-peer-deps && poetry install --with dev,docs",
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspace,type=bind"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.isort",
+        "ms-toolsai.jupyter",
+        "ms-python.debugpy",
+        "ms-python.python-environments",
+        "formulahendry.auto-close-tag",
+        "formulahendry.auto-rename-tag",
+        "streetsidesoftware.code-spell-checker",
+        "streetsidesoftware.code-spell-checker-british-english",
+        "batisteo.vscode-django",
+        "editorconfig.editorconfig",
+        "tamasfe.even-better-toml",
+        "donjayamanne.githistory",
+        "ecmel.vscode-html-css",
+        "davidanson.vscode-markdownlint",
+        "ms-vscode.vscode-node-azure-pack",
+        "qwtel.sqlite-viewer",
+        "svelte.svelte-vscode",
+        "wayou.vscode-todo-highlight",
+        "redhat.vscode-yaml",
+        "dbaeumer.vscode-eslint"
+      ],
+      "settings": {
+        "editor.formatOnSave": false,
+        "python.linting.enabled": true,
+        "python.formatting.provider": "black"
+      }
+    }
+  }
+}

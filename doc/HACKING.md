@@ -2,12 +2,13 @@ Developer Notes for OpenBook
 ============================
 
 This document serves as a cheat sheet for developers to get started quickly. There are no
-fancy things -- if you already know Python, Poetry, Django, NPM, … But finding the right
+fancy things -- if you already know Python, Poetry, Django, NPM, ... But finding the right
 information might not be easy when working with so much different technology. This document
 tries to summarize the most important things.
 
 1. [AI Policy](#ai-policy)
 1. [Quick Start](#quick-start)
+1. [Using Dev Containers](#using-dev-containers)
 1. [Technology Choices](#technology-choices)
 1. [Dependency Policy](#dependency-policy)
 1. [Directory Layout](#directory-layout)
@@ -51,11 +52,14 @@ solutions even when a straight-forward way exists.
 Quick Start
 -----------
 
-The following tools must be available on your development machine:
+The following tools must be available on your development machine. Or use the included dev container
+configuration, if you have Docker or Podman installed. See [Using Dev Containers](#using-dev-containers)
+for more details.
 
 * Python
 * Node.js
 * Redis
+* Java (for the OpenAPI code generator)
 
 Then you can install all dependent libraries:
 
@@ -101,6 +105,36 @@ This will start the following things:
 
 The setup will be fairly similar to a typical production environment minus the database.
 For local development we use SQLite as per Django's defaults.
+
+Using Dev Containers
+--------------------
+
+If you prefer a containerized development environment, you can use the included dev container configuration.
+This allows you to develop in a consistent environment without installing all the required tools on your
+local machine. For this you will need:
+
+* An IDE that supports dev containers (e.g. [Visual Studio Code](https://code.visualstudio.com/) with the
+  [Remote - Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension).
+* [Docker](https://www.docker.com/) or [Podman](https://podman.io/)
+
+On Windows you might prefer Podman over Docker to avoid licensing issues. To do so:
+
+1. Install Podman Desktop from [podman-desktop.io](https://podman-desktop.io/).
+2. Open Visual Studio Code and go to the settings (`Ctrl+,` or `Cmd+,`).
+3. Search for "Remote - Containers: Docker Path" and set it to the path of your Podman executable (e.g., `C:\Program Files\RedHat\Podman\podman.exe`).
+4. Restart Visual Studio Code and proceed with the steps above to open the project in a container.
+
+Now you can build and start the dev cointainer:
+
+1. Open the project in Visual Studio Code.
+2. When prompted, click "Reopen in Container" to start the dev container.
+3. Alternatively, open the command palette and select "Remote-Containers: Reopen in Container".
+4. The first time you open the container, it will take some time to build. Be patient while the container is being built.
+5. Once the container is ready, you can start developing as usual. All the required tools are already installed in the container.
+
+The dev container configuration is located in the `.devcontainer` directory at the root of the project.
+All the required tools (Python, Node.js, Redis, Java, etc.) are pre-installed in the container.
+The container is configured to use the same ports as the local development environment, so you can access the application as usual.
 
 Technology Choices
 ------------------
@@ -263,7 +297,7 @@ model in lower-case (no other transformation done).
 
 **Django Admin:**
 By default the model permissions are checked in the Django Admin (in the `ModelAdmin` class, methods
-`has_…_permission(self, request)`) to check, if a user is allowed to perform the corresponding action.
+`has_..._permission(self, request)`) to check, if a user is allowed to perform the corresponding action.
 
 **Own Code:**
 No permissions check is done when directly accessing the database with the Django ORM. Permission checks
@@ -305,7 +339,7 @@ The API is a compatible extension to the regular API:
 
 * `User.has_perm(self, perm, obj=None)` (Django User)
 * `has_perm(user_obj, perm, obj=None)` (Authentication Backend)
-* `ModelAdmin.has_…_permission(self, request, obj=None)` (Django Admin)
+* `ModelAdmin.has_..._permission(self, request, obj=None)` (Django Admin)
 * `BasePermission.has_object_permission(self, request, view, obj)` (Django REST Framework)
 
 However, there are some oddities:

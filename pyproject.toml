@@ -43,6 +43,8 @@ django-colorfield = "^0.14.0"
 tox = "^4.50.0"
 pip-audit = "^2.10.0"
 
+[tool.poetry.group.docs.dependencies]
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
