@@ -51,9 +51,9 @@ jobs:
 
             - name: "Run coverage check"
               run: |
-                  export PYTHONPATH=src
-                  poetry run coverage run --rcfile=pyproject.toml src/manage.py test tests
-                  poetry run coverage report --rcfile=pyproject.toml -m
+                  cd src
+                  poetry run coverage run --rcfile=../pyproject.toml src/manage.py test
+                  poetry run coverage report --rcfile=../pyproject.toml -m
 
             - name: "Run code checks"
               run: npm run check

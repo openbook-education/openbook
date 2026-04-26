@@ -100,7 +100,7 @@
             "automerge": false,
             "platformAutomerge": false,
             "addLabels": ["major-update"],
-            "prBodyNotes": ["Review the upstream migration notes before merging this major update."]
+            "prBodyNotes": ["Review the upstream migration notes before merging this major update.\n\nFor new python versions update the test matrix in `.github/workflows/run-tests-full.yml`. "]
         }
     ]
 }

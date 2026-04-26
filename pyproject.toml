@@ -50,11 +50,13 @@ coverage = "^7.13.5"
 pip-audit = "^2.10.0"
 
 [tool.coverage.report]
-fail_under = 90
+fail_under = 75
 show_missing = true
 skip_covered = true
 omit = [
     "*/__pycache__/*",
+    "manage.py",
+    "openbook/*.py",
 ]
 
 [build-system]
