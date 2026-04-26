@@ -1,0 +1,223 @@
+Versioning and Releases
+=======================
+
+This page documents the versioning strategy and the steps required to cut a
+release of ``openbook``.
+
+.. contents::
+   :local:
+   :depth: 1
+
+Versioning Strategy
+-------------------
+
+``openbook`` follows `Semantic Versioning <https://semver.org/>`_
+(SemVer). Given a version number ``MAJOR.MINOR.PATCH``:
+
+- **PATCH** is incremented for backwards-compatible bug fixes.
+- **MINOR** is incremented for backwards-compatible new features.
+- **MAJOR** is incremented for breaking changes to the public API.
+
+There are currently no plans to introduce breaking changes. Users can safely
+update to any patch or minor release without modifying their code.
+
+Release Checklist
+-----------------
+
+1. **Ensure main is green.**
+
+   All CI checks must pass before tagging.
+
+2. **Create release issue (recommended).**
+
+   Create a new issue for the release and describe remaining work to be done before
+   a new version is released. You don't need to repeat the individual release steps.
+   Just, what else needs to be done.
+
+3. **Create new branch.**
+
+   From within the release issue create a new release preparation branch. Checkout
+   the branch as the next steps must all be performed within that branch.
+
+4. **Complete remaining work.**
+
+   If there is any remaining work to be done (e.g. updating documentation) push the
+   changes onto the release preparation branch.
+
+5. **Update the changelog.**
+
+   Add a dated entry to :doc:`/reference/changelog` summarising user-visible changes.
+   See :ref:`changelog-format` below for the expected format.
+
+6. **Bump the version number** in ``pyproject.toml`` using Poetry:
+
+   .. code-block:: bash
+
+      # choose one of: patch, minor, major
+      poetry version minor
+
+7. **Commit the version bump:**
+
+   .. code-block:: bash
+
+      git add pyproject.toml docs/reference/changelog.rst
+      git commit -m "Bump version: vX.Y.Z"
+
+8. **Open and merge pull request.**
+
+   Now open a pull request to merge the release preparation branch into main. At this
+   stage Copilot will review the branch, code quality and security will be scanned,
+   documentation will be built, and unit tests will run. Usually you will need to
+   push a few more commits to the release branch (which will automatically appear in
+   the PR and retrigger quality checks).
+
+   Once all is green, merge the pull request into main.
+
+9. **Tag the commit in order to trigger the release workflow.**
+
+   Checkout the main branch and create a **signed annotated tag** for the merge
+   commit, then push the tag to GitHub:
+
+   .. code-block:: bash
+
+      git checkout main
+      git pull
+      git tag -s vX.Y.Z -m "Release vX.Y.Z"
+      git push origin --tags
+
+   The ``.github/workflows/release.yml`` workflow will automatically:
+
+   - Verify the tag is a signed annotated tag with a valid signature
+   - Verify the tag version matches ``pyproject.toml``
+   - Run the full test suite and build the documentation again (for safety)
+   - Build source distribution (``.tar.gz``) and wheel (``.whl``) artifacts
+   - Generate a CycloneDX SBOM (``sbom.cyclonedx.json``)
+   - Create a GitHub release with release notes extracted from the changelog
+
+   Monitor the workflow run in the **Actions** tab.
+
+.. _changelog-format:
+
+Changelog Format
+----------------
+
+The changelog is located in ``docs/reference/changelog.rst`` and uses
+reStructuredText (RST) formatting. Each version entry must follow this structure,
+allowing the release workflow to extract the changelog entries for the GitHub
+release page.
+
+.. code-block:: rst
+
+   X.Y.Z (Month Year)
+   ^^^^^^^^^^^^^^^^^^
+
+   - Change 1
+   - Change 2
+   - Change 3
+
+**Guidelines:**
+
+- Use the exact version number (e.g., ``2.1.0``) without the ``v`` prefix.
+- Add the release date in parentheses (e.g., ``(April 2026)``).
+- Add underline using ``^`` characters of same length.
+- List changes as bullet points with clear, user-facing descriptions.
+- Start descriptions with the affected component.
+- Group related changes together logically.
+
+**Pre-releases:**
+
+For pre-release versions (alpha, beta, release candidate), use the extended
+version format in the tag and changelog:
+
+.. code-block:: bash
+
+   git tag v2.1.0-pre1
+   git tag v2.1.0-rc1
+
+Update the changelog accordingly:
+
+.. code-block:: rst
+
+   0.0.1-pre1 (April 2026)
+   ^^^^^^^^^^^^^^^^^^^^^^^
+
+   - Preview of upcoming features...
+
+The release workflow will automatically detect pre-releases and mark them as
+such in GitHub.
+
+Tag Signing
+-----------
+
+Setup
+^^^^^
+
+Release tags must be signed. If tag signing is not configured locally, set it
+up once before creating your next release:
+
+.. code-block:: bash
+
+   # Use your existing GPG key ID
+   git config --global user.signingkey <YOUR_GPG_KEY_ID>
+   git config --global tag.gpgSign true
+
+To list available secret keys and find your key ID:
+
+.. code-block:: bash
+
+   gpg --list-secret-keys --keyid-format=long
+
+Only signed annotated tags (``git tag -s``) are accepted by the release
+workflow.
+
+Signing commits is also recommended as a general repository security practice,
+but commit signing is currently not enforced by the release workflow.
+
+Troubleshooting
+^^^^^^^^^^^^^^^
+
+If the release workflow rejects a signed tag with a reason such as ``bad_email``,
+inspect the tag metadata first:
+
+.. code-block:: bash
+
+   git cat-file -p <tag>
+
+Look for the ``tagger`` line, for example:
+
+.. code-block:: text
+
+   tagger Name <email@example.com> ...
+
+When you create a signed tag with ``git tag -s``, Git embeds the tagger identity
+from your local Git configuration. That email address must:
+
+- Be present in your GitHub account
+- Be verified in GitHub
+- Match exactly, including casing
+
+A common failure mode is that GitHub has multiple verified email addresses, but
+Git is using the wrong one via ``user.email``. This matters because Git uses
+that email for the tagger identity, while GPG signs with a key that is usually
+associated with specific UID email addresses. If the tagger email and the
+verified GitHub identity do not align, GitHub tag verification can fail.
+
+To fix this, delete the incorrect tag locally and remotely, correct your Git
+identity, then recreate and push the signed tag:
+
+.. code-block:: bash
+
+   git tag -d <tag>
+   git push origin :refs/tags/<tag>
+
+   git config user.email <correct-verified-email>
+   git tag -s <tag>
+   git push origin <tag>
+
+Read the Docs
+-------------
+
+Documentation is rebuilt automatically on every push to ``main`` and on every
+tag that matches the ``v*`` pattern. No manual trigger is needed after pushing
+a release tag. See :doc:`/maintainers/repository-setup` for details of the Read
+the Docs project settings and automation rules.
