@@ -22,9 +22,9 @@
   "type": "module",
   "packageManager": "npm@11.x",
   "scripts": {
-    "clean": "node ../../../_scripts/library/clean.js",
-    "watch": "node ../../../_scripts/library/watch.js",
-    "build": "node ../../../_scripts/library/build.js",
+    "clean": "node ../../../bin/library/clean.js",
+    "watch": "node ../../../bin/library/watch.js",
+    "build": "node ../../../bin/library/build.js",
     "lint": "eslint \"./**/*.{ts,tsx}\"",
     "lintfix": "eslint --fix \"./**/*.{ts,tsx}\"",
     "prettier": "prettier --ignore-path ../../.gitignore \"**/*.+(ts|tsx)\"",

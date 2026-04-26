@@ -2,7 +2,6 @@ OpenBook: Interactive Online Textbooks
 ======================================
 
 [![Test Suite](https://github.com/DennisSchulmeister/openbook/actions/workflows/run-tests.yml/badge.svg)](https://github.com/DennisSchulmeister/openbook/actions/workflows/run-tests.yml)
-[![SBOM](https://github.com/DennisSchulmeister/openbook/actions/workflows/refresh-sbom.yml/badge.svg)](https://github.com/DennisSchulmeister/openbook/actions/workflows/refresh-sbom.yml)
 [![Dependencies (Minor/Patch)](https://github.com/DennisSchulmeister/openbook/actions/workflows/renovate-minor.yml/badge.svg)](https://github.com/DennisSchulmeister/openbook/actions/workflows/renovate-minor.yml)
 [![Dependencies (Major)](https://github.com/DennisSchulmeister/openbook/actions/workflows/renovate-major.yml/badge.svg)](https://github.com/DennisSchulmeister/openbook/actions/workflows/renovate-major.yml)
 
@@ -13,7 +12,7 @@ OpenBook: Interactive Online Textbooks
 
 <p align="center">
    <!-- https://pixabay.com/photos/screwdriver-background-screw-wooden-1008974/ -->
-   <img src="_img/under-construction.jpg" alt="Under Construction" width="300">
+   <img src="doc/img/under-construction.jpg" alt="Under Construction" width="300">
    <br>
    <b>Under Construction</b>
    <br>

@@ -35,7 +35,7 @@ Baseline Eligibility Criteria
 
 Every dependency must satisfy **all** of the following before any further evaluation takes place.
 If a candidate fails any one criterion, it is immediately disqualified and must not be integrated
-in our codebase! 
+in our codebase!
 
 - [ ] **License:** Must carry a clear license statement, and the license must be compatible with
   [AGPL-3.0](https://www.gnu.org/licenses/agpl-3.0.html). Copyleft licenses (GPL, LGPL, AGPL) are
@@ -208,7 +208,7 @@ Version Upgrades and Security Fixes
   or when manually dispatched (for example before a release).
 
   The same automation also tracks GitHub Actions versions and the pinned image tags in the Docker Compose example under
-  `_docker/`.
+  `docker/`.
 
   **Always trigger dependency updates through Renovate rather than running `poetry update` or `npm update` by hand.**
   Manual updates skip the automated pull-request audit trail and the dedicated Renovate PR checks. You can trigger an

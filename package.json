@@ -12,7 +12,7 @@
         "redis": "redis-server",
         "runserver": "cd src && python manage.py runserver",
         "maildev": "maildev -s 1025 -w 8887",
-        "mocksaml": "node _scripts/mock-saml-idp/server.js -h localhost -p 8886",
+        "mocksaml": "node bin/mock-saml-idp/server.js -h localhost -p 8886",
         "frontend": "cd src/frontend && npm run watch",
         "libraries": "cd src/libraries && npm run watch",
         "start": "conc -n redis,django,maildev,mocksaml,frontend,libraries -c auto \"npm run redis\" \"npm run runserver\" \"npm run maildev\" \"npm run mocksaml\" \"npm run frontend\" \"npm run libraries\"",

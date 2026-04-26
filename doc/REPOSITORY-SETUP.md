@@ -164,7 +164,7 @@ sub-projects. Extends `@tsconfig/svelte`. Notable settings:
 ### `tsconfig.nodejs.json`
 
 A companion TypeScript configuration for Node.js scripts (e.g. the esbuild build scripts
-under `_scripts/`). Overrides the base config with:
+under `bin/`). Overrides the base config with:
 
 - `"module": "nodenext"` and `"moduleResolution": "NodeNext"` — correct resolution for
   native ESM in Node.js.

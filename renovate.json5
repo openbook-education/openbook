@@ -68,7 +68,7 @@
         {
             "description": "Docker Example",
             "matchManagers": ["docker-compose","dockerfile"],
-            "matchFileNames": ["_docker/**"],
+            "matchFileNames": ["docker/**"],
             "dependencyDashboardCategory": "Docker Example"
         },
         {

@@ -4,9 +4,9 @@
   "type": "module",
   "packageManager": "npm@11.x",
   "scripts": {
-    "clean": "node ../../../_scripts/frontend/clean.js",
-    "watch": "node ../../../_scripts/frontend/watch.js",
-    "build": "node ../../../_scripts/frontend/build.js",
+    "clean": "node ../../../bin/frontend/clean.js",
+    "watch": "node ../../../bin/frontend/watch.js",
+    "build": "node ../../../bin/frontend/build.js",
     "lint": "eslint \"./**/*.{ts,tsx}\"",
     "lintfix": "eslint --fix \"./**/*.{ts,tsx}\"",
     "prettier": "prettier --ignore-path ../../.gitignore \"**/*.+(ts|tsx)\"",

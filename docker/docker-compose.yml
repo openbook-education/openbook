@@ -29,7 +29,7 @@ services:
             POSTGRES_DB: openbook
         volumes:
           - openbook_postgres:/var/lib/postgresql/data
-    
+
     #---------------------------------------------------------------------------
     # Redis Key/Value Storage - Used by Django Channels
     # https://hub.docker.com/_/redis
@@ -46,7 +46,7 @@ services:
     openbook:
         build:
             context: ".."
-            dockerfile: _docker/openbook/Dockerfile
+            dockerfile: docker/openbook/Dockerfile
         restart: unless-stopped
         #ports:
         #    - 127.0.0.1:8000:8000
@@ -61,7 +61,7 @@ services:
         environment:
             DJANGO_SETTINGS_MODULE: openbook.settings
             OB_LOAD_INITIAL_DATA: 1
-    
+
     #---------------------------------------------------------------------------
     # Caddy Frontend Web Server - Serves static files and media uploads and
     # forwards everything else to the OpenBook server.

@@ -17,7 +17,7 @@ Regarding deployment this is a pretty standard Django project. Please see the
 [Django Documentation](https://docs.djangoproject.com/en/5.0/#the-development-process)
 for all details. Below is a quick summary including a few notable considerations.
 
-![Deployment Architecture](_img/deployment-architecture.png)
+![Deployment Architecture](img/deployment-architecture.png)
 
 * __Front Webserver:__ This is not strictly necessary but usually you want one for
   the following tasks:
@@ -59,7 +59,7 @@ for all details. Below is a quick summary including a few notable considerations
   Daphne is already a dependency, in practice this simply means:
 
   ```sh
-  daphne -p 8000 -b 0.0.0.0 openbook.asgi:application 
+  daphne -p 8000 -b 0.0.0.0 openbook.asgi:application
   ```
 
 * __Redis:__ This is not yet needed. But in future we will likely rely on websockets for real-time
@@ -68,7 +68,7 @@ for all details. Below is a quick summary including a few notable considerations
   communication backend. Typically [Redis](https://redis.io) is used for this. Our Django project
   already contains the necessary configuration, expecting Redis to listen on `localhost:6379`.
   Of course, this setting can be overwritten in the local settings file.
-  
+
 * __Database:__ A database like [MariaDB](https://mariadb.org/) or [Postgres](https://www.postgresql.org/)
   is needed for persistent storage. See the [Django Documentation](https://docs.djangoproject.com/en/5.0/ref/databases/)
   for all supported databases. Make sure to pip install the correct database driver and adopt the local
@@ -159,7 +159,7 @@ python ./manage.py collectstatic
 Docker Compose
 --------------
 
-The [_docker](_docker) directory contains a working example configuration for Docker Compose.
+The [docker](docker) directory contains a working example configuration for Docker Compose.
 You can use it to test a full deployment build on your local machine and as a template for your
 own deployment. The following commands will be helpful:
 
@@ -178,7 +178,7 @@ The following services are defined:
 
 As of today there is no official docker image on Docker Hub. Therefor the directory contains a
 Dockerfile that will be built on demand. For the time being the recommendation is to pull the
-source code from GitHub, copy the `_docker` directory to a new location outside the git tree
+source code from GitHub, copy the `docker` directory to a new location outside the git tree
 and adapt it to your needs.
 
 Get in touch with us, if you like to work on an official Docker image, once the platform is

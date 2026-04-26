@@ -48,13 +48,13 @@ RUN mkdir -p src/_media.volume; \
     mkdir -p src/_static; \
     mkdir -p src/_media
 
-COPY --from=python-build /app/requirements.txt . 
+COPY --from=python-build /app/requirements.txt .
 RUN python -m venv .env
 RUN .env/bin/pip install -r requirements.txt
 RUN .env/bin/pip install psycopg
 
 COPY . .
-COPY _docker/openbook/entrypoint.sh src/entrypoint.sh
+COPY docker/openbook/entrypoint.sh src/entrypoint.sh
 RUN chmod +x src/entrypoint.sh
 
 # Copy frontend files to ./_static and ./_media.
