@@ -1,5 +1,20 @@
 OpenBook: Changelog
-==========================
+===================
+
+Version 0.0.1-rc1
+^^^^^^^^^^^^^^^^^
+
+2026-04-26: Updated tooling
+---------------------------
+
+Proper documentation was set up and GitHub Actions workflows have been introduced to support the
+following activities:
+
+- Git branch protection
+- Unit tests
+- Code reviews and quality checks
+- Dependency updates
+- Release and SBOM generation
 
 2026-03-17: Dependency updates and policy
 -----------------------------------------

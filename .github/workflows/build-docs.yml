@@ -1,0 +1,52 @@
+name: "Build Documentation"
+
+on:
+    workflow_call: {}
+    workflow_dispatch: {}
+    pull_request:
+        paths:
+            - ".github/workflows/build-docs.yml"
+            - ".readthedocs.yaml"
+            - "poetry.lock"
+            - "pyproject.toml"
+            - "docs/**"
+            - "src/openbook/**"
+    push:
+        branches:
+            - main
+        paths:
+            - ".github/workflows/build-docs.yml"
+            - ".readthedocs.yaml"
+            - "poetry.lock"
+            - "pyproject.toml"
+            - "docs/**"
+            - "src/openbook/**"
+
+permissions:
+    contents: read
+
+jobs:
+    build-docs:
+        name: "Build Sphinx site"
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: "Checkout code"
+              uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+
+            - name: "Set up CI environment"
+              uses: ./.github/actions/setup-ci-environment
+              with:
+                  setup-python: "true"
+
+            - name: "Install documentation dependencies"
+              run: poetry install --no-interaction --with docs
+
+            # Sphinx options:
+            #   -W Treat warnings as errors (to catch broken references)
+            #   -T Print tracebacks
+            #   -v Verbose output (-v -v even more verbose)
+            #
+            # Deliberately not included is --keep-going, because it may swallow errors.
+            - name: "Build documentation"
+              run: poetry run sphinx-build -W -T -v docs/ /tmp/sphinx-test-build

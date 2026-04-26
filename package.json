@@ -31,7 +31,7 @@
         "check:security:npm": "npm audit --audit-level=moderate || (echo \"WARNING: npm audit found vulnerabilities (non-blocking).\" && true)",
         "check:security:python": "cd src && poetry run pip-audit || (echo \"WARNING: pip-audit found vulnerabilities (non-blocking).\" && true)",
         "check:security": "npm run check:security:npm && npm run check:security:python",
-        "check": "npm run lint && npm run check:security && npm run test",
+        "check": "npm run lint && npm run check:security",
         "deps:update:minor": "gh workflow run renovate-minor.yml",
         "deps:update:major": "gh workflow run renovate-major.yml"
     },

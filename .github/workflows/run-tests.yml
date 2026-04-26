@@ -15,8 +15,8 @@ concurrency:
 
 jobs:
     # Decide whether to run the full test suite or the dummy test suite. The full test
-    # suite is run when a file in the `src` directory has changed of the workflow was
-    # manually started. Otherwise the dummy test suite will be run to satisfy the branch
+    # suite is run when Python/package or test workflows changed, or the workflow was
+    # manually started. Otherwise the dummy test suite will be run to satisfy branch
     # protection rules without wasting compute time.
     changes:
         name: "Detect relevant changes"
@@ -35,7 +35,7 @@ jobs:
               run: |
                   echo "run-tests=true" >> "$GITHUB_OUTPUT"
 
-            - name: "Check whether `src` changed"
+            - name: "Check whether Python/package files changed"
               id: filter
               if: github.event_name == 'pull_request'
               uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d # v4.0.1
@@ -43,8 +43,10 @@ jobs:
                   filters: |
                       src:
                           - "src/**"
+                          - "pyproject.toml"
                           - "poetry.lock"
                           - "package-lock.json"
+                          - ".github/workflows/*tests*"
 
     # Branch into reusable sub-workflow for the full test suite. Moved into a separate workflow
     # to only initialize the full CI environment when it is really needed.

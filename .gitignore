@@ -25,6 +25,7 @@ __pycache__/
 .Python
 build/
 develop-eggs/
+/dist/
 
 ## Needed for typescript output
 #dist/

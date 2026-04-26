@@ -29,6 +29,16 @@
             "matchStrings": [
                 "python-version:\\n\\s+description:\\s+\"Python\\s+version\\s+to\\s+install\"\\n\\s+#\\s+renovate:\\s+datasource=(?<datasource>\\S+)\\s+depName=(?<depName>\\S+)(?:\\s+versioning=(?<versioning>\\S+))?\\n\\s+default:\\s+\"(?<currentValue>\\S+)\""
             ]
+        },
+        {
+            "customType": "regex",
+            "description": "Track latest Node.js runtime release",
+            "fileMatch": [
+                "^\\.github/actions/setup-ci-environment/action\\.yml$"
+            ],
+            "matchStrings": [
+                "node-version:\\n\\s+description:\\s+\"Node\\.js\\s+version\\s+to\\s+install\"\\n\\s+#\\s+renovate:\\s+datasource=(?<datasource>\\S+)\\s+depName=(?<depName>\\S+)(?:\\s+versioning=(?<versioning>\\S+))?\\n\\s+default:\\s+\"(?<currentValue>\\S+)\""
+            ]
         }
     ],
     "labels": ["dependencies", "automated"],
@@ -83,13 +93,6 @@
             "automerge": true,
             "platformAutomerge": true,
             "addLabels": ["minor-update"]
-        },
-        {
-            "description": "Automerge regex-driven updates",
-            "matchManagers": ["custom.regex"],
-            "automerge": true,
-            "platformAutomerge": true,
-            "addLabels": ["python-update"]
         },
         {
             "description": "Leave PR open for manual review for major updates",
