@@ -108,18 +108,22 @@ local machine. For this you will need:
 
 On Windows you might prefer Podman over Docker to avoid licensing issues. To do so:
 
-1. Install Podman Desktop from [podman-desktop.io](https://podman-desktop.io/).
-2. Open Visual Studio Code and go to the settings (`Ctrl+,` or `Cmd+,`).
-3. Search for "Remote - Containers: Docker Path" and set it to the path of your Podman executable (e.g., `C:\Program Files\RedHat\Podman\podman.exe`).
-4. Restart Visual Studio Code and proceed with the steps above to open the project in a container.
+1. Install Windows Subsystem for Linux with the command `wsl --update`
+2. Install Podman Desktop from [podman-desktop.io](https://podman-desktop.io/).
+3. Open Podman Desktop and install Podman and Podman Compose.
+4. Open Visual Studio Code and go to the settings.
+5. Search for "Remote - Containers: Docker Path" and set it to `podman`.
+6. Still in VS Code settings, set the Docker Compose path to `podman compose`
+7. Restart Visual Studio Code and proceed with the steps above to open the project in a container.
 
-Now you can build and start the dev cointainer:
+Now you can build and start the dev container:
 
-1. Open the project in Visual Studio Code.
+1. Open the project in Visual Studio Code.2
 2. When prompted, click "Reopen in Container" to start the dev container.
 3. Alternatively, open the command palette and select "Remote-Containers: Reopen in Container".
-4. The first time you open the container, it will take some time to build. Be patient while the container is being built.
+4. Be *very* patient while the container is being built. Show logs to see the progress. The next time startup will be quick.
 5. Once the container is ready, you can start developing as usual. All the required tools are already installed in the container.
+6. Additionally you can use the `pi` coding agent on the terminal (if you bring an LLM API key).
 
 The dev container configuration is located in the `.devcontainer` directory at the root of the project.
 All the required tools (Python, Node.js, Redis, Java, etc.) are pre-installed in the container.
@@ -269,7 +273,7 @@ This section described the permission handling in Django and how it is used in t
 It explains the implementation strategy to make regular model-based permissions (e.g. "Can create
 textbook") co-exist with object-level permissions (e.g. "Can change THIS textbook").
 
-#### Default Permissions for Each Model
+### Default Permissions for Each Model
 
 When the app `django.contrib.auth` is installed, Django automatically creates four permission objects
 the database for each model:
@@ -282,7 +286,7 @@ the database for each model:
 `{app_label}` is the owning app's label (as defined in the `App` class) and `{model}` the name of the
 model in lower-case (no other transformation done).
 
-#### How Permissions are Checked (on Model Level)
+### How Permissions are Checked (on Model Level)
 
 **Django Admin:**
 By default the model permissions are checked in the Django Admin (in the `ModelAdmin` class, methods

@@ -19,6 +19,8 @@ RUN ln -s /usr/bin/python3 /usr/bin/python
 
 RUN npm install -g @mariozechner/pi-coding-agent
 
+RUN echo "cd /workspace; $(poetry env activate)" >> /root/.profile
+
 WORKDIR /workspace
 
 EXPOSE 8000 8886 8887 6379 3000
