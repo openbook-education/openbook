@@ -23,9 +23,7 @@
         {
             "customType": "regex",
             "description": "Track latest Python runtime release",
-            "fileMatch": [
-                "^\\.github/actions/setup-ci-environment/action\\.yml$"
-            ],
+            "managerFilePatterns": ["^\\.github/actions/setup-ci-environment/action\\.yml$"],
             "matchStrings": [
                 "python-version:\\n\\s+description:\\s+\"Python\\s+version\\s+to\\s+install\"\\n\\s+#\\s+renovate:\\s+datasource=(?<datasource>\\S+)\\s+depName=(?<depName>\\S+)(?:\\s+versioning=(?<versioning>\\S+))?\\n\\s+default:\\s+\"(?<currentValue>\\S+)\""
             ]
@@ -33,9 +31,7 @@
         {
             "customType": "regex",
             "description": "Track latest Node.js runtime release",
-            "fileMatch": [
-                "^\\.github/actions/setup-ci-environment/action\\.yml$"
-            ],
+            "managerFilePatterns": ["^\\.github/actions/setup-ci-environment/action\\.yml$"],
             "matchStrings": [
                 "node-version:\\n\\s+description:\\s+\"Node\\.js\\s+version\\s+to\\s+install\"\\n\\s+#\\s+renovate:\\s+datasource=(?<datasource>\\S+)\\s+depName=(?<depName>\\S+)(?:\\s+versioning=(?<versioning>\\S+))?\\n\\s+default:\\s+\"(?<currentValue>\\S+)\""
             ]
@@ -88,8 +84,11 @@
         },
 
         {
+            // NOTE: SemVer allows breaking changes for any 0.x version. Therefore, we match
+            // only version >= 1.0.0 for auto-merge, as recommended in the Renovate manual.
             "description": "Automerge minor dependency updates",
             "matchUpdateTypes": ["digest", "minor", "patch", "pin", "pinDigest"],
+            "matchCurrentVersion": ">=1.0.0",
             "automerge": true,
             "platformAutomerge": true,
             "addLabels": ["minor-update"]
@@ -100,7 +99,8 @@
             "automerge": false,
             "platformAutomerge": false,
             "addLabels": ["major-update"],
-            "prBodyNotes": ["Review the upstream migration notes before merging this major update.\n\nFor new python versions update the test matrix in `.github/workflows/run-tests-full.yml`. "]
+            "prBodyNotes": [
+                "Review the upstream migration notes before merging this major update.\n\nFor new python versions update the test matrix in `.github/workflows/run-tests-full.yml`. "]
         }
     ]
 }
