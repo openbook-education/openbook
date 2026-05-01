@@ -1,1 +1,0 @@
-Please rewrite the following feature request for clarity:

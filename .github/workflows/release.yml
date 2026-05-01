@@ -127,7 +127,7 @@ jobs:
                   version = os.environ["VERSION"]
                   output_file = os.environ["GITHUB_OUTPUT"]
 
-                  with open("docs/reference/changelog.rst") as f:
+                  with open("docs/administrators/changelog.rst") as f:
                       content = f.read()
 
                   # Find the section for this version
