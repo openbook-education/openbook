@@ -23,4 +23,4 @@ RUN echo "cd /workspace; $(poetry env activate)" >> /root/.profile
 
 WORKDIR /workspace
 
-EXPOSE 8000 8886 8887 6379 3000
+EXPOSE 8000 8885 8886 8887 6379 3000

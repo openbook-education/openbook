@@ -1,8 +1,6 @@
 Repository and Tooling Setup
 ============================
 
-TODO: Update (read config files to understand differences! Use ../doc/REPOSITORY-SETUP.md as basis!)
-
 This document records the repository configuration that was put in place to
 keep CI, dependency management, and published documentation working. Some of
 that behavior depends on settings outside the repository, so the external setup
@@ -27,9 +25,9 @@ secret was created:
    * - ``RENOVATE_TOKEN``
      - Fine-grained personal access token for the scheduled Renovate workflow.
 
-``RENOVATE_TOKEN`` is used by ``.github/workflows/run-renovate.yml`` so
-Renovate can open dependency pull requests and update the Dependency Dashboard
-issue.
+``RENOVATE_TOKEN`` is used by the Renovate workflows so Renovate can open
+dependency pull requests and perform configured automerge behavior where
+allowed.
 
 The token belongs to a user with write access to the repository and has the
 following permissions:
@@ -37,35 +35,12 @@ following permissions:
 - Read access to metadata
 - Read and write access to code, issues, pull requests, and workflows
 
-PyPI Trusted Publisher (OIDC)
------------------------------
+Release model
+-------------
 
-Instead of using long-lived API tokens, the release workflow uses `PyPI's OIDC
-Trusted Publisher <https://docs.pypi.org/trusted-publishers/>`_ feature to
-securely publish packages to PyPI without storing credentials in repository
-secrets.
-
-To set up the trusted publisher:
-
-1. Log in to `PyPI <https://pypi.org/>`_ with an account that has admin access
-   to the ``drf-flex-fields2`` project.
-
-2. Navigate to the project settings and select **Publishing** or **Trusted
-   publishers**.
-
-3. Click **Add a new trusted publisher** and configure it as follows:
-
-   - **Publisher name**: `GitHub`
-   - **Repository owner**: `openbook-education`
-   - **Repository name**: `drf-flex-fields2`
-   - **Workflow name**: `release.yml`
-   - **Environment name**: (leave blank or use default)
-
-4. Confirm and save the configuration.
-
-Once configured, the ``.github/workflows/release.yml`` workflow will
-authenticate to PyPI using OpenID Connect (OIDC) and can publish packages
-without any API tokens stored in the repository.
+OpenBook releases are created from signed tags and published as GitHub Releases
+with source archives and SBOM artifacts. The release workflow does not publish
+Python packages to PyPI.
 
 Branch Protection Rules
 -----------------------
@@ -92,18 +67,18 @@ CI Workflows
 
 The repository currently uses a small workflow set:
 
-- ``.github/workflows/run-tests.yml``: Entry workflow to run the test suite
-  depending on which files have changed – either the full test suite or a
-  lightweight dummy test workflow.
+- ``.github/workflows/run-tests.yml``: Entry workflow that routes PR checks to
+  the full suite or a lightweight dummy workflow, depending on changed paths.
 - ``.github/workflows/run-tests-full.yml``: Full test and coverage run across
-  the supported Python matrix.
+  OpenBook checks.
 - ``.github/workflows/run-tests-dummy.yml``: Lightweight success path for
   pull requests without relevant Python/package/workflow changes.
-- ``.github/workflows/run-renovate.yml``: Weekly and on-demand Renovate run.
+- ``.github/workflows/renovate-minor.yml``: Scheduled patch/minor dependency updates.
+- ``.github/workflows/renovate-major.yml``: Scheduled major dependency updates.
 - ``.github/workflows/build-docs.yml``: Builds documentation on changes to
   the documentation source or public API.
-- ``.github/workflows/release.yml``: Automatically publishes releases to PyPI
-  when a version tag (e.g., ``v2.0.0``) is pushed to the default branch. See
+- ``.github/workflows/release.yml``: Creates a GitHub Release from a signed
+  version tag (for example ``v0.0.1-rc1``). See
   :doc:`/maintainers/versioning-and-releases` for details.
 
 Release Tag Signature Enforcement
@@ -162,7 +137,7 @@ Root Configuration Files
 This file is the central project configuration managed by
 `Poetry <https://python-poetry.org/>`_. It contains:
 
-- Project metadata such as package name, version, authors, and repository URL
+- Project metadata such as application name, version, authors, and repository URL
 - Runtime dependency definitions
 - Documentation dependency definitions in
   ``[tool.poetry.group.docs.dependencies]``
@@ -178,15 +153,14 @@ environment would resolve identical dependency versions.
 
 This file is the configuration for
 `Renovate <https://docs.renovatebot.com/>`_. It manages Poetry and GitHub
-Actions dependencies and supports auto-merging for non-runtime updates after
-required checks pass. Runtime dependency updates are tracked for manual
-maintenance.
+Actions dependencies and supports automerge for selected non-breaking update
+classes after required checks pass.
 
 ``docs/conf.py``
 ^^^^^^^^^^^^^^^^
 
 This file serves as the primary Sphinx documentation configuration. It defines
-extensions, the sphinx-rtd-theme, autoapi directories, and build options.
+extensions, the sphinx-rtd-theme, and build options.
 
 ``.readthedocs.yaml``
 ^^^^^^^^^^^^^^^^^^^^^

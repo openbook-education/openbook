@@ -21,6 +21,8 @@
         "build:libraries": "cd src/libraries && npm run build",
         "build:frontend": "cd src/frontend && npm run build",
         "build": "npm run build:frontend && npm run build:libraries",
+        "docs:build": "poetry run sphinx-build -W -T -v docs/ docs/_build",
+        "docs": "poetry run sphinx-autobuild -W -T -v --port 8885 docs/ docs/_build",
         "lint:frontend": "cd src/frontend && npm run lint",
         "lint:libraries": "cd src/libraries && npm run lint",
         "lint": "npm run lint:frontend && npm run lint:libraries",

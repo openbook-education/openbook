@@ -1,60 +1,23 @@
-drf-flex-fields2
-================
+OpenBook Documentation
+======================
 
-What is it?
-^^^^^^^^^^^
+Welcome to the OpenBook manual. This documentation is organized by audience so
+you can start quickly and then move deeper without searching through unrelated
+material.
 
-``drf-flex-fields2`` adds dynamic field expansion, sparse fieldsets, and nested
-serializer control to Django REST Framework serializers with a small API surface
-and minimal magic.
-
-Whether you are a first-time user, an API consumer, a backend developer, or a
-maintainer looking to help, you are in the right place. The goal of this fork is
-to keep a practical and well-documented serializer extension healthy, modern,
-and friendly to contribute to.
-
-This is a fork of ``drf-flex-fields`` developed and maintained by Robert Singer
-between 2018 and 2023. Users, community contributors, and maintainers are warmly
-welcome to keep this package useful and maintained.
-
-What this package gives you
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-- Expand nested resources on demand with query parameters such as ``?expand=country.states``.
-- Return sparse fieldsets with ``?fields=`` or ``?omit=``.
-- Reuse serializers instead of maintaining multiple slim variants.
-- Keep list endpoints under control with per-view expansion limits.
-- Optionally optimize querysets with a dedicated filter backend.
-
+The user manual is still in an early stage and intentionally starts with
+placeholder chapters. These chapters document what already exists and clearly
+mark where more user-facing content will follow.
 
 .. toctree::
    :maxdepth: 1
-   :caption: Getting Started
+   :caption: User Manual
 
-   getting-started/installation
-   getting-started/migration
-   getting-started/quickstart
-   getting-started/core-concepts
+   user-guide/index
 
 .. toctree::
    :maxdepth: 1
-   :caption: Guide
-
-   guide/usage
-   guide/serializer-options
-   guide/advanced
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Reference
-
-   reference/api-reference
-   reference/changelog
-   reference/history
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Maintainers
+   :caption: Developer and Maintainer Manual
 
    maintainers/local-development
    maintainers/development-process
@@ -62,3 +25,9 @@ What this package gives you
    maintainers/architecture
    maintainers/repository-setup
    maintainers/versioning-and-releases
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Reference
+
+   reference/index

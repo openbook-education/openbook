@@ -1,7 +1,7 @@
 {
   "name": "OpenBook Dev Container",
   "dockerFile": "Dockerfile",
-  "forwardPorts": [3000, 8000, 8886, 8887, 6379],
+  "forwardPorts": [3000, 8000, 8885, 8886, 8887, 6379],
   "postCreateCommand": ".devcontainer/post-install.sh",
   "mounts": [
     "source=${localWorkspaceFolder},target=/workspace,type=bind"

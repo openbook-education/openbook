@@ -1,12 +1,7 @@
-"""Sphinx configuration for drf-flex-fields2 documentation."""
+"""Sphinx configuration for OpenBook documentation."""
 
-import os, sys, tomllib
+import tomllib
 from pathlib import Path
-
-# Add the package source directory to sys.path so autoapi can find it.
-sys.path.insert(0, os.path.abspath(".."))
-sys.path.insert(0, os.path.abspath("../src"))
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tests.settings")
 
 # Extract version string from pyproject.toml
 pyproject = Path(__file__).resolve().parents[1] / "pyproject.toml"
@@ -14,29 +9,15 @@ pyproject = Path(__file__).resolve().parents[1] / "pyproject.toml"
 with pyproject.open("rb") as f:
     release = tomllib.load(f)["tool"]["poetry"]["version"]
 
-project = "drf-flex-fields2"
-author = "Dennis Schulmeister, Robert Singer"
-copyright = "drf-flex-fields2 maintainers"
+project = "OpenBook"
+author = "Dennis Schulmeister-Zimolong and contributors"
+copyright = "OpenBook contributors"
 
 extensions = [
-    "autoapi.extension",
-    "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
     "sphinx_llm.txt",
 ]
-
-autoapi_dirs = ["../src/rest_flex_fields2"]
-autoapi_root = "api"
-autoapi_options = [
-    "members",
-    "undoc-members",
-    "show-inheritance",
-    "show-module-summary",
-]
-autoapi_own_page_level = "class"
-autoapi_member_order = "bysource"
-autoapi_add_toctree_entry = False
 
 html_theme = "sphinx_rtd_theme"
 html_theme_options = {
@@ -44,4 +25,4 @@ html_theme_options = {
     "titles_only": False,
 }
 
-exclude_patterns = ["_build"]
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]

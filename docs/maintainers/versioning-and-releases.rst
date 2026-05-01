@@ -90,7 +90,7 @@ Release Checklist
    - Verify the tag is a signed annotated tag with a valid signature
    - Verify the tag version matches ``pyproject.toml``
    - Run the full test suite and build the documentation again (for safety)
-   - Build source distribution (``.tar.gz``) and wheel (``.whl``) artifacts
+   - Build a versioned source archive artifact (``.tar.gz``)
    - Generate a CycloneDX SBOM (``sbom.cyclonedx.json``)
    - Create a GitHub release with release notes extracted from the changelog
 
