@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "openbook"
-version = "0.0.1-rc1"
+version = "0.0.1-pre1"
 description = "OpenBook: Interactive Online Textbooks"
 authors = ["Dennis Schulmeister-Zimolong <dennis@wpvs.de>"]
 homepage = "https://openbook.studio"

@@ -6,6 +6,16 @@ not try to be an exhaustive design specification. Instead, it connects the
 main components so you can reason about changes, deployment behavior, and
 where to place new code.
 
+Technology Stack
+----------------
+
+TODO: Major dependencies:
+    - Backend: Django, DRF, Cellery, Redis, Django-supported SQL database
+    - Frontend: TypeScript, Esbuild and Svelte
+
+
+.. TODO: Rewrite complete document. The text below is not very good.
+
 System overview
 ---------------
 
