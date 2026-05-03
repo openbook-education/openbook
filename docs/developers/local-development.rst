@@ -1,6 +1,6 @@
-=================
-Local Development
-=================
+===================
+# Local Development
+===================
 
 This page documents day-to-day local workflows for maintainers.
 Repository-level and external service setup remains in

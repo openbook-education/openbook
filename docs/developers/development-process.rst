@@ -1,6 +1,6 @@
-===================
-Development Process
-===================
+=====================
+# Development Process
+=====================
 
 This page describes the expected repository workflow from issue triage to merge.
 
@@ -69,7 +69,7 @@ in one place.
 
 
 ---------------
-Release handoff
+Release Handoff
 ---------------
 
 The step-by-step release checklist (version bump, tagging, PyPI publish) is in

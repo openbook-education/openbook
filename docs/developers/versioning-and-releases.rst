@@ -1,6 +1,6 @@
-=======================
-Versioning and Releases
-=======================
+=========================
+# Versioning and Releases
+=========================
 
 This page documents the versioning strategy and the steps required to cut a
 release of ``openbook``.

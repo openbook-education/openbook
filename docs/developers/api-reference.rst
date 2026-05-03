@@ -1,6 +1,6 @@
-=============
-API Reference
-=============
+===============
+# API Reference
+===============
 
 OpenBook currently maintains API reference material in two complementary forms:
 

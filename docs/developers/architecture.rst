@@ -1,6 +1,6 @@
-=======================
-Architecture and Design
-=======================
+=========================
+# Architecture and Design
+=========================
 
 This page gives maintainers a practical architecture map for OpenBook. It does
 not try to be an exhaustive design specification. Instead, it connects the

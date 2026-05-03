@@ -1,6 +1,6 @@
-=================
-Dependency Policy
-=================
+===================
+# Dependency Policy
+===================
 
 This page documents how OpenBook evaluates, adds, and updates dependencies.
 The policy is intentionally practical: it favors maintainability and
