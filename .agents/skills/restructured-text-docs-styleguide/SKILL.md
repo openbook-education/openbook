@@ -9,7 +9,7 @@ usually within the `docs/` directory, always apply the following style guide:
 
 # File & Layout Structure
 
-* Keep lines under 100 characters but minor overflow is acceptable to improve readability.
+* Break lines at 100 characters. Minor overflow is acceptable to improve readability.
 * Use exactly two blank lines to separate top-level sections.
 * Use one blank line for all other separations (e.g. paragraphs, subsections, directives).
 * Do not introduce trailing whitespace.
@@ -115,11 +115,48 @@ Example:
 
 # Diagrams & Visual Elements
 
-- Use `blockdiag` for diagrams (e.g. architecture, flows).
+- Use `graphviz` for diagrams (e.g. architecture, flows).
 - Insert diagrams for architecture explanations, workflows and similar.
+- Use transparent background and colors to make diagrams less boring.
 - Provide textual explanation alongside diagrams.
 - Use screenshots to support documentation of program features.
 - Insert a comment and tell me, when you can't find a good screenshot or visual.
+- Horizontally center images and diagrams.
+- Always add captions.
+
+Example Diagram:
+
+```rst
+.. graphviz::
+   :align: center
+   :caption: Feature planing and development process
+
+   digraph workflow {
+      graph [bgcolor=transparent];
+      rankdir = TB;
+      node [shape=box, width=2, height=0.5, style="rounded,filled"];
+
+      { rank=same;
+         node     [fillcolor="#e3f2fd", color="#1e88e5"];
+         ideas    [label="1. Ideas and Issues"];
+         planning [label="2. Project Planning"];
+      }
+
+      { rank=same
+         node     [fillcolor="#e8f5e9", color="#43a047"];
+         branch   [label="3. Feature Branch"];
+         pr       [label="4. Pull Request and Review"];
+      }
+
+      { rank=same;
+         node     [fillcolor="#fff3e0", color="#fb8c00"];
+         release  [label="5. Release"];
+         docs     [label="6. Website Update"];
+      }
+
+      ideas -> planning -> branch -> pr -> release -> docs;
+   }
+```
 
 # Consistency & Maintainability
 

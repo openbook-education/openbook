@@ -1,6 +1,6 @@
-=========================
-# Versioning and Releases
-=========================
+=======================
+Versioning and Releases
+=======================
 
 This page documents the versioning strategy and the steps required to cut a
 release of ``openbook``.
@@ -24,32 +24,6 @@ Versioning Strategy
 There are currently no plans to introduce breaking changes. Users can safely
 update to any patch or minor release without modifying their code.
 
-.. -------------
-.. Release model
-.. -------------
-..
-.. OpenBook releases are created from signed tags and published as GitHub Releases
-.. with source archives and SBOM artifacts. The release workflow does not publish
-.. Python packages to PyPI.
-..
-..
-.. ---------------------------------
-.. Release Tag Signature Enforcement
-.. ---------------------------------
-..
-.. The release workflow enforces signed, annotated tags before any artifacts are
-.. built or published.
-..
-.. - Tags must be created with ``git tag -s`` (annotated + signed).
-.. - Lightweight tags are rejected.
-.. - Tags with missing or invalid signatures are rejected.
-..
-.. This check is performed in ``.github/workflows/release.yml`` via the GitHub API
-.. verification metadata for the tag object.
-..
-.. Signed commits are also recommended for maintainers, but they are not enforced
-.. by the release workflow.
-
 
 -----------------
 Release Checklist
@@ -65,36 +39,41 @@ Release Checklist
    a new version is released. You don't need to repeat the individual release steps.
    Just, what else needs to be done.
 
-3. **Create new branch.**
+3. **Align release planning on the GitHub Project board.**
+
+   Check the planning board on GitHub to make sure that there are no open issues
+   left for the release. If needed, move issues to the next development cycle.
+
+4. **Create new branch.**
 
    From within the release issue create a new release preparation branch. Checkout
    the branch as the next steps must all be performed within that branch.
 
-4. **Complete remaining work.**
+5. **Complete remaining work.**
 
    If there is any remaining work to be done (e.g. updating documentation) push the
    changes onto the release preparation branch.
 
-5. **Update the changelog.**
+6. **Update the changelog.**
 
    Add a dated entry to :doc:`/administrators/changelog` summarising user-visible changes.
    See :ref:`changelog-format` below for the expected format.
 
-6. **Bump the version number** in ``pyproject.toml`` using Poetry:
+7. **Bump the version number** in ``pyproject.toml`` using Poetry:
 
    .. code-block:: bash
 
       # choose one of: patch, minor, major
       poetry version minor
 
-7. **Commit the version bump:**
+8. **Commit the version bump:**
 
    .. code-block:: bash
 
       git add pyproject.toml docs/administrators/changelog.rst
       git commit -m "Bump version: vX.Y.Z"
 
-8. **Open and merge pull request.**
+9. **Open and merge pull request.**
 
    Now open a pull request to merge the release preparation branch into main. At this
    stage Copilot will review the branch, code quality and security will be scanned,
@@ -104,7 +83,7 @@ Release Checklist
 
    Once all is green, merge the pull request into main.
 
-9. **Tag the commit in order to trigger the release workflow.**
+10. **Tag the commit in order to trigger the release workflow.**
 
    Checkout the main branch and create a **signed annotated tag** for the merge
    commit, then push the tag to GitHub:
@@ -124,11 +103,16 @@ Release Checklist
    - Build a versioned source archive artifact (``.tar.gz``)
    - Generate a CycloneDX SBOM (``sbom.cyclonedx.json``)
    - Create a GitHub release with release notes extracted from the changelog
+   - Create a release branch for hot fixes (if the release is no pre-release)
 
    Monitor the workflow run in the **Actions** tab.
 
-.. _changelog-format:
+12. **Update website content.**
 
+   Ensure release-related website pages are updated as required.
+
+
+.. _changelog-format:
 
 ----------------
 Changelog Format

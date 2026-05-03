@@ -81,6 +81,8 @@ frontend. Therefore, the project configuration uses a ``pyproject.toml`` file as
 well as a ``package.json`` files in different locations to declare dependencies
 and utility scripts. The main logic is this:
 
+.. rst-class:: spaced-list
+
 1. All backend dependencies are collected in ``pyproject.toml`` at project root.
    Dependency groups are used to separate runtime dependencies from tooling.
 
@@ -192,25 +194,12 @@ Read the Docs
 
 The repository includes ``.readthedocs.yaml`` and ``docs/conf.py``, but Read
 the Docs still requires one-time project configuration outside the repository.
-
 The project is configured in Read the Docs with the following settings:
 
-- The GitHub repository is imported into Read the Docs.
-- ``main`` is the default branch.
-- The Read the Docs GitHub webhook remains enabled so pushes and tags stay
-  synchronized automatically.
-- The checked-in ``.readthedocs.yaml`` file is used instead of manually
-  configuring build commands in the UI.
-- An automation rule in **Admin → Automation Rules** or the versions UI
-  activates release tags automatically.
-- For repositories using tags such as ``v2.0.0``, use a pattern such as ``v*``.
-  A wildcard pattern of ``*`` is only appropriate if every Git tag should become
-  a published docs version.
-- ``latest`` is the default version; promote the newest release to ``stable``
-  when needed.
-
-No additional GitHub secret is required for tag-triggered Read the Docs builds
-because the repository was connected through the native GitHub integration.
+- GitHub Repository: https://github.com/openbook-education/openbook
+- Enable the GitHub webhook
+- ``latest`` tracks the ``main`` branch and ``stable`` the last version.
+- Versions are tagged with ``v*``, e.g. ``v2.0.0``.
 
 ``docs/conf.py``
 ................

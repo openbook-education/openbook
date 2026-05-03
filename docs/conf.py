@@ -14,6 +14,7 @@ author = "Dennis Schulmeister-Zimolong and contributors"
 copyright = "OpenBook contributors"
 
 extensions = [
+    "sphinx.ext.graphviz",
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
     "sphinx_llm.txt",
@@ -24,5 +25,7 @@ html_theme_options = {
     "navigation_depth": 4,
     "titles_only": False,
 }
+html_static_path = ['_static']
+html_css_files = ["custom.css"]
 
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]

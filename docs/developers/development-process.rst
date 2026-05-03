@@ -9,9 +9,11 @@ This page describes the expected repository workflow from issue triage to merge.
 Issue to Branch
 ---------------
 
-1. Confirm scope and expected behavior in an issue.
-2. Create a feature branch from ``main`` (ideally from within the GitHub issue).
-3. Keep branch changes focused to one logical change.
+1. Collect ideas, feature requests, bugs, and general development tasks in an issue.
+2. Confirm scope and expected behavior in the issue discussion.
+3. Add the issue to the GitHub Project board and assign a milestone where relevant.
+4. Create a feature branch from ``main`` (ideally from within the GitHub issue).
+5. Keep branch changes focused to one logical change.
 
 Suggested branch naming (note, that this requires manually changing the
 suggested branch name when creating the branch within an issue):
@@ -33,20 +35,20 @@ Pull Request
 4. Update :doc:`/administrators/changelog` for notable user-facing updates.
 5. Keep backend coverage at or above the configured threshold in ``pyproject.toml``.
 
+For larger developments, split work into smaller pull requests when this reduces risk or improves
+review quality. Early merges are acceptable even if a feature is not yet end-user complete, as long
+as the intermediate state is safe.
+
 
 -----------------
 Checks and Review
 -----------------
 
 - Required CI checks must pass.
-- The ``tests`` status check from ``.github/workflows/run-tests.yml`` is the
-  required branch protection check.
-- For changes under ``src/``, ``run-tests.yml`` routes to
-  ``run-tests-full.yml``.
-- For non-relevant changes, the dummy workflow path satisfies branch
-  protection without running the full suite.
-- The full workflow runs linting, security checks, backend tests, and related
-  quality gates.
+- The ``tests`` status check from ``.github/workflows/run-tests.yml`` is the required branch protection check.
+- For changes under ``src/``, ``run-tests.yml`` routes to ``run-tests-full.yml``.
+- For non-relevant changes, the dummy workflow path satisfies branch protection without running the full suite.
+- The full workflow runs linting, security checks, backend tests, and related quality gates.
 - Copilot review is requested automatically.
 - Manual maintainer review confirms behavior, tests, and documentation quality.
 
@@ -58,20 +60,10 @@ Review focus areas:
 - Clarity and maintainability
 
 
-------------------------------
-Runtime Dependency Update Flow
-------------------------------
-
-OpenBook uses dedicated Renovate workflows rather than ad-hoc local updates.
-Do not bypass this process with broad manual ``poetry update`` or ``npm update``
-runs. The Renovate workflow keeps update intent, review, and CI evidence connected
-in one place.
-
-
 ---------------
 Release Handoff
 ---------------
 
-The step-by-step release checklist (version bump, tagging, PyPI publish) is in
+The step-by-step release checklist (version bump, tagging, release automation) is in
 :doc:`/developers/versioning-and-releases`. Repository-level and external
 service configuration is documented in :doc:`/developers/repository-setup`.
