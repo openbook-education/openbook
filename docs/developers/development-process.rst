@@ -30,7 +30,7 @@ Pull Request
 1. Link relevant issue in the PR description. Ideally open an issue, first.
 2. Describe behavior changes and optionally test coverage, if not obvious from the issue.
 3. Add or update documentation for user-facing changes.
-4. Update :doc:`/reference/changelog` for notable user-facing updates.
+4. Update :doc:`/administrators/changelog` for notable user-facing updates.
 5. Keep backend coverage at or above the configured threshold in ``pyproject.toml``.
 
 
@@ -73,5 +73,5 @@ Release handoff
 ---------------
 
 The step-by-step release checklist (version bump, tagging, PyPI publish) is in
-:doc:`/maintainers/versioning-and-releases`. Repository-level and external
-service configuration is documented in :doc:`/maintainers/repository-setup`.
+:doc:`/developers/versioning-and-releases`. Repository-level and external
+service configuration is documented in :doc:`/developers/repository-setup`.

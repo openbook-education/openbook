@@ -277,7 +277,7 @@ environments, and local build artifacts.
 ``.prettierrc``
 ...............
 
-`Prettier <https://prettier.io/`_ code formatter settings. Notable settings:
+`Prettier <https://prettier.io/>`_ code formatter settings. Notable settings:
 
 - ``"printWidth": 130`` — wider than the Prettier default of 80.
 - ``"tabWidth": 4`` — consistent with ``.editorconfig``.

@@ -77,7 +77,7 @@ Release Checklist
 
 5. **Update the changelog.**
 
-   Add a dated entry to :doc:`/reference/changelog` summarising user-visible changes.
+   Add a dated entry to :doc:`/administrators/changelog` summarising user-visible changes.
    See :ref:`changelog-format` below for the expected format.
 
 6. **Bump the version number** in ``pyproject.toml`` using Poetry:
@@ -91,7 +91,7 @@ Release Checklist
 
    .. code-block:: bash
 
-      git add pyproject.toml docs/reference/changelog.rst
+      git add pyproject.toml docs/administrators/changelog.rst
       git commit -m "Bump version: vX.Y.Z"
 
 8. **Open and merge pull request.**
@@ -134,7 +134,7 @@ Release Checklist
 Changelog Format
 ----------------
 
-The changelog is located in ``docs/reference/changelog.rst`` and uses
+The changelog is located in ``docs/administrators/changelog.rst`` and uses
 reStructuredText (RST) formatting. Each version entry must follow this structure,
 allowing the release workflow to extract the changelog entries for the GitHub
 release page.
@@ -258,5 +258,5 @@ Read the Docs
 
 Documentation is rebuilt automatically on every push to ``main`` and on every
 tag that matches the ``v*`` pattern. No manual trigger is needed after pushing
-a release tag. See :doc:`/maintainers/repository-setup` for details of the Read
+a release tag. See :doc:`/developers/repository-setup` for details of the Read
 the Docs project settings and automation rules.

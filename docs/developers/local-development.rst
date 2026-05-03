@@ -4,7 +4,7 @@ Local Development
 
 This page documents day-to-day local workflows for maintainers.
 Repository-level and external service setup remains in
-:doc:`/maintainers/repository-setup`.
+:doc:`/developers/repository-setup`.
 
 
 -------------
@@ -129,4 +129,4 @@ Daily Checklist
 2. Run ``npm run check``.
 3. Run coverage and confirm it stays at or above 75%.
 4. Run docs build if public behavior or docs changed.
-5. Keep changelog updates in :doc:`/reference/changelog` for user-visible changes.
+5. Keep changelog updates in :doc:`/administrators/changelog` for user-visible changes.
