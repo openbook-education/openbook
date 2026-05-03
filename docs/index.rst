@@ -68,6 +68,7 @@ download, install, and use **without restrictions**.
    getting-started/teaching-and-learning-with-ai
    getting-started/design-decisions
    getting-started/community
+   getting-started/code-of-conduct
 
 .. toctree::
    :maxdepth: 1
@@ -100,10 +101,15 @@ download, install, and use **without restrictions**.
    :maxdepth: 1
    :caption: Developers
 
-   developers/local-development
-   developers/development-process
-   developers/dependency-policy
+   developers/repository-layout
    developers/architecture
-   developers/api-reference
-   developers/repository-setup
+   developers/development-process
+   developers/local-development
+   developers/dependency-policy
    developers/versioning-and-releases
+   developers/repository-setup
+   developers/api-reference
+
+
+
+

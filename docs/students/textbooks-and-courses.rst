@@ -1,7 +1,8 @@
-TODO - Textbooks and Courses
-============================
+=======================
+# Textbooks and Courses
+=======================
 
-TODO:
+.. TODO: Write documentation according to plan below. Then remove `#` from headline
 
 1. Distinction of textbooks (learning content) and courses (usage in classroom)
 2. Navigating the library

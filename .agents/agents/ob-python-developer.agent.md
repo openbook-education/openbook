@@ -1,6 +1,6 @@
 ---
+name: "ob-python-developer"
 description: "Use for implementing, refactoring, reviewing, or testing Python/Django backend code. Trigger phrases: python, django, backend, model, view, serializer, migration, unit test, pytest, manage.py, poetry, docstrings."
-name: "python-developer"
 argument-hint: "Describe the backend task (e.g. 'add validation to serializer X and cover with tests')."
 ---
 

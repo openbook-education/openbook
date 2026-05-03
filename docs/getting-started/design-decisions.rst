@@ -1,7 +1,8 @@
-TODO - Design Decisions
-=======================
+==================
+# Design Decisions
+==================
 
-TODO:
+.. TODO: Write documentation according to plan below. Then remove `#` from headline
 
 1. Educational design decisions
     - Online Textbooks:

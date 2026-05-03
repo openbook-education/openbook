@@ -1,6 +1,6 @@
 ---
+name: "ob-frontend-developer"
 description: "Use when implementing, refactoring, reviewing, or testing TypeScript/Svelte frontend code. Trigger phrases: typescript, frontend, svelte, component, tailwind, daisyui, ui, route, store, state, openapi client, npm, eslint."
-name: "frontend-typescript-developer"
 argument-hint: "Describe the frontend task (e.g. 'implement a Svelte page with DaisyUI cards and add type-safe API integration')."
 ---
 

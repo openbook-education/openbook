@@ -31,5 +31,8 @@
         ".renovaterc": "jsonc",
         ".renovaterc.json": "jsonc",
         ".renovaterc.json5": "jsonc"
+    },
+    "chat.agentFilesLocations": {
+        ".agents/agents": true
     }
 }

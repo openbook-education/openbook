@@ -1,7 +1,8 @@
-TODO - Defining the Library Structure
-=====================================
+================================
+# Defining the Library Structure
+================================
 
-TODO:
+.. TODO: Write documentation according to plan below. Then remove `#` from headline
 
 1. How the library works technically
 2. How to customize the library structure

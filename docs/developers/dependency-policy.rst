@@ -1,3 +1,4 @@
+=================
 Dependency Policy
 =================
 
@@ -9,7 +10,9 @@ traceability over fast but opaque upgrades.
    :local:
    :depth: 1
 
-Guiding approach
+
+----------------
+Guiding Approach
 ----------------
 
 Dependencies save development time but introduce maintenance risk. OpenBook
@@ -22,7 +25,9 @@ replaced if needed.
 Before introducing a new dependency, open a tracking issue and document the
 selection process.
 
-Baseline eligibility
+
+--------------------
+Baseline Eligibility
 --------------------
 
 Each dependency must satisfy all of the following:
@@ -34,7 +39,9 @@ Each dependency must satisfy all of the following:
 
 If any baseline criterion fails, the dependency is rejected.
 
-Evaluation depth and impact
+
+---------------------------
+Evaluation Depth and Impact
 ---------------------------
 
 Not every dependency requires the same depth of evaluation. OpenBook uses a
@@ -47,6 +54,8 @@ lightweight impact-driven approach:
 When uncertainty remains after scoring, prefer a smaller dependency with lower
 replacement cost.
 
+
+------------------------
 Non-Runtime Dependencies
 ------------------------
 
@@ -59,18 +68,15 @@ Typical examples:
 - Sphinx and documentation extensions
 - GitHub Actions dependencies
 
+
+------------------------------------
 Semi-Automated Updates With Renovate
 ------------------------------------
 
 `Renovate <https://docs.renovatebot.com/>`_ regularly checks the repository for
-dependency updates through two dedicated workflows:
+dependency updates. For maintainers, this means:
 
-- ``.github/workflows/renovate-minor.yml`` for patch/minor updates.
-- ``.github/workflows/renovate-major.yml`` for major updates.
-
-For maintainers, this means:
-
-1. Let Renovate open and scope update PRs.
+1. Normally, let Renovate open and scope update PRs.
 2. Review change impact and migration notes.
 3. Run CI and fix integration breakage in the same PR.
 4. Merge only when checks pass and behavior is verified.
@@ -79,13 +85,11 @@ Use the provided manual-dispatch scripts when an out-of-band update is needed.
 Avoid untracked bulk updates from local shells, because they bypass the
 repository's review and audit trail.
 
+
+------------------------------------
 Test Strategy For Dependency Updates
 ------------------------------------
 
-Dependency update validation is enforced through the normal CI checks. The
-``tests`` status check is the required merge gate and routes changes to either
-the full test workflow or the lightweight dummy workflow, depending on changed
-paths.
-
-When update PRs touch runtime behavior, run the full local check sequence
-before merge and include any required migration notes in changelog entries.
+Dependency update validation is enforced through the normal CI checks. But still
+it makes sens to run tests locally before merging, and especially to manually test
+that that everything is still working from a user's point-of-view.

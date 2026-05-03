@@ -1,7 +1,8 @@
-TODO - Installation and Updates
-===============================
+==========================
+# Installation and Updates
+==========================
 
-TODO:
+.. TODO: Write documentation according to plan below. Then remove `#` from headline
 
 1. Required services (Webserver, SQL database, redis, ...)
 2. Download options

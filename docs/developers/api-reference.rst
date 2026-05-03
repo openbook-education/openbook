@@ -1,3 +1,4 @@
+=============
 API Reference
 =============
 
@@ -7,6 +8,7 @@ OpenBook currently maintains API reference material in two complementary forms:
 2. Curated authentication flow specifications in ``doc/specs``.
 
 This page explains how maintainers should use both sources together.
+
 
 Runtime OpenAPI documents
 -------------------------
@@ -19,6 +21,7 @@ When the local development server is running, OpenAPI outputs are available at:
 
 Treat these endpoints as the canonical machine-readable contract for request
 and response structures.
+
 
 Curated flow specifications
 ---------------------------
@@ -33,6 +36,7 @@ Use them when you need practical behavior details such as:
 - CSRF handling patterns for browser clients,
 - SAML/social login path details.
 
+
 Documentation maintenance policy
 --------------------------------
 
@@ -41,6 +45,3 @@ When API behavior changes:
 1. Verify OpenAPI output reflects the implementation.
 2. Update matching flow documentation in ``doc/specs``.
 3. Add a user-visible changelog entry when behavior changes externally.
-
-.. toctree::
-   :hidden:

@@ -1,7 +1,8 @@
-TODO - Learning Activities
-==========================
+=====================
+# Learning Activities
+=====================
 
-TODO:
+.. TODO: Write documentation according to plan below. Then remove `#` from headline
 
 1. What is inside a textbook or course
 2. Course onboarding and learning preferences

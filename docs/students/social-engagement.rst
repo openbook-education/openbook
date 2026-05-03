@@ -1,7 +1,8 @@
-TODO - Social Engagement
-========================
+===================
+# Social Engagement
+===================
 
-TODO:
+.. TODO: Write documentation according to plan below. Then remove `#` from headline
 
 1. Preparing questions for class
 2. Using the course forums

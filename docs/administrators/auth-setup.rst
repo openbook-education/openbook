@@ -1,7 +1,8 @@
-TODO - Authentication Setup
-===========================
+======================
+# Authentication Setup
+======================
 
-TODO:
+.. TODO: Write documentation according to plan below. Then remove `#` from headline
 
 1. Capabilities of Django Allauth
 2. Signup rules for local users

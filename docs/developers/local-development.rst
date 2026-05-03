@@ -1,3 +1,4 @@
+=================
 Local Development
 =================
 
@@ -5,6 +6,8 @@ This page documents day-to-day local workflows for maintainers.
 Repository-level and external service setup remains in
 :doc:`/maintainers/repository-setup`.
 
+
+-------------
 Prerequisites
 -------------
 
@@ -14,7 +17,9 @@ Prerequisites
 - Redis for local integrated runs
 - Java for OpenAPI generator tooling
 
-Install dependencies
+
+--------------------
+Install Dependencies
 --------------------
 
 Run dependency installation from the repository root:
@@ -28,7 +33,9 @@ Always run ``npm install`` in the repository root. Do not run it inside
 ``src/frontend`` because nested ``node_modules`` directories can shadow
 workspace dependencies.
 
-Start local development
+
+-----------------------
+Start Local Development
 -----------------------
 
 The standard integrated development command is:
@@ -40,28 +47,18 @@ The standard integrated development command is:
 This command starts Django (via Daphne), Redis, frontend/library watch builds,
 and local helper services used by authentication flows.
 
-Run tests
+
+---------
+Run Tests
 ---------
 
-Run the full backend test suite:
+Run the full test suite, including coverage report at the end:
 
 .. code-block:: bash
 
-    npm run test:backend
+    npm run test
 
-Run project-wide quality checks:
-
-.. code-block:: bash
-
-    npm run check
-
-Run test coverage
------------------
-
-Coverage is configured in ``pyproject.toml`` and enforced with a
-``fail_under`` threshold of **75%**.
-
-Run coverage from the repository root:
+In reality this runs the following commands:
 
 .. code-block:: bash
 
@@ -72,7 +69,15 @@ Run coverage from the repository root:
 If coverage fails, review the ``Missing`` column and add tests for the
 reported lines or branches before opening a PR.
 
-Build documentation
+Run project-wide quality checks:
+
+.. code-block:: bash
+
+    npm run check
+
+
+-------------------
+Build Documentation
 -------------------
 
 Continuously rebuild the documentation when sources change and start a
@@ -104,7 +109,9 @@ What these options do:
 
 Deliberately not included is ``--keep-going``, because it may swallow errors.
 
-Common maintenance commands
+
+---------------------------
+Common Maintenance Commands
 ---------------------------
 
 - Show dependency graph: ``poetry show --tree``
@@ -113,12 +120,13 @@ Common maintenance commands
 - Build frontend and libraries once: ``npm run build``
 - Run dependency security checks: ``npm run check:security``
 
-Daily checklist
+
+---------------
+Daily Checklist
 ---------------
 
 1. Pull latest ``main``.
 2. Run ``npm run check``.
 3. Run coverage and confirm it stays at or above 75%.
 4. Run docs build if public behavior or docs changed.
-5. Keep changelog updates in :doc:`/reference/changelog` for user-visible
-   changes.
+5. Keep changelog updates in :doc:`/reference/changelog` for user-visible changes.

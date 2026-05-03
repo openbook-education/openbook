@@ -1,7 +1,6 @@
 ---
+name: "ob-tech-writer"
 description: "Use when writing, editing, or reviewing documentation (README, manuals, changelogs, Sphinx/RST). Trigger phrases: write docs, update documentation, document this, improve docs, add to manual, write README, edit changelog, RST, reStructuredText, Sphinx."
-name: "tech-writer"
-tools: [read, edit, search]
 argument-hint: "Describe the documentation task (e.g. 'add a user guide section for feature X')"
 ---
 
@@ -17,23 +16,12 @@ Write in an engaging, concise style. Prefer explanatory prose over excessive bul
 
 All new or updated content must go into `docs/`.
 
-## Writing Conventions
+## Writing Conventions and Format
 
-- Use **reStructuredText** for all files in `docs/`
-- Prefer:
-  - `..` directives
-  - `::` code blocks
-  - `:ref:` for cross-references (use sparingly)
+Use **reStructuredText** for all files in `docs/`.
+Follow the style guide defined in the
+[restructured-text-docs-styleguide skill](../skills/restructured-text-docs-styleguide/SKILL.md).
 
-### Format
-
-- Use backticks for code, commands, filenames, and variables
-- Use active voice and present tense
-- Keep sentences concise (one idea per sentence)
-- Avoid sections that consist only of bullet points
-- Use double quotes in examples unless conflicting
-- Indent code blocks with four spaces
-- Separate sections with blank lines
 
 ## Audience Targeting
 

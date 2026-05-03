@@ -1,7 +1,8 @@
-TODO - Working on Textbooks
-===========================
+======================
+# Working on Textbooks
+======================
 
-TODO:
+.. TODO: Write documentation according to plan below. Then remove `#` from headline
 
 1. How to create textbooks
 2. How to manage (rename, delete, ...) textbooks in the frontend

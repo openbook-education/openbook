@@ -1,3 +1,4 @@
+=======================
 Architecture and Design
 =======================
 
@@ -6,6 +7,8 @@ not try to be an exhaustive design specification. Instead, it connects the
 main components so you can reason about changes, deployment behavior, and
 where to place new code.
 
+
+----------------
 Technology Stack
 ----------------
 
@@ -16,6 +19,8 @@ TODO: Major dependencies:
 
 .. TODO: Rewrite complete document. The text below is not very good.
 
+
+---------------
 System overview
 ---------------
 
@@ -31,6 +36,8 @@ managed in the same repository.
 The design intentionally keeps the number of runtime moving parts low while
 still supporting APIs, asynchronous communication, and modern frontend builds.
 
+
+-----------------
 Backend structure
 -----------------
 
@@ -45,6 +52,8 @@ The backend follows Django's project/app model:
 Authentication and API behavior are centered on Django REST Framework,
 drf-spectacular, and django-allauth headless flows.
 
+
+------------------------------
 Frontend and library structure
 ------------------------------
 
@@ -60,6 +69,8 @@ packages from the repository root:
 Build orchestration happens through root ``npm`` scripts and the scripts in
 ``bin``.
 
+
+-------------------
 Deployment topology
 -------------------
 
@@ -73,6 +84,8 @@ Production-like deployments generally follow this pattern:
 The Docker example under ``docker/`` demonstrates this topology and is a
 useful baseline for debugging environment-specific issues.
 
+
+-----------------
 Design principles
 -----------------
 

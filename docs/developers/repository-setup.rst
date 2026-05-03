@@ -1,208 +1,310 @@
+============================
 Repository and Tooling Setup
 ============================
 
-This document records the repository configuration that was put in place to
-keep CI, dependency management, and published documentation working. Some of
-that behavior depends on settings outside the repository, so the external setup
-is documented here as part of the repository's operational state.
+This page describes the GitHub repository settings and configuration files that make
+the CI/CD workflows and tooling of this project work. Its purpose is to record the
+operational state of the repository as well as to allow th setup to be reproduced
+for similar projects.
 
 .. contents::
    :local:
    :depth: 1
 
+
+--------------------------
+GitHub Repository Settings
+--------------------------
+
+This section documents all settings to the GitHub repository made directly on the
+platform outside the source tree.
+
 Repository Secrets
-------------------
+..................
 
 Under **Settings → Secrets and variables → Actions**, the following repository
-secret was created:
+secret is stored:
 
-.. list-table::
-   :header-rows: 1
-   :widths: 30 70
-
-   * - Secret name
-     - Description
-   * - ``RENOVATE_TOKEN``
-     - Fine-grained personal access token for the scheduled Renovate workflow.
-
-``RENOVATE_TOKEN`` is used by the Renovate workflows so Renovate can open
-dependency pull requests and perform configured automerge behavior where
-allowed.
-
-The token belongs to a user with write access to the repository and has the
-following permissions:
+``RENOVATE_TOKEN``: Fine-grained personal access token used by the Renovate bot
+(running as regular CI job) to authenticate against the GitHub API for opening
+and merging pull requests. The token must belong to a user with write access to
+the repository through the following permissions:
 
 - Read access to metadata
 - Read and write access to code, issues, pull requests, and workflows
 
-Release model
--------------
-
-OpenBook releases are created from signed tags and published as GitHub Releases
-with source archives and SBOM artifacts. The release workflow does not publish
-Python packages to PyPI.
-
 Branch Protection Rules
------------------------
+.......................
 
 Under **Settings → Rules → Rulesets** or **Settings → Branches**, the
-following rules were applied to the default branch.
+following rules apply to the default branch.
 
-Require a pull request before merging
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+1. **Pull request before merging** -- Direct pushes to the main branch are
+   blocked so all changes go through pull requests:
 
-Direct pushes to the default branch were blocked so all changes would go
-through pull requests.
+   - *Require a pull request before merging* with *Dismiss stale pull request
+     approvals when new commits are pushed*
 
-The required status check is ``tests``, which is the final aggregator job from
-``.github/workflows/run-tests.yml``. That workflow routes changes either to the
-full test suite or to the dummy success workflow depending on whether relevant
-code changed.
+   - *Require status checks to pass* with *Status checks that are required*:
+     ``tests``
 
-This setup kept branch protection strict for package changes while avoiding
-expensive test runs for unrelated repository maintenance.
+   ``tests`` is the final aggregator job from the testing CI workflow, that
+   collects the results from either the full test suite or the dummy test
+   suite, depending on which files have been changed.
 
+2. **Copilot code review** -- Another rule enables *Automatically request Copilot
+   code review* to review each pull request to the main branch.
+
+The setup ensures that during normal development commits to the main branch only
+occur via pull requests from feature branches. This allows to review the commits
+manually and machine-assisted (e.g. Copilot Code Review). Also the test suite,
+documentation building and other base quality checks must pass, before changes
+land in main.
+
+.. note ::
+
+   As it turns out, AI-assisted code reviews help to identify edge cases and overlooked
+   changes for consistency. At the same time, they must be taken with a grain of salt,
+   as they tend to by nit-picky or decide on outdated knowledge:
+
+   - The comment could be rewritten more clearly
+   - Renovate warns to migrate the config and Copilot advices to revert the very change
+   - ...
+
+
+---------------------
+Project Configuration
+---------------------
+
+This project uses a combination of Python in the backend and Typescript in the
+frontend. Therefore, the project configuration uses a ``pyproject.toml`` file as
+well as a ``package.json`` files in different locations to declare dependencies
+and utility scripts. The main logic is this:
+
+1. All backend dependencies are collected in ``pyproject.toml`` at project root.
+   Dependency groups are used to separate runtime dependencies from tooling.
+
+2. Additional Node.js-based development tools are declared as development dependencies
+   in the root-level ``package.json`` file. Additionally, this file contains run scripts
+   as shortcuts for typical development tasks. Workspaces are defined to centralize
+   shared dependencies across the JavaScript sub-projects.
+
+3. Frontend sub-projects have their own ``package.json`` file as normal. But usually,
+   run scripts are declared so, that they can either be executed inside a single
+   project directory for a single project or from the parent directory for all
+   sub-projects alike.
+
+``pyproject.toml``
+..................
+
+This file is the central project configuration managed by `Poetry <https://python-poetry.org/>`_.
+``package-mode = false`` is set because OpenBook is a Django application, not a Python package
+published to PyPI.
+
+``poetry.lock``
+...............
+
+This file is generated by Poetry and committed to the repository so every
+environment resolves identical dependency versions.
+
+``package.json``
+................
+
+This file is the npm workspace root manifest. All JavaScript and TypeScript
+sub-projects — the frontend application and the component libraries — are
+declared as workspaces under ``src/frontend/*`` and ``src/libraries/*``.
+
+Run scripts across all ``package.json`` files follow a similar pattern.
+Simple scripts like ``lint`` normally don't do anything by themselves,
+except running other scripts with the same prefix, e.g. ``lint:frontend``
+and ``lint:backend``. On the root-level these are just different steps
+of a pipeline. In the source directories these are wrappers around similar
+scripts in child-directories.
+
+For example, the projects in ``src/frontend/admin`` and ``src/frontend/app``
+both define ``build`` scripts, that run different build steps one after
+another, like ``build:src``, ``build:tailwind`` and so on. To simplify
+integration in bigger pipelines, the file ``src/frontend/package.json``
+defines the wrappers ``build:admin`` and ``build:app`` that are called
+by a sinlge ``build`` script.
+
+``package-lock.json``
+.....................
+
+Auto-generated npm lock file. Committed to the repository to ensure reproducible
+installs (when installing with ``npm ci`` as opposed to ``npm install``).
+
+
+------------
 CI Workflows
 ------------
 
-The repository currently uses a small workflow set:
 
-- ``.github/workflows/run-tests.yml``: Entry workflow that routes PR checks to
-  the full suite or a lightweight dummy workflow, depending on changed paths.
-- ``.github/workflows/run-tests-full.yml``: Full test and coverage run across
-  OpenBook checks.
-- ``.github/workflows/run-tests-dummy.yml``: Lightweight success path for
-  pull requests without relevant Python/package/workflow changes.
-- ``.github/workflows/renovate-minor.yml``: Scheduled patch/minor dependency updates.
-- ``.github/workflows/renovate-major.yml``: Scheduled major dependency updates.
-- ``.github/workflows/build-docs.yml``: Builds documentation on changes to
-  the documentation source or public API.
-- ``.github/workflows/release.yml``: Creates a GitHub Release from a signed
-  version tag (for example ``v0.0.1-rc1``). See
-  :doc:`/maintainers/versioning-and-releases` for details.
+The repository uses GitHub Actions for recurring CI workflows triggered
+by different events.
 
-Release Tag Signature Enforcement
----------------------------------
+Test Suite / Documentation
+..........................
 
-The release workflow enforces signed, annotated tags before any artifacts are
-built or published.
+The following workflows run tests and test builds when source files change.
+Some effort is done, to limit test run to relevant source files, but there
+can still be false-positives. We don't try to over-optimize the checks as
+a testrun too often causes not much harm.
 
-- Tags must be created with ``git tag -s`` (annotated + signed).
-- Lightweight tags are rejected.
-- Tags with missing or invalid signatures are rejected.
+``.github/workflows/run-tests.yml`` (and friends)
+.................................................
 
-This check is performed in ``.github/workflows/release.yml`` via the GitHub API
-verification metadata for the tag object.
+Testing is always started via this workflow. It analyzes the changed files
+and decides whether to route to ``.github/workflows/run-tests-full.yml``
+for the real test suite or ``.github/workflows/run-tests-dummy.yml`` for
+dummy testing. This gives a lightweight success path for pull requests
+that don't need the full test suite running.
 
-Signed commits are also recommended for maintainers, but they are not enforced
-by the release workflow.
+``.github/workflows/build-docs.yml``
+....................................
 
-Automatically request a Copilot code review
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+This workflow test-builds the Sphinx manual. Build output is not retained,
+as Read the Docs rebuilds the documentation, anyway. But it helps to catch
+build errors during the development cycle.
 
-Under **Settings → General → Pull Requests**, *Automatically request Copilot
-code review* was enabled.
+Dependency Upgrades
+...................
 
-Read the Docs Project Settings
-------------------------------
+``.github/workflows/run-renovate.yml``
+......................................
+
+Scheduled dependency updates via Renovate, running weekly every Monday.
+Can also be triggered manually.
+
+Release Automation
+..................
+
+``.github/workflows/release.yml``
+.................................
+
+Creates a GitHub Release from a signed version tag (e.g. ``v0.0.1-rc1``).
+See :doc:`/developers/versioning-and-releases` for details.
+
+
+-------------
+Read the Docs
+-------------
 
 The repository includes ``.readthedocs.yaml`` and ``docs/conf.py``, but Read
-the Docs still required one-time project configuration outside the repository.
+the Docs still requires one-time project configuration outside the repository.
 
-The project was configured in Read the Docs with the following settings:
+The project is configured in Read the Docs with the following settings:
 
-- The GitHub repository was imported into Read the Docs.
-- ``main`` was kept as the default branch.
-- The Read the Docs GitHub webhook remained enabled so pushes and tags stayed
+- The GitHub repository is imported into Read the Docs.
+- ``main`` is the default branch.
+- The Read the Docs GitHub webhook remains enabled so pushes and tags stay
   synchronized automatically.
-- The checked-in ``.readthedocs.yaml`` file was used instead of manually
+- The checked-in ``.readthedocs.yaml`` file is used instead of manually
   configuring build commands in the UI.
-- An automation rule was added in **Admin → Automation Rules** or the versions
-  UI so release tags would activate automatically.
-- For repositories using tags such as ``v2.0.0``, a pattern such as ``v*`` was
-  used. A wildcard pattern of ``*`` would only have been appropriate if every
-  Git tag was meant to become a published docs version.
-- ``latest`` was kept as the default version, and the newest release could be
-  promoted to ``stable`` when needed.
+- An automation rule in **Admin → Automation Rules** or the versions UI
+  activates release tags automatically.
+- For repositories using tags such as ``v2.0.0``, use a pattern such as ``v*``.
+  A wildcard pattern of ``*`` is only appropriate if every Git tag should become
+  a published docs version.
+- ``latest`` is the default version; promote the newest release to ``stable``
+  when needed.
 
 No additional GitHub secret is required for tag-triggered Read the Docs builds
 because the repository was connected through the native GitHub integration.
 
-Root Configuration Files
-------------------------
-
-``pyproject.toml``
-^^^^^^^^^^^^^^^^^^
-
-This file is the central project configuration managed by
-`Poetry <https://python-poetry.org/>`_. It contains:
-
-- Project metadata such as application name, version, authors, and repository URL
-- Runtime dependency definitions
-- Documentation dependency definitions in
-  ``[tool.poetry.group.docs.dependencies]``
-
-``poetry.lock``
-^^^^^^^^^^^^^^^
-
-This file is generated by Poetry and committed to the repository so every
-environment would resolve identical dependency versions.
-
-``renovate.json5``
-^^^^^^^^^^^^^^^^^^
-
-This file is the configuration for
-`Renovate <https://docs.renovatebot.com/>`_. It manages Poetry and GitHub
-Actions dependencies and supports automerge for selected non-breaking update
-classes after required checks pass.
-
 ``docs/conf.py``
-^^^^^^^^^^^^^^^^
+................
 
 This file serves as the primary Sphinx documentation configuration. It defines
 extensions, the sphinx-rtd-theme, and build options.
 
 ``.readthedocs.yaml``
-^^^^^^^^^^^^^^^^^^^^^
+.....................
 
 This file is the Read the Docs build configuration. It installs
 Poetry after environment creation, overrides the install step to install the
 project together with the docs dependency group, and builds the site with
 Sphinx.
 
-``docs/``
-^^^^^^^^^
 
-This directory is the source location for the documentation
-site. It contains the user guide, API reference pages, changelog, and
-maintainer notes.
+------------------
+Dependency Updates
+------------------
 
-``.github/workflows/build-docs.yml``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+``renovate.json5``
+..................
 
-This workflow builds the Sphinx site in CI on documentation,
-packaging, and public API changes. That keeps local docs changes aligned with
-what Read the Docs builds.
+This file is the configuration for `Renovate <https://docs.renovatebot.com/>`_.
+It manages dependencies across all package managers: ``poetry``, ``npm``,
+``docker-compose``, ``dockerfile``, ``github-actions``, and a custom regex
+manager that tracks Python and Node.js versions declared in CI workflows.
 
-``.github/workflows/run-tests.yml``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Automerge is enabled for digest, patch, and minor updates of packages at
+version ``1.0.0`` or above (pre-1.0 packages require manual review because
+semantic versioning allows breaking changes in any ``0.x`` release).
+Major updates are labelled ``major-update`` and left open for manual review.
+Lock-file maintenance PRs are also automerged.
 
-This workflow routes pull requests either to the full Django test suite or to
-the dummy check, depending on whether relevant code changed.
+
+-----------------------
+Local Development Tools
+-----------------------
 
 ``.editorconfig``
-^^^^^^^^^^^^^^^^^
+.................
 
-This file defines editor-wide formatting defaults, including four-space
-indentation and LF line endings.
+`EditorConfig <https://editorconfig.org/>`_ settings applied by supporting editors
+(VS Code, JetBrains IDEs, …) to enforce project-wide formatting defaults.
 
-``.gitattributes``
-^^^^^^^^^^^^^^^^^^
+``eslint.config.js``
+....................
 
-This file records Git attributes for generated or special-case files.
+`ESLint <https://eslint.org/>`_ configuration in the new flat config format.
+
+Defines separate rule sets for plain JavaScript files (``*.{js,mjs,cjs}``) and
+TypeScript files (``*.{ts,tsx,mts,cts}``). TypeScript rules are provided by
+``@typescript-eslint/eslint-plugin``. Import order and unused-import detection
+use ``eslint-plugin-import`` and ``eslint-plugin-unused-imports``.
+Auto-generated directories such as the API client and auth client are excluded
+from linting.
 
 ``.gitignore``
-^^^^^^^^^^^^^^
+..............
 
 This file defines ignore rules for Python cache directories, virtual
 environments, and local build artifacts.
+
+``.prettierrc``
+...............
+
+`Prettier <https://prettier.io/`_ code formatter settings. Notable settings:
+
+- ``"printWidth": 130`` — wider than the Prettier default of 80.
+- ``"tabWidth": 4`` — consistent with ``.editorconfig``.
+- ``"singleQuote": false`` — double quotes everywhere.
+- ``"trailingComma": "es5"`` — trailing commas where valid in ES5.
+- ``"semi": true`` — semicolons required.
+
+``tsconfig.base.json``
+......................
+
+This file is the base TypeScript configuration shared by all frontend
+sub-projects. It extends ``@tsconfig/svelte`` and sets:
+
+- ``"target": "esnext"`` and ``"module": "esnext"`` with
+  ``"moduleResolution": "Bundler"`` — suited for esbuild-bundled Svelte
+  applications.
+- ``"strict": true`` — full strict type checking.
+- ``"noEmit": true`` — TypeScript is used for type checking only; esbuild
+  handles transpilation.
+- ``"verbatimModuleSyntax": true`` — enforces explicit ``import type`` for
+  type-only imports.
+
+``tsconfig.nodejs.json``
+........................
+
+This file is a companion TypeScript configuration for Node.js scripts such as
+the esbuild build scripts under ``bin/``. It overrides the base configuration
+with ``"module": "nodenext"`` and ``"moduleResolution": "NodeNext"`` for
+correct native ESM resolution, and enables output emission with source maps
+and declaration files.

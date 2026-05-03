@@ -1,7 +1,8 @@
-TODO - Course Management
-========================
+===================
+# Course Management
+===================
 
-TODO:
+.. TODO: Write documentation according to plan below. Then remove `#` from headline
 
 1. How to create new course
 2. How to manage (rename, delete, ...) courses

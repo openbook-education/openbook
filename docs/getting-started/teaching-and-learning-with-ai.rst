@@ -1,8 +1,8 @@
-TODO - Teaching & Learning with AI
-==================================
+=============================
+# Teaching & Learning with AI
+=============================
 
-TODO
-
+.. TODO: Write documentation according to plan below. Then remove `#` from headline
 
 The project addresses three recurring problems in everyday teaching:
 

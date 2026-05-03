@@ -1,3 +1,4 @@
+=======================
 Versioning and Releases
 =======================
 
@@ -8,6 +9,8 @@ release of ``openbook``.
    :local:
    :depth: 1
 
+
+-------------------
 Versioning Strategy
 -------------------
 
@@ -21,6 +24,34 @@ Versioning Strategy
 There are currently no plans to introduce breaking changes. Users can safely
 update to any patch or minor release without modifying their code.
 
+.. -------------
+.. Release model
+.. -------------
+..
+.. OpenBook releases are created from signed tags and published as GitHub Releases
+.. with source archives and SBOM artifacts. The release workflow does not publish
+.. Python packages to PyPI.
+..
+..
+.. ---------------------------------
+.. Release Tag Signature Enforcement
+.. ---------------------------------
+..
+.. The release workflow enforces signed, annotated tags before any artifacts are
+.. built or published.
+..
+.. - Tags must be created with ``git tag -s`` (annotated + signed).
+.. - Lightweight tags are rejected.
+.. - Tags with missing or invalid signatures are rejected.
+..
+.. This check is performed in ``.github/workflows/release.yml`` via the GitHub API
+.. verification metadata for the tag object.
+..
+.. Signed commits are also recommended for maintainers, but they are not enforced
+.. by the release workflow.
+
+
+-----------------
 Release Checklist
 -----------------
 
@@ -98,6 +129,8 @@ Release Checklist
 
 .. _changelog-format:
 
+
+----------------
 Changelog Format
 ----------------
 
@@ -115,7 +148,8 @@ release page.
    - Change 2
    - Change 3
 
-**Guidelines:**
+Guidelines
+..........
 
 - Use the exact version number (e.g., ``2.1.0``) without the ``v`` prefix.
 - Add the release date in parentheses (e.g., ``(April 2026)``).
@@ -124,7 +158,8 @@ release page.
 - Start descriptions with the affected component.
 - Group related changes together logically.
 
-**Pre-releases:**
+Pre-releases
+............
 
 For pre-release versions (alpha, beta, release candidate), use the extended
 version format in the tag and changelog:
@@ -146,11 +181,13 @@ Update the changelog accordingly:
 The release workflow will automatically detect pre-releases and mark them as
 such in GitHub.
 
+
+-----------
 Tag Signing
 -----------
 
 Setup
-^^^^^
+.....
 
 Release tags must be signed. If tag signing is not configured locally, set it
 up once before creating your next release:
@@ -174,7 +211,7 @@ Signing commits is also recommended as a general repository security practice,
 but commit signing is currently not enforced by the release workflow.
 
 Troubleshooting
-^^^^^^^^^^^^^^^
+...............
 
 If the release workflow rejects a signed tag with a reason such as ``bad_email``,
 inspect the tag metadata first:
@@ -214,6 +251,8 @@ identity, then recreate and push the signed tag:
    git tag -s <tag>
    git push origin <tag>
 
+
+-------------
 Read the Docs
 -------------
 

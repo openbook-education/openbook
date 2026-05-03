@@ -1,7 +1,8 @@
-TODO - Signup & Account Management
-==================================
+=============================
+# Signup & Account Management
+=============================
 
-TODO:
+.. TODO: Write documentation according to plan below. Then remove `#` from headline
 
 1. Signup with a local user
 2. Signup with social and school users

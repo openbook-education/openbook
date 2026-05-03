@@ -1,7 +1,8 @@
-TODO - The OpenBook Community
-=============================
+========================
+# The OpenBook Community
+========================
 
-TODO:
+.. TODO: Write documentation according to plan below. Then remove `#` from headline
 
 1. Where to find what?
 2. How we work together
