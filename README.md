@@ -18,8 +18,8 @@ Under Construction
 
 Hang on. This project is still in early stages, under heavy development. The project is deliberately
 made open-source from the beginning to assist developers and others interested in joining the project
-to document our vision what has already been built. Stay tuned until the first version is released or
-better yet, join us in shaping the future of education.
+by documenting our vision and how much of it has already been built. Stay tuned until the first version
+is released or better yet, join us in shaping the future of education.
 
 Welcome to OpenBook
 -------------------

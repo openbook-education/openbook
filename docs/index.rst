@@ -9,9 +9,9 @@ Under Construction
    :align: center
 
 Hang on. This project is still in early stages, under heavy development. This manual was set up
-early to assist developers and others interested in joining the project to document our vision
-what has already been built. Stay tuned until the first version is released or better yet, join
-us in shaping the future of education.
+early to assist developers and others interested in joining the project by documenting our vision
+and how much of it has already been built. Stay tuned until the first version is released or better
+yet, join us in shaping the future of education.
 
 Welcome to OpenBook
 -------------------
