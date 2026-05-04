@@ -104,6 +104,7 @@ download, install, and use **without restrictions**.
    developers/architecture
    developers/development-process
    developers/local-development
+   developers/ai-code-policy
    developers/dependency-policy
    developers/versioning-and-releases
    developers/repository-setup

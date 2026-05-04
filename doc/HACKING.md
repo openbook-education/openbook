@@ -6,7 +6,6 @@ fancy things -- if you already know Python, Poetry, Django, NPM, ... But finding
 information might not be easy when working with so much different technology. This document
 tries to summarize the most important things.
 
-1. [AI Policy](#ai-policy)
 1. [Quick Start](#quick-start)
 1. [Using Dev Containers](#using-dev-containers)
 1. [Technology Choices](#technology-choices)
@@ -20,34 +19,6 @@ tries to summarize the most important things.
 1. [Creating Fixtures](#creating-fixtures)
 1. [SQLite Shell](#sqlite-shell)
 1. [NPM and esbuild](#npm-and-esbuild)
-
-AI Policy
----------
-
-You will find that this repository contains prompt templates and instructions for GitHub CoPilot.
-Still we are very careful when accepting AI generated code. Because unlike all marketing claims,
-Large Language Models cannot program or develop software. The only thing they can do is to create
-code that is syntactically correct and in simple cases even doing what you expect. Still they are
-far from replacing a skilled software developer. Our own experience is this (May 2025):
-
-* AI coding assistants fail to consider the wider context and development style.
-* For Django, DRF, drf-spectacular the results are only so so, oftentimes hallucinated or convoluted.
-* You need to try very hard to make the LLM match your code style.
-* For writing unit tests GitHub CoPilot performs better then Windsurf.
-* For simpler tasks (how to do X in Python again?) Windsurf is usually good enough.
-
-Of course a lot can be done with good prompts. But don't spend more time prompting than it would
-take you to write the code by hand. Please always be cautious, make sure that generated code blends
-in with the rest (redact and change as necessary) and is as good as hand-written code. Double check
-generated code for subtle bugs and straight-forwardness. LLMs tend for very elaborate and indirect
-solutions even when a straight-forward way exists.
-
-* Be precise in your prompts and refer to examples in the repo that the LLM can use as reference.
-* Understand *every* line as if you had written it yourself. Then it is fine.
-* Manually rework the code to blend in with the rest (style, comments, complexity, ...)
-* Don't spam us with unrevised AI slob. This is considered no trivial offense.
-* If in doubt prefer hand-written code, even if it is less complete. 🙃
-* Have fun.
 
 Quick Start
 -----------

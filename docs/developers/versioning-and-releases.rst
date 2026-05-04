@@ -3,7 +3,7 @@ Versioning and Releases
 =======================
 
 This page documents the versioning strategy and the steps required to cut a
-release of ``openbook``.
+release of OpenBook.
 
 .. contents:: Page Content
    :local:
@@ -14,7 +14,7 @@ release of ``openbook``.
 Versioning Strategy
 -------------------
 
-``openbook`` follows `Semantic Versioning <https://semver.org/>`_
+OpenBook follows `Semantic Versioning <https://semver.org/>`_
 (SemVer). Given a version number ``MAJOR.MINOR.PATCH``:
 
 - **PATCH** is incremented for backwards-compatible bug fixes.
