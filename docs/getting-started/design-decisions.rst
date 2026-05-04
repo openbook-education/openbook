@@ -6,6 +6,14 @@
 .. For most points you must go into much more detail then the notes below.
 .. `teaching-and-learning-with-ai.rst` provides the product idea and background-information for this page.
 
+This page records the key educational and technical decisions that shape OpenBook and explains
+the reasoning behind them.
+
+.. contents:: Page Content
+   :local:
+   :depth: 1
+
+
 1. Educational design decisions
       - Online Textbooks:
          - Letterpress printing for the first time allowed to efficiently conserve and replicate knowledge

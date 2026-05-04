@@ -7,7 +7,7 @@ the CI/CD workflows and tooling of this project work. Its purpose is to record t
 operational state of the repository as well as to allow th setup to be reproduced
 for similar projects.
 
-.. contents::
+.. contents:: Page Content
    :local:
    :depth: 1
 

@@ -4,6 +4,14 @@
 
 .. TODO: Write documentation according to plan below. Then remove `#` from headline
 
+This page guides administrators through installing OpenBook, configuring it for production, and
+keeping it up to date.
+
+.. contents:: Page Content
+   :local:
+   :depth: 1
+
+
 1. Required services (Webserver, SQL database, redis, ...)
 2. Download options
 3. Installation with ``poetry`` and ``npm``

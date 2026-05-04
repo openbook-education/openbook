@@ -6,7 +6,7 @@ This page documents how OpenBook evaluates, adds, and updates dependencies. The 
 intentionally practical: it favors maintainability and traceability over fast but opaque
 upgrades.
 
-.. contents::
+.. contents:: Page Content
    :local:
    :depth: 1
 

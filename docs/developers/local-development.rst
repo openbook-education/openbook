@@ -3,8 +3,10 @@
 ===================
 
 This page documents day-to-day local workflows for maintainers.
-Repository-level and external service setup remains in
-:doc:`/developers/repository-setup`.
+
+.. contents:: Page Content
+   :local:
+   :depth: 1
 
 
 -------------

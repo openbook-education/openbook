@@ -5,6 +5,10 @@ Repository Layout
 This page describes the directory layout of the OpenBook source repository. It answers questions
 like where do you find the different parts, what goes where and why is it structured like this.
 
+.. contents:: Page Content
+   :local:
+   :depth: 1
+
 .. code-block:: text
 
    openbook/

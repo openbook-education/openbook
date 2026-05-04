@@ -7,6 +7,10 @@ not try to be an exhaustive design specification. Instead, it connects the
 main components so you can reason about changes, deployment behavior, and
 where to place new code.
 
+.. contents:: Page Content
+   :local:
+   :depth: 1
+
 
 ----------------
 Technology Stack

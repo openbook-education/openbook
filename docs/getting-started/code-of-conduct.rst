@@ -2,6 +2,14 @@
 Code of Conduct
 ===============
 
+The OpenBook community is built on mutual respect and collaboration. This Code of Conduct describes
+the standards we hold ourselves to and explains how violations are handled.
+
+.. contents:: Page Content
+   :local:
+   :depth: 1
+
+
 ----------
 Our Pledge
 ----------

@@ -2,6 +2,18 @@
 The OpenBook Community
 ======================
 
+This page introduces the OpenBook community, explains how to get involved, and points to the
+resources and workflows that keep the project moving forward.
+
+.. contents:: Page Content
+   :local:
+   :depth: 1
+
+
+-------------------
+About our Community
+-------------------
+
 OpenBook is more than software. It is a growing community where students, educators, administrators,
 and developers build better education together. People join with different goals, backgrounds, and
 experiences, and that variety is one of our strengths. We aim to keep the community welcoming,
@@ -19,13 +31,15 @@ helps others teach, learn, and collaborate more effectively.
 Online Resources
 ----------------
 
-General Information:
+General Information
+...................
 
 - Website: https://openbook.education
 - Manual: https://openbook-education.readthedocs.org
 - Community Discussions: https://github.com/openbook-education/openbook/discussions
 
-Development:
+Development
+...........
 
 - Source Code: https://github.com/openbook-education/openbook
 - Project Planning: https://github.com/orgs/openbook-education/projects/1

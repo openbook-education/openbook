@@ -5,7 +5,7 @@ Versioning and Releases
 This page documents the versioning strategy and the steps required to cut a
 release of ``openbook``.
 
-.. contents::
+.. contents:: Page Content
    :local:
    :depth: 1
 

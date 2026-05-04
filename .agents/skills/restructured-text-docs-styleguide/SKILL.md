@@ -23,6 +23,8 @@ usually within the `docs/` directory, always apply the following style guide:
     3. Subsection (no deeper nesting)
 - Use Title Case (APA-style) for all headings.
 - Prefix incomplete pages or sections with # .
+- Begin each page with a one to three sentences introduction.
+- Add a local table of contents (title: Page Content, depth: 1) before the first top-level section.
 
 Heading Syntax:
 
@@ -38,6 +40,13 @@ Example:
 ==========
 Page Title
 ==========
+
+This page ... (one to three sentences introducing the page)
+
+.. contents:: Page Content
+   :local:
+   :depth: 1
+
 
 -------------
 Section Title
@@ -104,6 +113,7 @@ Another text paragraph.
     - Notes and tips
 - Keep admonitions except examples short (3-4 sentences, typically).
 - Examples can be of any length.
+- Collect references to other pages and links in a `.. seealso::` admonition.
 
 Example:
 
