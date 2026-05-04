@@ -5,57 +5,64 @@ OpenBook: Interactive Online Textbooks
 [![Dependencies (Minor/Patch)](https://github.com/DennisSchulmeister/openbook/actions/workflows/renovate-minor.yml/badge.svg)](https://github.com/DennisSchulmeister/openbook/actions/workflows/renovate-minor.yml)
 [![Dependencies (Major)](https://github.com/DennisSchulmeister/openbook/actions/workflows/renovate-major.yml/badge.svg)](https://github.com/DennisSchulmeister/openbook/actions/workflows/renovate-major.yml)
 
-1. [Short Description](#short-description)
-1. [Further Documentation](#further-documentation)
-1. [Problem Statements](#problem-statements)
+1. [Welcome to OpenBook](#welcome-to-openbook)
 1. [Copyright](#copyright)
+
+Under Construction
+------------------
 
 <p align="center">
    <!-- https://pixabay.com/photos/screwdriver-background-screw-wooden-1008974/ -->
    <img src="doc/img/under-construction.jpg" alt="Under Construction" width="300">
-   <br>
-   <b>Under Construction</b>
-   <br>
-   This is not yet ready for production. Many features are still missing!
-   <br>
-   Leave a star on GitHub and send us a message to stay updated.
 </p>
 
-Short Description
------------------
+Hang on. This project is still in early stages, under heavy development. The project is deliberately
+made open-source from the beginning to assist developers and others interested in joining the project
+to document our vision what has already been built. Stay tuned until the first version is released or
+better yet, join us in shaping the future of education.
 
-OpenBook is the successor to [lecture-slide.js](https://www.npmjs.com/package/@dschulmeis/lecture-slides.js)
-which as been in development since 2017. The main idea is still to create beautiful and engaging
-online course materials for my students in the form of interactive online textbooks. Because this
-is the form that the previous "lecture slides" have taken now (textbooks instead of annotated slides).
-Additionally, not only the architecture shall be completely renewed, but many more features are planned:
+Welcome to OpenBook
+-------------------
 
-   * Online WYSIWYG editing of course materials
-   * Static export of course materials for LMS upload or static web hosting
-   * Many more interactive elements
-   * Integration with 3rd party libraries like [H5P](https://h5p.org/)
-   * AI-based interactive tutor
-   * And many more
+OpenBook is more than just a tool: it's a **personal learning companion** for students and a
+**powerful teaching assistant** for educators. Designed by educators and students for students
+and educators, it redefines how we learn, teach, and engage with knowledge.
 
-Problem Statements
-------------------
+### For Learners
 
- 1. Typical lecture scripts (including the textbooks developed with lecture-slide.js)
-    have a rigid, linear structure that is aimed at all learners equally. As a result,
-    the individual knowledge level and learning needs of students are not adequately
-    taken into account.
+OpenBook acts as your **personal lecturer**, guiding you through your learning journey. It doesn't
+just answer questions. It actively supports you by:
 
- 2. As a teacher, I don't know what learning level my students are at and how well
-    prepared they are for a particular classroom unit.
+* Curating and organizing learning materials tailored to your needs.
+* Monitoring your progress and suggesting interactive activities to help you meet your goals.
+* Helping you prepare questions for your teachers and connect with fellow learners.
 
- 3. As a student, I quickly lose track of what I have to learn by when and what
-    content is important.
+### For Teachers & Lecturers
 
-Further Documentation
----------------------
+One could say, OpenBook is your traditional learning management system reimagined in the 21st century.
+But OpenBook is much more than that. OpenBook serves as your always available **teaching assistant**,
+supporting the entire teaching lifecycle:
 
-At the time being there is no full documentation, yet. But README files are available to summarize the
-most important points for different target groups. See [./doc](./doc) directory.
+* Structuring and presenting content – the core of OpenBook's functionality.
+* supporting student self-studies,
+* running interactive exercises,
+* answering student questions,
+* providing detailed progress reports,
+* and much more
+
+### Interactive Learning, Redefined
+
+At the heart of OpenBook are **highly interactive online textbooks**, blending the best of traditional
+print with modern multimedia. Courses built around these textbooks are enhanced by OpenBook's
+**built-in learning model and AI assistant**, which doesn't just respond to prompts but drives the
+entire learning experience.
+
+### Free, Open, and for Everyone
+
+OpenBook is **100% Free and Libre Software**. No exceptions, no excuses. We believe education --- and
+the technology that powers it --- should be accessible to everyone, with no exceptions. There are no
+premium versions or hidden paywalls. OpenBook is fully open-source, available for anyone to
+download, install, and use **without restrictions**.
 
 Copyright
 ---------
@@ -68,4 +75,5 @@ it under the terms of the GNU Affero General Public License as
 published by the Free Software Foundation, either version 3 of the
 License, or (at your option) any later version.
 
-Development funded by the KoLLI research project at DHBW Karlsruhe.
+In the year 2025 development was in part funded by the KoLLI research
+project at DHBW Karlsruhe.

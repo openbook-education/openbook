@@ -9,6 +9,11 @@ like where do you find the different parts, what goes where and why is it struct
    :local:
    :depth: 1
 
+
+---------
+Top Level
+---------
+
 .. code-block:: text
 
    openbook/
@@ -27,11 +32,6 @@ like where do you find the different parts, what goes where and why is it struct
        └── libraries/       # Reusable content block libraries
            ├── core/
            └── ls-compat/
-
-
----------
-Top Level
----------
 
 The repository root contains configuration files and four notable directories. ``src/`` holds all
 runtime code — backend, frontend, and libraries — while ``docs/`` contains the documentation source.

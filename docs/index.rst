@@ -8,24 +8,23 @@ Under Construction
    :height: 15em
    :align: center
 
-Hang on. This project is still in early stages, under heavy development.
-This manual was set up early to assist developers and others interested in
-joining the project to document what has already been built. Stay tuned until
-the first version is released.
+Hang on. This project is still in early stages, under heavy development. This manual was set up
+early to assist developers and others interested in joining the project to document our vision
+what has already been built. Stay tuned until the first version is released or better yet, join
+us in shaping the future of education.
 
 Welcome to OpenBook
 -------------------
 
-OpenBook is more than just a tool --- it's a **personal learning companion**
-for students and a **powerful teaching assistant** for educators. Designed by
-educators for educators, it redefines how we learn, teach, and engage with
-knowledge.
+OpenBook is more than just a tool: it's a **personal learning companion** for students and a
+**powerful teaching assistant** for educators. Designed by educators and students for students
+and educators, it redefines how we learn, teach, and engage with knowledge.
 
 For Learners
 ............
 
-OpenBook acts as your **personal lecturer**, guiding you through your learning
-journey. It doesn't just answer questions --- it actively supports you by:
+OpenBook acts as your **personal lecturer**, guiding you through your learning journey. It doesn't
+just answer questions. It actively supports you by:
 
 * Curating and organizing learning materials tailored to your needs.
 * Monitoring your progress and suggesting interactive activities to help you meet your goals.
@@ -34,11 +33,11 @@ journey. It doesn't just answer questions --- it actively supports you by:
 For Teachers & Lecturers
 ........................
 
-One could say, OpenBook is your traditional learning management system reimagined in
-the 21st century. But OpenBook is much more than that. OpenBook serves as your always
-available **teaching assistant**, supporting the entire teaching lifecycle:
+One could say, OpenBook is your traditional learning management system reimagined in the 21st century.
+But OpenBook is much more than that. OpenBook serves as your always available **teaching assistant**,
+supporting the entire teaching lifecycle:
 
-* Structuring and presenting content --- the core of OpenBook's functionality.
+* Structuring and presenting content – the core of OpenBook's functionality.
 * supporting student self-studies,
 * running interactive exercises,
 * answering student questions,
@@ -48,10 +47,10 @@ available **teaching assistant**, supporting the entire teaching lifecycle:
 Interactive Learning, Redefined
 ...............................
 
-At the heart of OpenBook are **highly interactive online textbooks**, blending the best of
-traditional print with modern multimedia. Courses built around these textbooks are enhanced
-by OpenBook's **built-in learning model and AI assistant**, which doesn't just respond to
-prompts --- it drives the entire learning experience.
+At the heart of OpenBook are **highly interactive online textbooks**, blending the best of traditional
+print with modern multimedia. Courses built around these textbooks are enhanced by OpenBook's
+**built-in learning model and AI assistant**, which doesn't just respond to prompts but drives the
+entire learning experience.
 
 Free, Open, and for Everyone
 ............................
