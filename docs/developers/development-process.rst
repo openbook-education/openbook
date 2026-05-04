@@ -13,10 +13,10 @@ This page describes the expected repository workflow from issue triage to merge.
 Issue to Branch
 ---------------
 
-1. Collect ideas, feature requests, bugs, and general development tasks in an issue.
-2. Confirm scope and expected behavior in the issue discussion.
-3. Add the issue to the GitHub Project board and assign a milestone where relevant.
-4. Create a feature branch from ``main`` (ideally from within the GitHub issue).
+1. Collect ideas, feature requests, bugs, and general development tasks in issues.
+2. Confirm scope and expected behavior in the issue discussions.
+3. Add each issue to the GitHub Project board and assign a milestone where relevant.
+4. For each issue create a feature branch from ``main`` (ideally from within the GitHub issue).
 5. Keep branch changes focused to one logical change.
 
 Suggested branch naming (note, that this requires manually changing the
