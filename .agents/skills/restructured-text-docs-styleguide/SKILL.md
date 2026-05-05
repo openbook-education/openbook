@@ -22,6 +22,7 @@ usually within the `docs/` directory, always apply the following style guide:
     2. Section
     3. Subsection (no deeper nesting)
 - Use Title Case (APA-style) for all headings.
+- Instead of multiple sub-sections with one paragraph prefer bold-facing the first words (see example below)
 - Prefix incomplete pages or sections with # .
 - Begin each page with a one to three sentences introduction.
 - Add a local table of contents (title: Page Content, depth: 1) before the first top-level section.
@@ -63,6 +64,11 @@ Another text paragraph.
 -------------------------------
 # Unfinished or Planned Section
 -------------------------------
+
+**Bold-faced sub-section** --- This is a single paragraph for which a dedicated
+headline is a bit overwhelming.
+
+**Another bold-faced sub-section** -- This is another single paragraph.
 ```
 
 # Content Style & Writing Quality
@@ -70,8 +76,8 @@ Another text paragraph.
 - Use active voice and present tense.
 - Keep sentences concise (one idea per sentence).
 - Prefer short paragraphs (4-6 sentences).
-- Prefer sentences over bullet lists, but use lists when they improve clarity.
-- Avoid sections consisting only of bullet points unless the content is inherently list-based.
+- Prefer sentences over bullet/enumeration lists, but use lists when they improve clarity.
+- Avoid sections consisting only of bullet points or enumeration lists unless the content is inherently list-based.
 - Start sections with a short explanatory paragraph before any list.
 - Encourage consistent terminology (define once, reuse).
 - Avoid filler phrases and redundancy.
