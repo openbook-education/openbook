@@ -6,6 +6,12 @@ This page collects various tutorials for often-needed development activities. Th
 build upon each other, as usually for each new feature all the below documented steps need
 to be carried out.
 
+.. note::
+
+   The repository contains AI agent definitions to assist with these tasks. You can read
+   them for additional information. When using AI agents, please still manually check the
+   outcome against nearby code and the documentation on this page.
+
 .. contents:: Page Content
    :local:
 
