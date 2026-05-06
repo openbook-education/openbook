@@ -1,17 +1,9 @@
-Developer Notes for OpenBook
-============================
+Backend Architecture Notes
+==========================
 
-This document serves as a cheat sheet for developers to get started quickly. There are no
-fancy things -- if you already know Python, Poetry, Django, NPM, ... But finding the right
-information might not be easy when working with so much different technology. This document
-tries to summarize the most important things.
-
-1. [Technology Choices](#technology-choices)
-1. [Django Project vs. App](#django-project-vs-app)
-1. [Permission Handling](#permission-handling)
-1. [Creating Fixtures](#creating-fixtures)
-
-
+This document collects defining aspects of the OpenBook backend architecture.
+The intention is to help developers understand the most important technology
+and implementation choices.
 
 Technology Choices
 ------------------
@@ -38,36 +30,6 @@ for the frontend we use the following additional things:
  * esbuild - Bundler
  * npm - Package manager
  * TypeScript - Type annotations for JavaScript
-
-Django Project vs. App
-----------------------
-
-Each Django web application consists of a _Django project_, representing the web application
-itself, and usually multiple _Django apps_, representing single functional units. Both are
-Python modules with certain required source files. Though the whole source code could easily
-live inside the project module, the Django developers recommend splitting the project into
-multiple apps to foster separation of concerns and code re-use.
-
-When you have a project like `openbook` the Django Admin command created a top-level
-directory of that name, containing a sub-directory of the same name. But to avoid having
-three nested directories of the same name, that directory was renamed to `src`, inside
-which the `openbook` Django project lives, inside which several apps live. Technically
-the apps could also live a siblings to the project, but allows us to use the sibling
-directories for other things.
-
-
-```text
-.                                 Root directory with this file
-└── src                           Main source directory
-    ├── manage.py                 Django CLI
-    └── openbook                  Django project
-        ├── settings.py           Django configuration
-        ├── app_1                 Django Application
-        │   └── ...
-        ├── app_2                 Django Application
-        │   └── ...
-        └── ...                   Django Application
-```
 
 Permission Handling
 -------------------
@@ -240,52 +202,3 @@ These two classes also employ a hack to check object-permissions also for new ob
 `DjangoObjectPermissionsOnly` is a specialized version of the stock `DjangoObjectPermissions` that
 respects the logic in our authentication backend (model-permission is not required but overrides
 object-permission, view permission is checked, too).
-
-Creating Fixtures
------------------
-
-Fixtures are a good way to provide initial data for developers and end-users to get started with
-the OpenBook server. Here are a few hints on what to consider:
-
-* **Hand-edited YAML Format:** Use `python manage.py dumpdata --format yaml myapp` to create a data
-  dump on the console. Copy the relevant parts into a new `fixtures/myapp/xyz.yaml` file. Note that
-  the file extension must be exactly `.yaml` for Django to recognize the fixture. Clean up the file,
-  bring all entries in logical order, remove unneeded `null` properties and add comments.
-
-* **Natural Keys:** When using the `dumpdata` command make sure to enable natural keys. Thus the
-  full command becomes: `python manage.py dumpdata --format yaml --natural-foreign --natural-primary myapp`.
-  This avoids a problem with generic relations: Each model with a generic relation must have a foreign
-  key on the `ContentType` model that contains a list of all known models. This uses an auto-incremented
-  ID that is not stable. Without natural keys the fixtures would contain the raw ID of the content type,
-  that would most-likely not reference the model we want during import of the fixture.
-
-* **Load Initial Data:** Once your new fixture is working, consider adding it to the `load_initial_data`
-  management command. The source code is in the `openbook/core/management` directory. This allows other
-  developers and users to import a complete set of initial data with only one command.
-
-**Natural keys, part II:** Why are we not using natural keys for our models? After writing the lines
-above the initial plan was to add natural keys to all own models, so that the fixtures would be free
-from UUIDs and generally much easier to read. But the attached trade-offs quickly outgrew the benefit:
-
-* Adding natural keys to each model increases the size considerably: `natural_key()` method, custom
-  manager, unique constraint for each model. But that alone would have been okay, as we didn't want
-  to introduce a dependency to [Django Natural Keys](https://pypi.org/project/natural-keys/) to keep
-  the dependencies minimal.
-
-* Many models have a name, that would be a perfect fit for the natural key. But it might be problematic
-  to make them unique.
-
-* Generic relations are still problematic due to the `object_id` property. That was the real killer.
-  Why all the effort, if each generic relation still references the UUID of the related object?
-  For this to work the UUID of the related object must be enforced during import, neglecting the reason
-  to add natural keys in the first place.
-
-  There is a work-around using [custom serializers and deserializers](https://stackoverflow.com/a/70700302).
-  But that is quite a lot of code that needs deep understanding of Django's inner workings. 🤯
-  Clearly something to avoid, if at all possible.
-
-Thankfully, using UUIDs the problem is not as large as if we were using the traditional auto-incremented
-IDs. With auto-incremented IDs natural keys are needed to ensure stable keys. Otherwise entries will
-not be imported if the ID is already used by another entry and imported foreign keys will reference
-the wrong object. UUIDs are supposed to be globally unique by default, avoiding most of the problems
-in the first place.

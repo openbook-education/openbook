@@ -1,5 +1,5 @@
 =============
-# How To Guides
+How To Guides
 =============
 
 This page collects various tutorials for often-needed development activities. The tutorials
@@ -17,20 +17,178 @@ to be carried out.
 
 
 -----------------
-# Creating New Apps
+Creating New Apps
 -----------------
 
-- Django Project vs. App (in resemblance to the same section from ``doc/HACKING.md``).
-- Creating a new app with ``manage.py``
-- OpenBook apps must live inside ``src/openbook``, using short names
-- Adding to ``INSTALLED_APPS`` in ``settings.py``
-- ``apps.py`` with a custom ``AppConfig`` class
-- Typical layout of an OpenBook Django app (read ``src/openbook/content`` as a template)
-   - ``routes.py`` instead of URLS
-      - no server-side rendering / view templates
-      - just models, admin, REST API, fixtures, migrations, unit tests
-   - Other typical Django app elements when needed
-- Example code for ``apps.py``
+Domain-specific features for OpenBook live in separate Django apps within the OpenBook Django project,
+in line with best-practices recommended by the Django developers. Technically speaking, both are Python
+project directories with pre-defined sub-modules (either single Python files or directories with an
+``__init__.py`` file --- from Python or Django's point of view, there is no difference). And theoretically
+a Django project doesn't need to be split into smaller apps. But the split improves clarity, separation
+of concerns and code reuse. Imagine the difference like this:
+
+A Django project is the full server application, while a Django app is a focused domain module inside
+that project. In OpenBook, apps are the unit for organizing data models, admin integration, REST API
+endpoints, and migration history around one bounded topic. Therefore, the first step, when implementing
+a new feature is either to find the right app to extend or to create a new app from scratch. This tutorial
+shows how to do the latter.
+
+Create and register a new app
+.............................
+
+Create the app with Django, then place it under ``src/openbook`` with a short, domain-specific name.
+After that, register it in ``INSTALLED_APPS`` in ``src/openbook/settings.py`` so migrations, admin
+discovery, and app startup hooks run automatically.
+
+Imagine, we wanted to create a new app for tracking learning progress. The typical process would be:
+
+.. code-block:: bash
+
+   cd src
+   python manage.py startapp learning_goals src/openbook/progress
+
+Then add the app import path to ``INSTALLED_APPS``:
+
+.. code-block:: python
+
+   INSTALLED_APPS = [
+       "openbook.core",
+       "openbook.auth",
+       "openbook.content",
+
+       # New entry for the new app
+       "openbook.learning_progress",
+
+       # Existing entries for 3rd-party apps ...
+   ]
+
+A typical app layout looks like this:
+
+.. code-block:: text
+
+   src/openbook/learning_progress/
+   ├── __init__.py
+   ├── apps.py
+   ├── routes.py
+   ├── migrations/
+   │   ├── __init__.py
+   │   └── 0001_initial.py
+   ├── models/
+   ├── __init__.py
+   │   └── learning_goal.py
+   ├── admin/
+   ├── __init__.py
+   │   └── learning_goal.py
+   ├── viewsets/
+   │   ├── __init__.py
+   │   └── learning_goal.py
+   └── fixtures/
+       └── openbook_learning_progress/
+           └── example_learning_goals.yaml
+
+In practice, model-heavy apps often grow with additional modules such as tests, custom management
+commands, signals, or service classes. Start with the structure above and extend it only when needed.
+
+.. note::
+
+   Note the many files named ``learning_goal.py`` or similar. As we will see in the sub-sequent
+   tutorials, most feature apps resolve around database models which are exposed in the Django
+   admin and the REST API. The three directories ``models/``, ``admin/`` and ``viewsets/`` serve
+   exactly this purpose. To simplify navigation, each file is concerned with exactly one model
+   (from a user's perspective) and we mirror the file-structure between most directories.
+
+   .. graphviz::
+      :align: center
+      :caption: One domain model is mirrored across the main packages of an OpenBook app.
+
+      digraph app_layout {
+         graph [bgcolor=transparent, rankdir=TB, nodesep=0.35, ranksep=0.6];
+         node [shape=box, style="rounded,filled", fontname="Sans"];
+
+         model  [label="models/learning_goal.py\nDjango model", fillcolor="#e3f2fd", color="#1e88e5"];
+         admin  [label="admin/learning_goal.py\nAdmin integration", fillcolor="#e8f5e9", color="#43a047"];
+         api    [label="viewsets/learning_goal.py\nREST API integration", fillcolor="#fff3e0", color="#fb8c00"];
+         routes [label="routes.py\nRegisters API endpoints", fillcolor="#fce4ec", color="#d81b60"];
+
+         model -> admin [label="same domain object", color="#43a047", fontcolor="#43a047"];
+         model -> api   [label="same domain object", color="#fb8c00", fontcolor="#fb8c00"];
+         api -> routes  [label="API wiring", color="#d81b60", fontcolor="#d81b60"];
+      }
+
+Define ``apps.py`` with explicit metadata
+.........................................
+
+Next you need to expose an ``AppConfig`` with a stable ``name`` and explicit ``label``.
+Though not strictly required, the label is important because OpenBook uses app labels
+in places like fixture model names and generic scope references.
+
+Create the file `app.py` (inside the app directory) with following content:
+
+.. code-block:: python
+
+   from django.apps              import AppConfig
+   from django.utils.translation import gettext_lazy as _
+
+
+   class ProgressApp(AppConfig):
+       name = "openbook.learning_progress"
+       label = "learning_progress"
+       verbose_name = _("Learning Progress")
+
+.. note::
+
+   Note the pattern for the class attribute values. The app name and label must follow
+   similar conventions as module names in Python: No spaces, start with a letter,
+   `snake_case` capitalization, etc. The name is always ``openbook.<app_label>`` and
+   the app label the package name.
+
+   The verbose name is used in the Admin and in other places in the UI. So it must be
+   marked with ``_()`` as a translatable text.
+
+Register API routes in ``routes.py``
+....................................
+
+OpenBook app structure focuses on models, admin, and REST APIs. We do not define server-rendered
+pages and thus typically don't have app-level ``urls.py`` files. Instead, each app provides
+API routes through ``routes.py``, and the project registers them from ``src/openbook/urls.py``.
+To this end, each app must expose a ``register_api_routes(router, prefix)`` function in
+``routes.py``, that registers the URL routes for the REST API endpoints.
+
+Example:
+
+.. code-block:: python
+
+   from .viewsets.goal import GoalViewSet
+
+
+   def register_api_routes(router, prefix):
+       # Will be filled-in later, when REST API viewsets are defined
+       pass
+
+Then wire the app-level route registration into ``src/openbook/urls.py`` like so:
+
+.. code-block:: python
+
+   # Existing imports ...
+   from .learing_progress.routes import register_api_routes as register_learning_progress_api_routes
+
+   # Existing register_<app_label>_api_routes
+   register_learning_progress_api_routes(api_router, "learning_progress")
+
+.. note ::
+
+   Note again the pattern, where the app label is used for consistent naming.
+
+Checklist Before Moving On
+..........................
+
+Before implementing models and APIs, verify that:
+
+1. The app lives under ``src/openbook/<app_name>``.
+2. The app is listed in ``INSTALLED_APPS``.
+3. ``apps.py`` defines ``name``, ``label``, and ``verbose_name``.
+4. ``routes.py`` exposes ``register_api_routes(router, prefix)``.
+5. ``src/openbook/urls.py`` imports and calls your route registration function.
 
 
 -------------------
@@ -38,7 +196,8 @@ to be carried out.
 -------------------
 
 .. NOTE: The mixins are central to the OpenBook architecture
-.. Readers must absolutely get them right
+.. Readers must know their relevance and how to use them for what to be able to write correct code.
+.. Please read their source to understand the background, before drafting the documentation.
 
 - Procedure to add new model classes
 - Example: ``src/openbook/auth/models/enrollment_method.py`` → read to understand the patterns before you document!
@@ -63,7 +222,8 @@ to be carried out.
 .. Start with simple example codes and expand from there with ever increasing examples
 
 .. NOTE: The mixins are central to the OpenBook architecture
-.. Readers must absolutely get them right
+.. Readers must know their relevance and how to use them for what to be able to write correct code.
+.. Please read their source to understand the background, before drafting the documentation.
 
 - Building upon the previous tutorial, exposing models in the admin
 - Every major model should be exposed in the admin
@@ -99,7 +259,8 @@ Exposing Models in the REST API
 .. Start with simple example codes and expand from there with ever increasing examples
 
 .. NOTE: The mixins are central to the OpenBook architecture
-.. Readers must absolutely get them right
+.. Readers must know their relevance and how to use them for what to be able to write correct code.
+.. Please read their source to understand the background, before drafting the documentation.
 
 - Building upon the previous tutorials, making models available to clients and the SPA via the REST API
 - Example: ``src/openbook/auth/viewsets/enrollment_method.py`` → read to understand the patterns before you document!
@@ -169,7 +330,8 @@ Use YAML fixtures to keep the data readable, reviewable, and easy to maintain in
 ------------------
 
 .. NOTE: The mixin is important to use to ensure baseline test coverage.
-.. Readers must get this right, including how to correctly use the mixin (read its source to understand before you document)
+.. Readers must know their relevance and how to use them for what to be able to write correct code.
+.. Please read their source to understand the background, before drafting the documentation.
 
 - Expanding on the previous examples, test coverage is important to ensure quality and ensure future maintenance
 - Example: ``src/openbook/auth/tests/test_enrollment_method.py`` → read to understand the patterns before you document!
