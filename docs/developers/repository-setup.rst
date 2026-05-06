@@ -1,6 +1,6 @@
-============================
-Repository and Tooling Setup
-============================
+================
+Repository Setup
+================
 
 This page describes the GitHub repository settings and configuration files that make
 the CI/CD workflows and tooling of this project work. Its purpose is to record the
@@ -9,7 +9,6 @@ for similar projects.
 
 .. contents:: Page Content
    :local:
-   :depth: 1
 
 
 --------------------------

@@ -8,8 +8,7 @@ This page describes how the OpenBook content library is organised and explains h
 can customise its structure and assign textbooks and courses to it.
 
 .. contents:: Page Content
-   :local:
-   :depth: 1
+   :local
 
 
 1. How the library works technically

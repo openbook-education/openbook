@@ -9,7 +9,6 @@ managing pages and content both in the editor and the administration panel.
 
 .. contents:: Page Content
    :local:
-   :depth: 1
 
 
 1. How to create textbooks

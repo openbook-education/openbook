@@ -9,7 +9,6 @@ how to create, import, and enhance learning materials, including with AI support
 
 .. contents:: Page Content
    :local:
-   :depth: 1
 
 
 1. Didactic overview of available content types and interactive elements

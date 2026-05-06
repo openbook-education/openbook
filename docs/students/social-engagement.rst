@@ -9,7 +9,6 @@ instructors, including discussion forums, questions, and direct messaging.
 
 .. contents:: Page Content
    :local:
-   :depth: 1
 
 
 1. Preparing questions for class

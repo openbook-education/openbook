@@ -101,14 +101,16 @@ download, install, and use **without restrictions**.
    :caption: Developers
 
    developers/repository-layout
-   developers/architecture
+   developers/backend-architecture
+   developers/frontend-architecture
    developers/development-process
    developers/local-development
+   developers/versioning-and-releases
    developers/ai-code-policy
    developers/dependency-policy
-   developers/versioning-and-releases
-   developers/repository-setup
+   developers/howto-guides
    developers/api-reference
+   developers/repository-setup
 
 
 

@@ -9,7 +9,6 @@ keeping it up to date.
 
 .. contents:: Page Content
    :local:
-   :depth: 1
 
 
 1. Required services (Webserver, SQL database, redis, ...)

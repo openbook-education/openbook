@@ -5,7 +5,6 @@ This page described the user-visible changes for each release.
 
 .. contents:: Page Content
    :local:
-   :depth: 1
 
 
 0.0.1-pre1

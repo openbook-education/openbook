@@ -9,7 +9,6 @@ ELISA creates a genuinely adaptive learning experience.
 
 .. contents:: Page Content
    :local:
-   :depth: 1
 
 
 -----------------------

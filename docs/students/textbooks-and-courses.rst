@@ -9,7 +9,6 @@ and how to enrol in a course or read a textbook independently.
 
 .. contents:: Page Content
    :local:
-   :depth: 1
 
 
 1. Distinction of textbooks (learning content) and courses (usage in classroom)

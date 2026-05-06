@@ -7,7 +7,6 @@ release of OpenBook.
 
 .. contents:: Page Content
    :local:
-   :depth: 1
 
 
 -------------------

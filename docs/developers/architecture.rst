@@ -9,7 +9,6 @@ where to place new code.
 
 .. contents:: Page Content
    :local:
-   :depth: 1
 
 
 ----------------

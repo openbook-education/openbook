@@ -11,7 +11,6 @@ opaque upgrades.
 
 .. contents:: Page Content
    :local:
-   :depth: 1
 
 
 ---------------------------

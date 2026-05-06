@@ -9,7 +9,6 @@ login, and managing your profile and password.
 
 .. contents:: Page Content
    :local:
-   :depth: 1
 
 
 1. Signup with a local user

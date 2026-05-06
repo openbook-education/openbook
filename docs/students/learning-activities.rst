@@ -9,7 +9,6 @@ the interactive elements, AI assistance, and learning progress tracking availabl
 
 .. contents:: Page Content
    :local:
-   :depth: 1
 
 
 1. What is inside a textbook or course

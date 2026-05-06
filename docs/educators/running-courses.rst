@@ -9,7 +9,6 @@ once a course is live.
 
 .. contents:: Page Content
    :local:
-   :depth: 1
 
 
 1. Setup student signup and enrollment

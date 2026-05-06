@@ -7,7 +7,6 @@ contributors to OpenBook are expected to use them and why the human factor remai
 
 .. contents:: Page Content
    :local:
-   :depth: 1
 
 
 ---------------

@@ -11,7 +11,6 @@ This page explains how maintainers should use both sources together.
 
 .. contents:: Page Content
    :local:
-   :depth: 1
 
 
 Runtime OpenAPI documents

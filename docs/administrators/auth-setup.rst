@@ -9,7 +9,6 @@ how to connect external identity providers.
 
 .. contents:: Page Content
    :local:
-   :depth: 1
 
 
 1. Capabilities of Django Allauth

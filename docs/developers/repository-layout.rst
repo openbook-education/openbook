@@ -7,7 +7,6 @@ like where do you find the different parts, what goes where and why is it struct
 
 .. contents:: Page Content
    :local:
-   :depth: 1
 
 
 ---------
@@ -17,19 +16,21 @@ Top Level
 .. code-block:: text
 
    openbook/
-   ├── bin/                 # Build and development tooling scripts
-   ├── docker/              # Docker Compose and web server configuration
-   ├── docs/                # Documentation source (Sphinx / RST)
-   └── src/                 # All runtime source code
+   ├── bin/                         # Build and development tooling scripts
+   ├── docker/                      # Docker Compose and web server configuration
+   ├── docs/                        # Documentation source (Sphinx / RST)
+   └── src/                         # All runtime source code
        ├── manage.py
-       ├── openbook/        # Django project (backend)
+       ├── openbook/                # Django project (backend)
        │   ├── auth/
        │   ├── content/
-       │   └── core/
-       ├── frontend/        # TypeScript / Svelte frontend packages
-       │   ├── admin/       # Django admin client code
-       │   └── app/         # User-facing SPA
-       └── libraries/       # Reusable content block libraries
+       │   ├── core/
+       │   ├── local_settings.py    # Site-specific settings (not under version control)
+       │   └── settings.py          # Fixed settings for all installations
+       ├── frontend/                # TypeScript / Svelte frontend packages
+       │   ├── admin/               # Django admin client code
+       │   └── app/                 # User-facing SPA
+       └── libraries/               # Reusable content block libraries
            ├── core/
            └── ls-compat/
 

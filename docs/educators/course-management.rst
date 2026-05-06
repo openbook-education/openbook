@@ -9,7 +9,6 @@ settings and how to assign or reuse textbooks across multiple courses.
 
 .. contents:: Page Content
    :local:
-   :depth: 1
 
 
 1. How to create new course
