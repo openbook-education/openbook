@@ -35,7 +35,7 @@ endpoints, and migration history around one bounded topic. Therefore, the first 
 a new feature is either to find the right app to extend or to create a new app from scratch. This tutorial
 shows how to do the latter.
 
-Create and register a new app
+Create and Register a New App
 .............................
 
 Create the app with Django, then place it under ``src/openbook`` with a short, domain-specific name.
@@ -117,7 +117,7 @@ commands, signals, or service classes. Start with the structure above and extend
          api -> routes  [label="API wiring", color="#d81b60", fontcolor="#d81b60"];
       }
 
-Define ``apps.py`` with explicit metadata
+Define ``apps.py`` With Explicit Metadata
 .........................................
 
 Next you need to expose an ``AppConfig`` with a stable ``name`` and explicit ``label``.
@@ -147,7 +147,7 @@ Create the file `app.py` (inside the app directory) with following content:
    The verbose name is used in the admin and in other places in the UI. So it must be
    marked with ``_()`` as a translatable text.
 
-Register API routes in ``routes.py``
+Register API Rememberoutes in ``routes.py``
 ....................................
 
 OpenBook app structure focuses on models, admin, and REST APIs. We do not define server-rendered
@@ -202,8 +202,8 @@ and provide the Python interface for all persistent data. In OpenBook, every maj
 gets its own model file inside the app's ``models/`` directory, mirroring the structure of the
 ``admin/`` and ``viewsets/`` directories that build on top of it.
 
-Create a Model File
-...................
+Create the Model
+................
 
 Create one Python file per domain concept inside ``models/``. Closely related helper models ---
 such as a translation companion for internationalised text fields --- live in the same file.
@@ -534,10 +534,10 @@ Before you continue with admin and API integration, verify that:
 
 
 --------------------------
-Adding Models to the admin
+Adding Models to the Admin
 --------------------------
 
-Django admin is the primary tool for administrators and developers to inspect live data, diagnose
+Django Admin is the primary tool for administrators and developers to inspect live data, diagnose
 problems, and create test content during development before a full UI exists. For this reason,
 every model should have an admin integration. The work follows the same file-mirroring pattern
 as models and viewsets: one source file per domain concept in the ``admin/`` directory, wired
@@ -546,11 +546,11 @@ together through ``__init__.py``.
 Create the Admin File
 .....................
 
-To integrate a model into the Django admin create a new file in the ``admin/`` directory with
+To integrate a model into the Django Admin create a new file in the ``admin/`` directory with
 the same name as its source file in the ``model/`` directory. Within the new file define a
-class that inherits from ``CustomModeladmin``, imported from ``openbook.admin``. This base class
+class that inherits from ``CustomModelAdmin``, imported from ``openbook.admin``. This base class
 combines three things, which is why, unlike in traditional Django projects, you never touch
-Django's built-in ``Modeladmin`` class directly:
+Django's built-in ``ModelAdmin`` class directly:
 
 1. Django Unfold for the styled admin UI, and
 2. DjangoQL for advanced search expressions in the change list,
@@ -563,12 +563,12 @@ named ``admin/learning_goal.py`` (like the model file) and have the following co
 
 .. code-block:: python
 
-   from openbook.admin         import CustomModeladmin
+   from openbook.admin         import CustomModelAdmin
    from ..models.learning_goal import LearningGoal
 
 
-   class LearningGoaladmin(CustomModeladmin):
-       """admin view for learning goals."""
+   class LearningGoaAadmin(CustomModelAdmin):
+       """Admin view for learning goals."""
        model         = LearningGoal
        list_display  = ["name", "course", "level", "is_active"]
        ordering      = ["course", "name"]
@@ -578,6 +578,11 @@ This is already functional: the change list shows the configured columns, result
 and searchable, and the default form --- not declared in the class --- renders all editable fields.
 Isn't Django great? 🙂
 
+.. important::
+
+   Always import models from the file in which they are defined, e.g. ``..models.learning_goal``.
+   Never import them from ``..models`` to reduce the risk of circular imports.
+
 Register in ``__init__.py``
 ...........................
 
@@ -586,10 +591,10 @@ Once the class exists, register it in ``admin/__init__.py``:
 .. code-block:: python
 
    from openbook.admin import admin_site
-   from .learning_goal import LearningGoaladmin
+   from .learning_goal import LearningGoalAdmin
    from ..             import models
 
-   admin_site.register(models.LearningGoal, LearningGoaladmin)
+   admin_site.register(models.LearningGoal, LearningGoalAdmin)
 
 The order of ``register()`` calls determines the order in which models appear in the admin
 sidebar. So, register models in a logical order that makes sense to administrators.
@@ -647,8 +652,8 @@ When a model uses ``CreatedModifiedByMixin``, import the four helper constants f
    from openbook.auth.admin.mixins.audit import created_modified_by_related
 
 
-   class LearningGoaladmin(CustomModeladmin):
-       """admin view for learning goals."""
+   class LearningGoalAdmin(CustomModelAdmin):
+       """Admin view for learning goals."""
        model               = LearningGoal
        resource_classes    = [LearningGoalResource]
        list_display        = ["name", "course", "level", "is_active", *created_modified_by_fields]
@@ -677,7 +682,7 @@ a tab. Always append it as the last entry in ``fieldsets``.
 Organising the Edit Form with Fieldsets
 .......................................
 
-By default Django admin renders all editable fields in a single unstyled block. Fieldsets
+By default Django Admin renders all editable fields in a single unstyled block. Fieldsets
 group fields into named sections and can optionally render as Django Unfold tabs, making
 longer forms easier to navigate. To this end, define ``fieldsets`` for the edit/change view
 and optionally -- when different -- ``add_fieldsets`` for the create view.
@@ -690,8 +695,8 @@ and optionally -- when different -- ``add_fieldsets`` for the create view.
 
 .. code-block:: python
 
-   class LearningGoaladmin(CustomModeladmin):
-       """admin view for learning goals."""
+   class LearningGoalAdmin(CustomModelAdmin):
+       """Admin view for learning goals."""
        # ... list attributes from above ...
 
        fieldsets = [
@@ -762,8 +767,8 @@ parent admin class via ``inlines``:
        verbose_name_plural = _("Translations")
 
 
-   class LearningGoaladmin(CustomModeladmin):
-       """admin view for learning goals."""
+   class LearningGoalAdmin(CustomModelAdmin):
+       """Admin view for learning goals."""
        # ...
        inlines = [_LearningGoalTextInline]
 
@@ -793,7 +798,7 @@ and declare the field list in its inner ``Meta`` class. Wire it into the admin c
 
 .. code-block:: python
 
-   from openbook.admin         import CustomModeladmin
+   from openbook.admin         import CustomModelAdmin
    from openbook.admin         import ImportExportModelResource
    from ..models.learning_goal import LearningGoal
 
@@ -809,8 +814,8 @@ and declare the field list in its inner ``Meta`` class. Wire it into the admin c
            ]
 
 
-   class LearningGoaladmin(CustomModeladmin):
-       """admin view for learning goals."""
+   class LearningGoalAdmin(CustomModelAdmin):
+       """Admin view for learning goals."""
        model            = LearningGoal
        resource_classes = [LearningGoalResource]   # Resource class above
        list_display     = ["name", "course", "level", "is_active"]
@@ -870,7 +875,7 @@ to valid options.
            fields = "__all__"
 
 
-   class EnrollmentMethodadmin(CustomModeladmin):
+   class EnrollmentMethodAdmin(CustomModelAdmin):
        form             = EnrollmentMethodForm
        resource_classes = [EnrollmentMethodResource]
        # ...
@@ -903,7 +908,7 @@ visible permissions to those allowed for the scope type.
            fields = "__all__"
 
 
-   class Courseadmin(CustomModeladmin):
+   class CourseAdmin(CustomModelAdmin):
        form             = CourseForm
        resource_classes = [CourseResource]
        # ...
@@ -959,7 +964,7 @@ respectively, in the same way as the audit trail helpers.
    from openbook.auth.admin.mixins.scope import scope_type_filter
 
 
-   class Courseadmin(CustomModeladmin):
+   class CourseAdmin(CustomModelAdmin):
        list_filter = [
            scope_type_filter,
            # ...
@@ -977,7 +982,7 @@ Checklist Before Moving On
 Before continuing to REST API integration, verify that:
 
 1. The admin file is placed under ``admin/``, mirroring the model file path.
-2. The admin class inherits from ``CustomModeladmin``.
+2. The admin class inherits from ``CustomModelAdmin``.
 3. A resource class is defined and listed in ``resource_classes``.
 4. Audit trail constants are used when ``CreatedModifiedByMixin`` is in the model's MRO.
 5. ``readonly_fields`` includes the audit trail field names.
@@ -987,13 +992,13 @@ Before continuing to REST API integration, verify that:
 
 .. seealso::
 
-   Django admin reference:
+   Django Admin reference:
    https://docs.djangoproject.com/en/stable/ref/contrib/admin/
 
-   Modeladmin list display options:
+   ModelAdmin list display options:
    https://docs.djangoproject.com/en/stable/ref/contrib/admin/#modeladmin-options
 
-   Django admin actions:
+   Django Admin actions:
    https://docs.djangoproject.com/en/stable/ref/contrib/admin/actions/
 
    Django Import/Export documentation:
@@ -1004,23 +1009,38 @@ Before continuing to REST API integration, verify that:
 Exposing Models in the REST API
 -------------------------------
 
-Building on the previous tutorials, this section explains how to expose a model through the REST API so
-that the frontend SPA and external clients can consume it. Every model needs three things: a **viewset**
-that handles HTTP requests, a **serializer** that translates between Python objects and JSON, and a
-**filter class** that enables clients to query the list endpoint. All three live in a single file inside
-``viewsets/``, mirroring the structure of ``models/`` and ``admin/``.
+.. - Mixins in package ``openbook.drf.viewsets``
+..    - Important to use them
+..    - Especially ``ModelViewSetMixin``
+..    - Short overview list
+
+.. - No import in ``__init__.py``, but in ``../routes.py`` to define the URL routes.
+
+.. - For each model also a custom serializers
+..    - derived from ``FlexFieldsModelSerializer``
+..    - ``drf_flex_fields2``: Client can choose the fields and whether to receive foreign keys or deep structures
+
+.. - For each model also custom filter class to support querying (searching)
+..    - derived from ``FilterSet`` (must come last after all mixins)
+..    - mixins in core and auth apps → overview (when to add which)
+
+OpenBook uses Django REST Framework to build a REST API that the frontend and external clients can consume.
+To pull this off, every model needs three things:
+
+1. a **ViewSet** that handles HTTP requests,
+2. a **Serializer** that translates between Python objects and JSON, and
+3. a **FilterSet class** that enables clients to query the list endpoint.
+
+Building on the previous tutorials, this section explains how to work with Django REST Framework and some
+OpenBook utilities to expose a model through the REST API.
 
 Create the ViewSet
 ..................
 
-Create one file per domain concept inside ``viewsets/``, named after the corresponding model file.
-Continuing the learning progress example, the file would be ``viewsets/learning_goal.py``.
-Every viewset inherits ``ModelViewSetMixin`` first, followed by DRF's ``ModelViewSet``. The order
-matters: ``ModelViewSetMixin`` must precede ``ModelViewSet`` so that its ``create()`` override takes
-effect. The mixin fills and validates the model instance before saving, which allows Django's
-object-level permission checks to run during creation --- when no database record exists yet.
-
-A minimal viewset looks like this:
+In this tutorial we are using the learning goals model from the tutorials above and expose it
+via the REST API. To do so, create a file called ``viewsets/learning_goal.py``, again following
+the convention to mirror the file structure of the ``models/`` and ``admin/`` directories, and
+put the following minimal ViewSet inside:
 
 .. code-block:: python
 
@@ -1043,56 +1063,73 @@ A minimal viewset looks like this:
        __doc__ = "Learning goals for a course"
 
        queryset         = LearningGoal.objects.all()
-       serializer_class = LearningGoalSerializer   # defined below
-       filterset_class  = LearningGoalFilter        # defined below
+       serializer_class = LearningGoalSerializer   # not yet defined
+       filterset_class  = LearningGoalFilter       # not yet defined
        ordering         = ["course", "name"]
        search_fields    = ["name", "description", "course__name"]
 
-The two class decorators serve specific purposes. ``@extend_schema(extensions=...)`` registers the
-viewset under a named group in the OpenAPI schema, which the API browser uses to organise endpoints by
-application area. ``@with_flex_fields_parameters()`` adds the ``_fields``, ``_omit``, and ``_expand``
-query parameter descriptions to the schema so clients know how to request only the fields they need.
+.. note::
 
-For models whose list and detail endpoints should be publicly readable without authentication, add
-``AllowAnonymousListRetrieveViewSetMixin`` before ``ModelViewSetMixin`` in the inheritance chain:
+   We will cover the ``LearningGoalSerializer`` and ``LearningGoalFilter`` classes soon.
+   They must be defined at the beginning of the same file for the example to work.
 
-.. code-block:: python
+From top to bottom, this code snippet does the following:
 
-   from openbook.drf.viewsets import AllowAnonymousListRetrieveViewSetMixin
+**OpenAPI schema extension** --- The class decorator ``@extend_schema`` is adds a new section to
+the OpenAPI webservice documentation. This keeps all related endpoints concerning a given model
+nicely together in the API browser. Similarly, the ``__doc__`` attribute defines the long description
+shown in the documentation.
 
-   class LearningGoalViewSet(AllowAnonymousListRetrieveViewSetMixin, ModelViewSetMixin, ModelViewSet):
-       ...
+**Flex fields parameters** --- The class decorator ``@with_flex_fields_parameters()`` adds the
+``_fields``, ``_omit``, and ``_expand`` query parameters to the OpenAPI schema so clients know
+how to request only the fields they need. The implementation is handled by the filterset class.
 
-This mixin returns ``AllowAny`` permissions for the ``list`` and ``retrieve`` actions while delegating
-all other permission checks to the viewset's default permission classes.
+**Mixin and base class** --- The ViewSet class must inherit from ``ModelViewSetMixin`` and
+``ModelViewSet`` in exactly this order. The order is important so that the mixin can fill and
+validate the model instance before saving, which in turn  allows Django's object-level permission
+checks to run during creation --- when no database record exists yet.
 
-Register API Routes
-...................
+**Queryset** --- ``queryset`` defines the base database query for all actions. Almost always
+you want to set it to ``<Model>.objects.all()``. This defines the maximum data that someone
+with all permissions can retrieve. Django REST framework automaticalls adds further filters
+for permissions and more.
 
-Unlike
-``models/`` and ``admin/``, there is no ``__init__.py`` import step. Instead, import the viewset
-directly in ``routes.py`` and register it with the DRF router there:
+**Serializer and FilterSet classes** --- ``serializer_class`` points to the serializer that converts
+model instances to JSON and validates incoming data. ``filterset_class`` points to the filter class
+that parses the URL query parameters and narrows the queryset accordingly. Both are defined in the
+same file and covered in detail in the sections below.
 
-.. code-block:: python
+**Ordering** --- ``ordering`` sets the default sort order for list responses. Mirror the
+``ordering`` declared in the model's ``Meta`` class so that the API and the admin behave
+consistently. Clients can override the sort order at request time using the ``ordering`` query
+parameter.
 
-   from .viewsets.learning_goal import LearningGoalViewSet
+**Search fields** --- ``search_fields`` drives the full-text search available via the ``search``
+query parameter. Use double-underscore notation to traverse relations, e.g. ``"course__name"``
+top search the name of the related course. Keep this list focused on the fields that are meaningful
+for users to search by.
 
+.. hint::
 
-   def register_api_routes(router, prefix):
-       router.register(f"{prefix}/learning_goals", LearningGoalViewSet, basename="learning_goal")
+   In OpenBook models by default are not accessible without authentication and propper permissions.
+   This makes sense most of the time, but doesn't work for the landing page and other public areas.
 
-The ``basename`` argument is used by DRF to generate the URL names for reverse lookups, such as
-``learning_goal-list`` and ``learning_goal-detail``. Use the model name in ``snake_case`` as the
-convention throughout OpenBook.
+   If your model must be accessible without login,  add ``AllowAnonymousListRetrieveViewSetMixin``
+   before ``ModelViewSetMixin`` in the inheritance chain.
+   This mixin returns ``AllowAny`` permissions for the ``list`` and ``retrieve`` actions while delegating
+   all other permission checks to the ViewSet's default permission classes.
 
-Creat the Serializer
-....................
+Create the Serializer
+.....................
 
-Every serializer extends ``FlexFieldsModelSerializer`` from ``openbook.drf.flex_serializers``. This
-class wraps ``rest_flex_fields2`` and adds two important behaviours: it calls ``model.full_clean()``
-during validation so that all Django field validators, ``clean()`` overrides, and uniqueness constraints
-are enforced on every API write; and it caches the validated model instance so that ``ModelViewSetMixin``
-can run permission checks before calling ``save()``.
+A ViewSet class handles HTTP requests and maps them to RESTful endpoints. But it doesn't know how
+to represent a model's data in a data format like JSON or how to convert raw JSON data back into
+a model instance. These tasks are delegated to Serializer classes.
+
+In OpenBook Serializer classes are tightly coupled to the ViewSets. For this reason we keep both
+in the same file, defining the Serializer first (because in Python a class cannot be used before
+it is defined). As a second peculiarity OpenBook integrates the ``drf-flex-fields2`` library to
+allow clients to request only those fields they need. A basic implementation looks like this:
 
 .. code-block:: python
 
@@ -1125,15 +1162,22 @@ can run permission checks before calling ``save()``.
                "modified_by": "openbook.auth.viewsets.user.UserSerializer",
            }
 
-A few conventions apply to every serializer. Always start the field list with ``"id"`` and end with the
-audit trail fields so the JSON output is predictable and consistent across all endpoints. Mark ``"id"``,
-``"created_at"``, and ``"modified_at"`` as read-only at minimum, since these are populated automatically
-by the database or by ``CreatedModifiedByMixin``.
+As a bare minimum, Serializer classes must contain an inner ``Meta`` class with the ``model`` property.
+Everything else is, in theory, optional. Still, we follow the following conventions:
 
-The ``expandable_fields`` dictionary maps field names to serializer class paths. By default, foreign keys
-are returned as UUIDs; the client opts in to receiving a full nested object by appending
-``?_expand=course`` to the request. For many-to-many relations, use the tuple form with
-``{"many": True}`` as the second element:
+**Explicit field list** --- Always declare ``fields`` explicitly to prevent accidentally exposing
+sensitive model data. Never use ``"__all__"``. Start the list with ``"id"`` and end with the audit
+trail fields so the JSON output is predictable and consistent across all endpoints.
+
+**Explicit read-only fields** --- Declare ``read_only_fields`` for every field that must not be
+writable via the API. At a minimum this includes ``"id"``, ``"created_at"``, and ``"modified_at"``,
+since they are populated automatically by the database or by ``CreatedModifiedByMixin``.
+
+**Expandable fields** --- By default, foreign keys are returned with their raw database values.
+However, OpenBook allows the client to append something like ``?_expand=course`` to the request
+URL to expand them into full nested objects. This is enabled by ``expandable_fields`` which
+references the dotted import path string of the respective Serializers. For many-to-many relations,
+use the tuple form with ``{"many": True}`` as the second element:
 
 .. code-block:: python
 
@@ -1141,54 +1185,67 @@ are returned as UUIDs; the client opts in to receiving a full nested object by a
        "permissions": ("openbook.auth.viewsets.permission.PermissionSerializer", {"many": True}),
    }
 
-For foreign keys that should be represented as human-readable strings rather than UUIDs, define a custom
-serializer field. The auth app ships several ready-made fields for common cases: ``UserField`` (returns
-the username), ``RoleField`` (returns the role slug), and ``ScopeTypeField`` (returns the
-fully-qualified model string such as ``"openbook_content.course"``). These fields replace the default
-``PrimaryKeyRelatedField`` and handle both input and output.
+.. important::
 
-For scope-owner models that implement ``ScopedRolesMixin``, inherit ``ScopedRolesSerializerMixin``
-before ``FlexFieldsModelSerializer``. This mixin injects the ``owner``, ``public_permissions``,
-``role_assignments``, ``enrollment_methods``, and ``access_requests`` fields along with their
-expandable variants. Spread its ``Meta`` field lists to avoid duplication:
+   Always reference Serializers from other files with dotted import path string, as shown above.
+   Never directly import the Serializers to avoid circular imports, which are not allows in Python.
 
-.. code-block:: python
+**Custom serializer fields** --- For Foreign Key fields where a raw ID is not meaningful to API
+consumers, add custom field classes as shown above with ``created_by`` and ``modified_by``.
+The auth app ships several ready-made fields for the most common cases:
 
-   from openbook.auth.serializers.mixins.scope import ScopedRolesSerializerMixin
+- ``UserField`` returns the username,
+- ``RoleField`` returns the role slug, and
+- ``ScopeTypeField`` returns the fully-qualified model string such as ``"openbook_content.course"``.
+
+The same pattern -- a custom field class that overrides ``to_internal_value`` and ``to_representation``
+--- can be applied to any foreign key that needs a human-readable representation. But only spend
+the time when it has clear advantages, not just because UUIDs don't look pretty.
+
+.. hint::
+
+   For scope-owner models that implement ``ScopedRolesMixin``, inherit ``ScopedRolesSerializerMixin``
+   before ``FlexFieldsModelSerializer``. This mixin injects the ``owner``, ``public_permissions``,
+   ``role_assignments``, ``enrollment_methods``, and ``access_requests`` fields along with their
+   expandable variants. Spread its ``Meta`` field lists to avoid duplication:
+
+   .. code-block:: python
+
+      from openbook.auth.serializers.mixins.scope import ScopedRolesSerializerMixin
 
 
-   class CourseSerializer(ScopedRolesSerializerMixin, FlexFieldsModelSerializer):
-       created_by  = UserField(read_only=True)
-       modified_by = UserField(read_only=True)
+      class CourseSerializer(ScopedRolesSerializerMixin, FlexFieldsModelSerializer):
+         created_by  = UserField(read_only=True)
+         modified_by = UserField(read_only=True)
 
-       class Meta:
-           model = Course
+         class Meta:
+            model = Course
 
-           fields = [
-               "id", "slug", "name", "description", "text_format",
-               *ScopedRolesSerializerMixin.Meta.fields,
-               "created_by", "created_at", "modified_by", "modified_at",
-           ]
+            fields = [
+                  "id", "slug", "name", "description", "text_format",
+                  *ScopedRolesSerializerMixin.Meta.fields,
+                  "created_by", "created_at", "modified_by", "modified_at",
+            ]
 
-           read_only_fields = [
-               "id",
-               *ScopedRolesSerializerMixin.Meta.read_only_fields,
-               "created_at", "modified_at",
-           ]
+            read_only_fields = [
+                  "id",
+                  *ScopedRolesSerializerMixin.Meta.read_only_fields,
+                  "created_at", "modified_at",
+            ]
 
-           expandable_fields = {
-               **ScopedRolesSerializerMixin.Meta.expandable_fields,
-               "created_by":  "openbook.auth.viewsets.user.UserSerializer",
-               "modified_by": "openbook.auth.viewsets.user.UserSerializer",
-           }
+            expandable_fields = {
+                  **ScopedRolesSerializerMixin.Meta.expandable_fields,
+                  "created_by":  "openbook.auth.viewsets.user.UserSerializer",
+                  "modified_by": "openbook.auth.viewsets.user.UserSerializer",
+            }
 
 Creat the Filter Class
 ......................
 
-Every viewset needs a filter class so clients can search and narrow the list endpoint with query
-parameters. The filter class inherits one or more mixin classes followed by ``FilterSet`` as the very
-last base class. This order is a hard requirement: ``FilterSet`` must appear last so that the mixin
-``Meta`` classes are resolved correctly before ``FilterSet`` processes them.
+In OpenBook every ViewSet class references a FilterSet class defined in the same file so clients can
+not only request a list of model entries but search and narrow the list with query parameters. For this
+the FilterSet class inherits one or more optional mixin classes followed by ``FilterSet`` as the very
+last base class. Again, the ordering is important.
 
 .. code-block:: python
 
@@ -1209,10 +1266,10 @@ last base class. This order is a hard requirement: ``FilterSet`` must appear las
 
 The ``fields`` dictionary maps field names to tuples of supported lookup expressions. Use
 ``("exact",)`` for equality checks and ``("exact", "lte", "gte")`` for date or numeric fields that
-benefit from range queries.
+benefit from range queries. Try to cover as many fields as makes sense for clients to filter against.
 
-The auth app provides filter mixins to cover the cross-cutting concerns. Add only those that match the
-model's mixin inheritance.
+As always, for cross-cutting concerns, the auth app provides mixins. These are roughly identical
+to the mixins used in the model definitions:
 
 **Audit trail filters** --- ``CreatedModifiedByFilterMixin`` adds ``created_by`` and ``modified_by``
 character filters resolved by username, plus date-range lookups for ``created_at`` and ``modified_at``.
@@ -1229,8 +1286,8 @@ Use it for models that implement ``ScopedRolesMixin``.
 permission strings in the form ``"app_label.codename"``. The former targets M2M permission relations;
 the latter targets a single FK permission field.
 
-When a field cannot be mapped to a standard lookup expression, define a custom filter method. Pass it
-as the ``method`` argument on the filter declaration and implement the method on the class:
+In some very special cases, a field cannot be mapped to a standard lookup expression. You need then
+to define a new property for the field and pass it a filter method like so:
 
 .. code-block:: python
 
@@ -1238,66 +1295,62 @@ as the ``method`` argument on the filter declaration and implement the method on
 
 
    class EnrollmentMethodFilter(ScopeFilterMixin, CreatedModifiedByFilterMixin, FilterSet):
+       # Explicit filter field
        role = CharFilter(method="role_filter")
 
        class Meta:
            model  = EnrollmentMethod
            fields = {
-               **ScopeFilterMixin.Meta.fields,
-               "role":      (),
-               "name":      ("exact",),
-               "is_active": ("exact",),
-               **CreatedModifiedByFilterMixin.Meta.fields,
+               # The field is included, but the match types are deliberately empty
+               "role": (),
+
+               # Remaining filter fields ...
            }
 
+       # Custom filter logic for the field
        def role_filter(self, queryset, name, value):
            return queryset.filter(role__slug=value)
 
 The method receives the queryset and the filter value and returns a filtered queryset. Use this pattern
 for any filter that must traverse a relation or apply logic that standard lookups cannot express.
 
-Advanced: OpenAPI Extensions and Custom Actions
-...............................................
+Register API Routes
+...................
 
-Most viewsets need nothing beyond what the preceding tutorials cover. The patterns below apply when
-default behaviour is not sufficient.
+As a final step, edit ``routes.py`` to register the new ViewSet with the Django REST Framework router:
 
-**Overriding operation details** --- ``@extend_schema`` can also be applied to individual action
-methods to set the ``operation_id``, a human-readable ``summary``, a typed ``request`` body, and the
-expected ``responses``. Use ``inline_serializer`` for simple one-off request payloads that do not
-warrant a dedicated serializer class:
+.. code-block:: python
+
+   from .viewsets.learning_goal import LearningGoalViewSet
+
+
+   def register_api_routes(router, prefix):
+       router.register(f"{prefix}/learning_goals", LearningGoalViewSet, basename="learning_goal")
+
+The ``basename`` argument is used to generate the URL names for reverse lookups, such as ``learning_goal-list``
+and ``learning_goal-detail``. Use the model name in ``snake_case`` as the convention throughout OpenBook.
+
+Advanced: Custom Actions
+........................
+
+Use custom actions when you need endpoints beyond the standard CRUD methods provided by
+``ModelViewSet``. Define them with ``@action`` from ``rest_framework.decorators``.
+
+The ``detail`` flag controls whether the endpoint targets one object (``True``) or the full
+collection (``False``). ``methods`` defines the allowed HTTP verbs, ``url_path`` defines the
+URL suffix, and ``permission_classes`` can override permissions for that action only.
+
+Annotate every custom action with ``@extend_schema`` so the OpenAPI output documents the
+request and response format correctly.
 
 .. code-block:: python
 
    from drf_spectacular.utils      import extend_schema
    from drf_spectacular.utils      import inline_serializer
-   from rest_framework.serializers import CharField
-
-
-   @extend_schema(
-       operation_id = "learning_progress_learning_goal_submit",
-       summary      = "Submit Learning Goal",
-       request      = inline_serializer(
-           name   = "SubmitGoalRequestSerializer",
-           fields = {"evidence": CharField(required=False)},
-       ),
-       responses = LearningGoalSerializer,
-   )
-   @action(detail=True, methods=["put"], url_path="submit")
-   def submit(self, request, pk=None):
-       ...
-
-**Custom actions** --- Use ``@action`` from ``rest_framework.decorators`` to add endpoints beyond the
-standard CRUD set. The ``detail`` flag controls whether the action operates on a single object
-(``True``, appended to the object's URL) or on the collection (``False``, appended to the list URL).
-The ``url_path`` value becomes the URL segment, and ``permission_classes`` overrides the viewset's
-default permissions for that action only:
-
-.. code-block:: python
-
    from rest_framework.decorators  import action
    from rest_framework.permissions import AllowAny
    from rest_framework.response    import Response
+   from rest_framework.serializers import CharField
 
 
    class EnrollmentMethodViewSet(ModelViewSetMixin, ModelViewSet):
@@ -1323,44 +1376,34 @@ default permissions for that action only:
            )
            return Response(RoleAssignmentSerializer(role_assignment).data)
 
-Always annotate custom actions with ``@extend_schema`` so the generated API documentation includes the
-correct request and response shapes.
+Checklist Before Moving On
+..........................
 
-**Scope-specific patterns** --- Models using ``ScopedRolesMixin`` or ``ScopeMixin`` need additional
-wiring in both the serializer and the filter class, as shown in the examples throughout this section.
-For complete reference implementations, read ``src/openbook/content/viewsets/course.py``
-(scope-owner pattern) and ``src/openbook/auth/viewsets/enrollment_method.py`` (scope-member pattern)
-side by side.
+Before continuing to fixtures and tests, verify that:
+
+1. The ViewSet file is in ``viewsets/``, named after the model file.
+2. The ViewSet inherits ``ModelViewSetMixin`` before ``ModelViewSet``.
+3. The ``@extend_schema()`` and ``@with_flex_fields_parameters()`` decorators are present.
+4. All required attributes are set: ``queryset``, ``serializer_class``, ``filterset_class``, ``search_fields``.
+5. The serializer extends ``FlexFieldsModelSerializer``.
+6. The serializer includes ``"id"`` and audit fields in ``read_only_fields``.
+7. ``expandable_fields`` is declared for all FK and M2M relations.
+8. The filter class has ``FilterSet`` last in its MRO and includes all applicable filter mixins.
+9. The ViewSet is registered in ``routes.py`` (not ``__init__.py``).
 
 .. seealso::
 
    Django REST Framework ViewSet reference:
    https://www.django-rest-framework.org/api-guide/viewsets/
 
-   DRF Flex Fields documentation:
-   https://rsinger86.github.io/drf-flex-fields/
+   DRF Flex Fields 2 documentation:
+   https://drf-flex-fields2.readthedocs.org
 
    DRF Spectacular documentation:
    https://drf-spectacular.readthedocs.io/en/latest/
 
    Django Filters documentation:
    https://django-filter.readthedocs.io/en/stable/
-
-Checklist Before Moving On
-..........................
-
-Before continuing to fixtures and tests, verify that:
-
-1. The viewset file is in ``viewsets/``, named after the model file.
-2. The viewset inherits ``ModelViewSetMixin`` before ``ModelViewSet``.
-3. The ``@extend_schema(extensions=...)`` and ``@with_flex_fields_parameters()`` decorators are present.
-4. All required attributes are set: ``queryset``, ``serializer_class``, ``filterset_class``,
-   ``search_fields``.
-5. The serializer extends ``FlexFieldsModelSerializer`` with ``"id"`` and audit fields in
-   ``read_only_fields``.
-6. ``expandable_fields`` is declared for all FK and M2M relations.
-7. The filter class has ``FilterSet`` last in its MRO and includes all applicable filter mixins.
-8. The viewset is registered in ``routes.py`` (not ``__init__.py``).
 
 -----------------
 Creating Fixtures
@@ -1371,7 +1414,7 @@ Use YAML fixtures to keep the data readable, reviewable, and easy to maintain in
 
 .. rst-class:: spaced-list
 
-1. Create and prepare the data first in Django admin or the application UI until it reflects the state you
+1. Create and prepare the data first in Django Admin or the application UI until it reflects the state you
    want to ship as a fixture.
 
 2. Then export only the data you need into a dedicated files under ``fixtures/<app>/`` using the following
@@ -1428,4 +1471,4 @@ Use YAML fixtures to keep the data readable, reviewable, and easy to maintain in
    - Mixin-class ``ModelViewSetTestMixin`` defines baseline tests for all models
       - Tests derived from class properties
          - Document what each property does
-      - Additional test methods as needed, especially for viewset actions
+      - Additional test methods as needed, especially for ViewSet actions
