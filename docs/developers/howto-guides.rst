@@ -1,10 +1,12 @@
-=============
-How To Guides
-=============
+=============================
+How To Implement New Features
+=============================
 
 This page collects various tutorials for often-needed development activities. The tutorials
-build upon each other, as usually for each new feature all the below documented steps need
-to be carried out.
+build upon each other and together cover the full development cycle for adding a new feature:
+from creating a Django app and defining the data model, through admin integration, all the way
+to exposing the model via the REST API so the frontend can consume it. Following them in order
+for each new feature ensures nothing is missed.
 
 .. note::
 
@@ -142,7 +144,7 @@ Create the file `app.py` (inside the app directory) with following content:
    `snake_case` capitalization, etc. The name is always ``openbook.<app_label>`` and
    the app label the package name.
 
-   The verbose name is used in the Admin and in other places in the UI. So it must be
+   The verbose name is used in the admin and in other places in the UI. So it must be
    marked with ``_()`` as a translatable text.
 
 Register API routes in ``routes.py``
@@ -267,7 +269,7 @@ and ``models.ForeignKey`` for relations.
 .. hint::
 
    In OpenBook, prefer explicit ``verbose_name`` values wrapped in ``_()`` for all user-facing
-   fields, so labels in Admin forms and API-driven UIs stay consistent and translatable. Also
+   fields, so labels in admin forms and API-driven UIs stay consistent and translatable. Also
    use ``get_level_display()`` in ``__str__()`` whenever a field defines ``choices``. This returns
    the human-readable (and translated) label instead of the raw stored value.
 
@@ -288,7 +290,7 @@ Every model must define an inner ``Meta`` class with at least ``verbose_name`` a
 ``constraints`` as the domain requires
 
 Additionaly, provide a ``__str__()`` method so the model displays as a human-readable string
-in the Admin and in log output. When ``NameDescriptionMixin`` is included it already supplies a
+in the admin and in log output. When ``NameDescriptionMixin`` is included it already supplies a
 ``__str__`` that returns ``self.name``, so override it only when the default output is not
 descriptive enough. ``ActiveInactiveMixin`` provides a companion ``__str__`` that returns
 ``"(inactive)"`` when the object is inactive, which you can compose into a richer string
@@ -354,7 +356,7 @@ Example:
          verbose_name_plural = _("Learning Goal Texts")
 
 Keep translation companion models close to their parent model in structure and naming so that
-Admin, API serializers, and tests can follow the same conventions across apps.
+admin, API serializers, and tests can follow the same conventions across apps.
 
 Export From ``models/__init__.py``
 ..................................
@@ -449,7 +451,7 @@ In practice, most field declarations combine a type with options such as ``verbo
 validation, database constraints, query performance, or API behavior.
 
 **Human-readable label** --- Always supply an explicit ``verbose_name`` wrapped in ``_()`` so
-the label is translatable. It appears in Admin forms, error messages, and API schema
+the label is translatable. It appears in admin forms, error messages, and API schema
 documentation. Without it Django generates a label from the attribute name, which can be
 misleading (for example ``"course_id"`` instead of ``"Course"``).
 
@@ -473,7 +475,7 @@ states, taxonomy levels, or category sets. Define the choices as an inner class 
 so they travel with the model and are easy to reference from tests and serializers.
 
 **Editorial guidance** --- Add ``help_text`` for any field where an editor might misunderstand
-the expected meaning or format. The text appears as a hint beneath the widget in Admin forms.
+the expected meaning or format. The text appears as a hint beneath the widget in admin forms.
 
 **Reverse relation name** --- Always set an explicit ``related_name`` on foreign keys and
 many-to-many fields. A clear name keeps reverse lookups readable and avoids clashes when the
@@ -520,7 +522,7 @@ Example patterns:
 Checklist Before Moving On
 ..........................
 
-Before you continue with Admin and API integration, verify that:
+Before you continue with admin and API integration, verify that:
 
 1. The model is placed in the correct file under ``models/`` (one concept plus companion models).
 2. Required core/auth mixins are inherited, with ``UUIDMixin`` first.
@@ -532,41 +534,470 @@ Before you continue with Admin and API integration, verify that:
 
 
 --------------------------
-# Adding Models to the Admin
+Adding Models to the admin
 --------------------------
 
-.. NOTE TO COPILOT:
-.. make sure that the tutorial follows a logical progression from simple to more complete
-.. because, getting this part right, including all the custom classes is central to the OpenBook architecture
-.. Each model NEEDS a viewset, serzializers, filters
-.. Start with simple example codes and expand from there with ever increasing examples
+Django admin is the primary tool for administrators and developers to inspect live data, diagnose
+problems, and create test content during development before a full UI exists. For this reason,
+every model should have an admin integration. The work follows the same file-mirroring pattern
+as models and viewsets: one source file per domain concept in the ``admin/`` directory, wired
+together through ``__init__.py``.
 
-.. The mixins are central to the OpenBook architecture
-.. Readers must know their relevance and how to use them for what to be able to write correct code.
-.. Please read their source to understand the background, before drafting the documentation.
-.. Also read src/openbook/auth/admin/enrollment_method.py to understand the patterns we are going to document.
+Create the admin File
+.....................
 
-- Building upon the previous tutorial, exposing models in the admin
-- Every major model should be exposed in the admin
-   - To allow administrators to analyze and fix data-related problems
-   - To create test data until a full UI has been built
-- Minimum steps:
-   - File-structure in ``admin/`` matching the ``models/`` structure
-   - Minimal class derived from ``CustomModelAdmin`` within a new source file
-   - Class derived from ``ScopeResourceMixin`` to allow import/export to various file formats
-      - Important to thoroughly test the export/import
-   - Import and registration in ``__init__.py``
-- Fine-tuning the result: Properties and mixins for fine-tuning
-      - list_display
-      - list_display_links
-      - list_select_related
-      - ordering
-      - search_fields
-      - readonly_fields
-      - list_filter
-      - fieldsets → field groups via (sets), tabs (Django Unfold extension)
-      - add_fieldsets → no fields with automatically created values, most importantly created_modified_by_fieldset, to avoid crashes
-- Example codes
+To integrate a model into the Django admin create a new file in the ``admin/`` directory with
+the same name as its source file in the ``model/`` directory. Within the new file define a
+class that inherits from ``CustomModeladmin``, imported from ``openbook.admin``. This base class
+combines three things, which is why, unlike in traditional Django projects, you never touch
+Django's built-in ``Modeladmin`` class directly:
+
+1. Django Unfold for the styled admin UI, and
+2. DjangoQL for advanced search expressions in the change list,
+3. Django Import/Export for CSV, YAML, and XLSX data exchange.
+
+A minimal admin class needs only the ``model``, ``list_display``, ``ordering``, and
+``search_fields`` properties to link it to the model class and name the fields used
+in the overview list.  Again, using learning goals as an example, the file would be
+named ``admin/learning_goal.py`` (like the model file) and have the following conent:
+
+.. code-block:: python
+
+   from openbook.admin         import CustomModeladmin
+   from ..models.learning_goal import LearningGoal
+
+
+   class LearningGoaladmin(CustomModeladmin):
+       """admin view for learning goals."""
+       model         = LearningGoal
+       list_display  = ["name", "course", "level", "is_active"]
+       ordering      = ["course", "name"]
+       search_fields = ["name", "course__name"]
+
+This is already functional: the change list shows the configured columns, results are sortable
+and searchable, and the default form --- not declared in the class --- renders all editable fields.
+Isn't Django great? 🙂
+
+Register in ``__init__.py``
+...........................
+
+Once the class exists, register it in ``admin/__init__.py``:
+
+.. code-block:: python
+
+   from openbook.admin import admin_site
+   from .learning_goal import LearningGoaladmin
+   from ..             import models
+
+   admin_site.register(models.LearningGoal, LearningGoaladmin)
+
+The order of ``register()`` calls determines the order in which models appear in the admin
+sidebar. So, register models in a logical order that makes sense to administrators.
+
+Configuring the Change List
+...........................
+
+The following admin class attributes control the change list behaviour. Look at other admin
+classes nearby to see how they are typically used and play aroudn with their values to achieve
+best results.
+
+.. important::
+
+   We treat the admin as a first-class citizen, as if it was the primary user interface for
+   all users. Because, for administrators it really *is* the primary user interface to
+   work with the models.
+
+**Visible columns** --- ``list_display`` sets which fields appear as columns. Keep it focused:
+show the fields needed to identify and distinguish records at a glance.
+
+**Clickable links** --- ``list_display_links`` specifies which columns act as links to the
+edit page. Without it, only the first column is a link by default. To simplify navigation a
+little, try to make all fields clickable.
+
+**Related field prefetching** --- ``list_select_related`` names the Foreign Key fields
+that Django should join in the same query as the list, avoiding one extra query per row.
+This usually enhances the performance considerably.
+
+**Default sort** --- ``ordering`` sets the default sort order for the change list. Mirror the
+``ordering`` declared in the model's ``Meta`` class to keep behaviour consistent.
+
+**Full-text search** --- ``search_fields`` drives the DjangoQL search bar. Use double
+underscore notation to traverse relations: ``"course__name"`` searches the related course's
+name.
+
+**Filter sidebar** --- ``list_filter`` populates the right-hand filter panel. Use plain field
+names for simple boolean or choice fields, and ``(field, RelatedOnlyFieldListFilter)`` tuples
+for Foreign Key fields where you want to restrict the list to values that are actually in use.
+
+**Read-only fields** --- ``readonly_fields`` marks fields that should be visible in the edit
+form but cannot be changed by the admin user. Always include the audit trail field names here
+so they are visible but protected from accidental edits.
+
+Audit Trail Integration
+.......................
+
+When a model uses ``CreatedModifiedByMixin``, import the four helper constants from
+``openbook.auth.admin.mixins.audit`` and spread them into the relevant admin class attributes:
+
+.. code-block:: python
+
+   from openbook.auth.admin.mixins.audit import created_modified_by_fields
+   from openbook.auth.admin.mixins.audit import created_modified_by_fieldset
+   from openbook.auth.admin.mixins.audit import created_modified_by_filter
+   from openbook.auth.admin.mixins.audit import created_modified_by_related
+
+
+   class LearningGoaladmin(CustomModeladmin):
+       """admin view for learning goals."""
+       model               = LearningGoal
+       resource_classes    = [LearningGoalResource]
+       list_display        = ["name", "course", "level", "is_active", *created_modified_by_fields]
+       list_select_related = [*created_modified_by_related]
+       list_filter         = ["level", "is_active", *created_modified_by_filter]
+       readonly_fields     = [*created_modified_by_fields]
+       ordering            = ["course", "name"]
+       search_fields       = ["name", "course__name"]
+
+The four constants expand as follows:
+
+**Column names** --- ``created_modified_by_fields`` is a list of four field names:
+``created_by``, ``created_at``, ``modified_by``, and ``modified_at``. Spread it into
+``list_display`` to show audit columns in the change list, and into ``readonly_fields`` to
+prevent manual edits.
+
+**Prefetch hints** --- ``created_modified_by_related`` lists the two Foreign Key names for the
+user relations. Spread it into ``list_select_related`` to avoid N+1 queries when the list renders.
+
+**Filter sidebar** --- ``created_modified_by_filter`` is a list of filter entries (plain
+strings and ``(field, FilterClass)`` tuples). Spread it into ``list_filter``.
+
+**Fieldset** --- ``created_modified_by_fieldset`` is a ready-made fieldset tuple rendered as
+a tab. Always append it as the last entry in ``fieldsets``.
+
+Organising the Edit Form with Fieldsets
+.......................................
+
+By default Django admin renders all editable fields in a single unstyled block. Fieldsets
+group fields into named sections and can optionally render as Django Unfold tabs, making
+longer forms easier to navigate. To this end, define ``fieldsets`` for the edit/change view
+and optionally -- when different -- ``add_fieldsets`` for the create view.
+
+.. caution::
+
+   When both ``fieldsets`` and ``add_fieldsets`` are present, the two must not be identical.
+   The latter must omit auto-populated fields such as the audit trail, because those fields
+   do not exist yet on first save and their presence causes a crash.
+
+.. code-block:: python
+
+   class LearningGoaladmin(CustomModeladmin):
+       """admin view for learning goals."""
+       # ... list attributes from above ...
+
+       fieldsets = [
+           (None, {
+               "fields": [
+                   ("course", "level"),
+                   ("name", "is_active"),
+               ],
+           }),
+           (_("Description"), {
+               "classes": ["tab"],
+               "fields": ["description", "text_format"],
+           }),
+           created_modified_by_fieldset,
+       ]
+
+       # The same as fieldsets but without created_modified_by_fieldset.
+       # Can be omitted for models with no readonly fields
+       add_fieldsets = [
+           (None, {
+               "fields": [
+                   ("course", "level"),
+                   ("name", "is_active"),
+               ],
+           }),
+           (_("Description"), {
+               "classes": ["tab"],
+               "fields": ["description", "text_format"],
+           }),
+       ]
+
+A few conventions to follow:
+
+**Field grouping** --- Pass a tuple inside the ``"fields"`` list to place multiple fields side
+by side on the same row: ``("course", "level")`` renders both on one line.
+
+**Tabs** --- Add ``"classes": ["tab"]`` to a fieldset to render it as a Django Unfold tab. Use
+tabs for secondary or less frequently edited groups such as description text, validity
+settings, or audit information.
+
+**Audit fieldset** --- Always end ``fieldsets`` with ``created_modified_by_fieldset`` when the
+model uses ``CreatedModifiedByMixin``. Never include it in ``add_fieldsets``.
+
+Inline Views
+............
+
+Related objects such as translation companion models can be embedded directly in the parent
+model's change page using inline classes. This is more ergonomic than requiring administrators
+to navigate to a separate list to manage translations. To do so, define a ``TabularInline``
+(or ``StackedInline`` for more complex layouts) in the same admin file and reference it in the
+parent admin class via ``inlines``:
+
+.. code-block:: python
+
+   from unfold.admin           import TabularInline
+   from ..models.learning_goal import LearningGoalText
+
+
+   class _LearningGoalTextInline(TabularInline):
+       """Inline for translated texts of a learning goal."""
+       model               = LearningGoalText
+       fields              = ["language", "short_title", "summary"]
+       ordering            = ["language"]
+       extra               = 0
+       show_change_link    = True
+       tab                 = True
+       verbose_name        = _("Translation")
+       verbose_name_plural = _("Translations")
+
+
+   class LearningGoaladmin(CustomModeladmin):
+       """admin view for learning goals."""
+       # ...
+       inlines = [_LearningGoalTextInline]
+
+Our conventions are:
+
+**No empty placeholder** --- Always set ``extra = 0`` to suppress the empty placeholder rows
+that Django renders by default.
+
+**Link to full admin page** -- If the inlined model has a proper admin page, set
+``show_change_link = True`` so that administrators can open the inline record on its own page
+for more detailed work.
+
+**Render as tabs** --- Consider, setting ``tab = True`` to render the inline as a separate Django
+Unfold tab, keeping the main form uncluttered.
+
+**Prefix private classes** --- Prefix inline class names with an underscore to signal that they are
+private implementation details of the file.
+
+Import/Export Support
+.....................
+
+In OpenBook every admin class should support file-based data import/export so that administrators
+can export data for review, import test data, or migrate entries between environments. This requires
+are resource class that must be derived from ``ImportExportModelResource`` (in ``openbook.admin``)
+and declare the field list in its inner ``Meta`` class. Wire it into the admin class via the
+``resource_classes`` property like so:
+
+.. code-block:: python
+
+   from openbook.admin         import CustomModeladmin
+   from openbook.admin         import ImportExportModelResource
+   from ..models.learning_goal import LearningGoal
+
+
+   class LearningGoalResource(ImportExportModelResource):
+       """Import/export resource for learning goals."""
+       class Meta:
+           model  = LearningGoal
+           fields = [
+               "id", "delete",
+               "course", "name", "level", "is_active",
+               "description", "text_format",
+           ]
+
+
+   class LearningGoaladmin(CustomModeladmin):
+       """admin view for learning goals."""
+       model            = LearningGoal
+       resource_classes = [LearningGoalResource]   # Resource class above
+       list_display     = ["name", "course", "level", "is_active"]
+       ordering         = ["course", "name"]
+       search_fields    = ["name", "course__name"]
+
+.. note::
+
+   Mind the square brackets around the ressource class.
+
+Always include ``"id"`` and ``"delete"`` as the first two fields. The ``delete`` column is a
+convention from ``ImportExportModelResource`` that lets users mark rows for deletion (provided
+thw file rows contain valid ids) by setting the value in the file to ``true``.
+
+For foreign keys, boolean fields, or many-to-many fields that
+cannot be represented as plain text, add a ``Field()`` declaration with an appropriate widget
+class. The advanced patterns subsection covers this for scope-related fields.
+
+.. seealso::
+
+   Advanced Import/Export patterns:
+   https://django-import-export.readthedocs.io/en/latest/advanced_usage.html
+
+Advanced: Scope-specific Patterns
+..................................
+
+Models that use ``ScopeMixin`` (i.e. belong to a permission scope) or ``ScopedRolesMixin``
+(i.e. define a permission scope) require additional mixins for the form and resource classes.
+All of these live in ``openbook.auth.admin.mixins.scope``.
+
+**Scope-member models** --- When a model references a scope via ``ScopeMixin``, inherit the
+resource class from ``ScopeResourceMixin`` instead of ``ImportExportModelResource``. This
+mixin handles import and export of the scope reference, resolving scope objects by slug during
+import. For the form, inherit from ``ScopeFormMixin`` to replace the raw UUID widget with a
+dynamically loaded select box that shows scope objects by name and restricts scope type choices
+to valid options.
+
+.. code-block:: python
+
+   from openbook.auth.admin.mixins.scope import ScopeFormMixin
+   from openbook.auth.admin.mixins.scope import ScopeResourceMixin
+
+
+   class EnrollmentMethodResource(ScopeResourceMixin):
+       class Meta:
+           model  = EnrollmentMethod
+           fields = [
+               "id", "delete",
+               *ScopeResourceMixin.Meta.fields,
+               "name", "role", "is_active",
+           ]
+
+
+   class EnrollmentMethodForm(ScopeFormMixin):
+       class Meta:
+           model  = EnrollmentMethod
+           fields = "__all__"
+
+
+   class EnrollmentMethodadmin(CustomModeladmin):
+       form             = EnrollmentMethodForm
+       resource_classes = [EnrollmentMethodResource]
+       # ...
+
+**Scope-owner models** --- When a model defines a permission scope via ``ScopedRolesMixin``,
+inherit the resource class from ``ScopedRolesResourceMixin`` to handle export of the owner and
+public permissions fields. For the form, inherit from ``ScopedRolesFormMixin`` to restrict
+visible permissions to those allowed for the scope type.
+
+.. code-block:: python
+
+   from openbook.admin                   import ImportExportModelResource
+   from openbook.auth.admin.mixins.scope import ScopedRolesFormMixin
+   from openbook.auth.admin.mixins.scope import ScopedRolesResourceMixin
+
+
+   class CourseResource(ScopedRolesResourceMixin, ImportExportModelResource):
+       class Meta:
+           model  = Course
+           fields = [
+               "id", "delete",
+               "slug", "name",
+               *ScopedRolesResourceMixin.Meta.fields,
+           ]
+
+
+   class CourseForm(ScopedRolesFormMixin):
+       class Meta:
+           model  = Course
+           fields = "__all__"
+
+
+   class Courseadmin(CustomModeladmin):
+       form             = CourseForm
+       resource_classes = [CourseResource]
+       # ...
+
+.. important::
+
+   Note that ``ScopedRolesResourceMixin`` must come before ``ImportExportModelResource`` in the
+   inheritance chain so that its field declarations take precedence.
+
+**Scope-role fields** --- Models that combine a scope reference with a role field additionally
+need ``ScopeRoleFieldFormMixin`` on the form class to restrict the role choices to roles
+defined within the selected scope. The corresponding inline class should inherit
+``ScopeRoleFieldInlineMixin`` to apply the same restriction inside inline forms.
+
+.. code-block:: python
+
+   from django.contrib.contenttypes.admin import GenericTabularInline
+   from unfold.admin                       import TabularInline
+
+   from openbook.auth.admin.mixins.scope   import ScopeFormMixin
+   from openbook.auth.admin.mixins.scope   import ScopeRoleFieldFormMixin
+   from openbook.auth.admin.mixins.scope   import ScopeRoleFieldInlineMixin
+
+
+   class EnrollmentMethodForm(ScopeFormMixin, ScopeRoleFieldFormMixin):
+       class Meta:
+           model  = EnrollmentMethod
+           fields = "__all__"
+
+       class Media:
+           css = {"all": [*ScopeFormMixin.Media.css["all"], *ScopeRoleFieldFormMixin.Media.css["all"]]}
+           js  = [*ScopeFormMixin.Media.js, *ScopeRoleFieldFormMixin.Media.js]
+
+
+   class EnrollmentMethodInline(ScopeRoleFieldInlineMixin, GenericTabularInline, TabularInline):
+       model       = EnrollmentMethod
+       ct_field    = "scope_type"
+       ct_fk_field = "scope_uuid"
+       fields      = ["name", "role", "is_active"]
+       extra       = 0
+
+When both ``ScopeFormMixin`` and ``ScopeRoleFieldFormMixin`` are needed, merge their ``Media``
+declarations explicitly as shown above. The same form class is then wired into the admin class
+via the ``form`` attribute.
+
+The module also exports the helper constants ``scope_type_filter`` and
+``permissions_fieldset``, which can be spread into ``list_filter`` and ``fieldsets``
+respectively, in the same way as the audit trail helpers.
+
+.. code-block:: python
+
+   from openbook.auth.admin.mixins.scope import permissions_fieldset
+   from openbook.auth.admin.mixins.scope import scope_type_filter
+
+
+   class Courseadmin(CustomModeladmin):
+       list_filter = [
+           scope_type_filter,
+           # ...
+       ]
+
+       fieldsets = [
+           # ...
+           permissions_fieldset,
+           created_modified_by_fieldset,
+       ]
+
+Checklist Before Moving On
+..........................
+
+Before continuing to REST API integration, verify that:
+
+1. The admin file is placed under ``admin/``, mirroring the model file path.
+2. The admin class inherits from ``CustomModeladmin``.
+3. A resource class is defined and listed in ``resource_classes``.
+4. Audit trail constants are used when ``CreatedModifiedByMixin`` is in the model's MRO.
+5. ``readonly_fields`` includes the audit trail field names.
+6. Both ``fieldsets`` and ``add_fieldsets`` are defined, and ``add_fieldsets`` omits the audit fieldset.
+7. Companion models (e.g. translations) are covered by an inline class.
+8. The admin class is registered in ``admin/__init__.py`` in the correct position.
+
+.. seealso::
+
+   Django admin reference:
+   https://docs.djangoproject.com/en/stable/ref/contrib/admin/
+
+   Modeladmin list display options:
+   https://docs.djangoproject.com/en/stable/ref/contrib/admin/#modeladmin-options
+
+   Django admin actions:
+   https://docs.djangoproject.com/en/stable/ref/contrib/admin/actions/
+
+   Django Import/Export documentation:
+   https://django-import-export.readthedocs.io/en/latest/
 
 
 -------------------------------
@@ -611,7 +1042,7 @@ Use YAML fixtures to keep the data readable, reviewable, and easy to maintain in
 
 .. rst-class:: spaced-list
 
-1. Create and prepare the data first in Django Admin or the application UI until it reflects the state you
+1. Create and prepare the data first in Django admin or the application UI until it reflects the state you
    want to ship as a fixture.
 
 2. Then export only the data you need into a dedicated files under ``fixtures/<app>/`` using the following

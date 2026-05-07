@@ -25,7 +25,7 @@ usually within the `docs/` directory, always apply the following style guide:
 - Instead of multiple sub-sections with one paragraph prefer bold-facing the first words (see example below)
 - Prefix incomplete pages or sections with # .
 - Begin each page with a one to three sentences introduction.
-- Add a local table of contents (title: Page Content, depth: 1) before the first top-level section.
+- Add a local table of contents (title: Page Content) before the first top-level section.
 
 Heading Syntax:
 
@@ -46,7 +46,6 @@ This page ... (one to three sentences introducing the page)
 
 .. contents:: Page Content
    :local:
-   :depth: 1
 
 
 -------------

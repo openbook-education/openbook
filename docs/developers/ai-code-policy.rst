@@ -53,6 +53,14 @@ produced. Specifically:
 As a rule of thumb, if you would not be comfortable explaining a piece of code in a review,
 it should not be in your pull request (which is a code review, after all).
 
+.. hint::
+
+   Precise prompts significantly reduce the risk of unwanted copyright infringement.
+   For example, instead of asking the AI agent to write a manual page on a topic from
+   scratch, first sketch out the full outline and sequence of ideas yourself, then let
+   the AI write the prose. Structural guidance steers the model away from reproducing
+   existing text verbatim.
+
 
 -------------------
 Improving the Tools

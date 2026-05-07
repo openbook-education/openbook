@@ -106,8 +106,9 @@ download, install, and use **without restrictions**.
    developers/development-process
    developers/local-development
    developers/versioning-and-releases
-   developers/ai-code-policy
    developers/dependency-policy
+   developers/ai-code-policy
+   developers/ai-coding-tips
    developers/howto-guides
    developers/api-reference
    developers/repository-setup
