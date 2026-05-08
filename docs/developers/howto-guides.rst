@@ -425,7 +425,7 @@ auditing and accountability.
 **Permission scope boundary** --- ``ScopedRolesMixin`` makes the model itself a top-level
 permission scope. A scope owns an owner and carries relations for roles, role assignments,
 enrollment methods, access requests, and public permissions. Use this only for container objects
-such as courses — models that define a permission boundary for everything they contain.
+such as courses --- models that define a permission boundary for everything they contain.
 
 **Scope membership** --- ``ScopeMixin`` is for models that belong to a scope rather than define
 one. It adds generic foreign key fields pointing at the parent scope object. This is used
@@ -465,7 +465,7 @@ and ``blank=True``.
 **Uniqueness vs. query performance** --- Use ``unique=True`` only when duplicates must be
 impossible by business rule, for example a globally unique external ID. That constraint already
 creates a database index as a side effect. When duplicate values are allowed but lookups are
-frequent — for example filtering by status or slug — use ``db_index=True`` instead.
+frequent --- for example filtering by status or slug --- use ``db_index=True`` instead.
 
 **Safe initial values** --- Add a ``default`` only when there is one genuinely correct
 initial value for the domain. Avoid hiding missing data with an arbitrary default.
@@ -1009,21 +1009,6 @@ Before continuing to REST API integration, verify that:
 Exposing Models in the REST API
 -------------------------------
 
-.. - Mixins in package ``openbook.drf.viewsets``
-..    - Important to use them
-..    - Especially ``ModelViewSetMixin``
-..    - Short overview list
-
-.. - No import in ``__init__.py``, but in ``../routes.py`` to define the URL routes.
-
-.. - For each model also a custom serializers
-..    - derived from ``FlexFieldsModelSerializer``
-..    - ``drf_flex_fields2``: Client can choose the fields and whether to receive foreign keys or deep structures
-
-.. - For each model also custom filter class to support querying (searching)
-..    - derived from ``FilterSet`` (must come last after all mixins)
-..    - mixins in core and auth apps → overview (when to add which)
-
 OpenBook uses Django REST Framework to build a REST API that the frontend and external clients can consume.
 To pull this off, every model needs three things:
 
@@ -1303,8 +1288,7 @@ to define a new property for the field and pass it a filter method like so:
            fields = {
                # The field is included, but the match types are deliberately empty
                "role": (),
-
-               # Remaining filter fields ...
+               ...
            }
 
        # Custom filter logic for the field
@@ -1422,7 +1406,7 @@ Use YAML fixtures to keep the data readable, reviewable, and easy to maintain in
 
    .. code-block:: bash
 
-      python manage.py dumpdata --format yaml --natural-foreign --natural-primary myapp
+      python manage.py dumpdata --format yaml --natural-foreign --natural-primary learning_progress
 
 2. After export, treat the fixture as source code. Reorder entries logically, remove unnecessary ``null``
    values, and add comments where relationships are not obvious.
@@ -1450,25 +1434,363 @@ Use YAML fixtures to keep the data readable, reviewable, and easy to maintain in
 
 
 ------------------
-# Writing Unit Tests
+Writing Unit Tests
 ------------------
 
+Test coverage is the quality gate for everything built in the previous tutorials. A well-tested feature
+can be refactored, extended, and maintained with confidence. The guiding principle is to test observable
+contracts and behaviour, not internal implementation details. Test what a class *promises* --- the errors
+it raises, the objects it returns, the database state it produces --- and leave the question of *how*
+it delivers that promise to the implementation.
 
-.. NOTE TO COPILOT: The mixin is important to use to ensure baseline test coverage.
-.. Readers must know their relevance and how to use them for what to be able to write correct code.
-.. Please read their source to understand the background, before drafting the documentation.
-.. Also read src/openbook/auth/tests/test_enrollment_method.py to understand the patterns we are going to document.
+Tests are usually organized around models where every test module follows the same three-class pattern.
+For a learning goal model, the file would be ``tests/learning_goal.py``, and the class names would be
+``LearningGoal_Test_Mixin``, ``LearningGoal_Model_Tests``, and ``LearningGoal_ViewSet_Tests``.
 
-- Expanding on the previous examples, test coverage is important to ensure quality and ensure future maintenance
-- Unit tests usually organized around models, therefore same directory structure as in ``models``
-- Basic example for creating unit tests with the Django test framework
-- Try to test contract and behaviour and not implementation
-- For models:
-   - Naming convention / typically required classes:
-      - ``<Model>_Test_Mixin``: Shared setup logic, e.g. creating mock database entries
-      - ``<Model>_Model_Tests``: Testing the low-level database model
-      - ``<Model>_ViewSet_Tests``: Testing the higher-level REST application
-   - Mixin-class ``ModelViewSetTestMixin`` defines baseline tests for all models
-      - Tests derived from class properties
-         - Document what each property does
-      - Additional test methods as needed, especially for ViewSet actions
+.. rst-class:: spaced-list
+
+1. **<Model>_Test_Mixin** holds the shared ``setUp()`` logic: creating users, parent objects, and
+   the fixture records required by both test classes below it. It contains no ``test_*`` methods and
+   serves purely as a reusable setup provider.
+
+2. **<Model>_Model_Tests** tests low-level model behaviour: validation errors raised by
+   ``clean()``, the return values and side-effects of domain methods, and any permission checks
+   enforced directly on the model.
+
+3. **<Model>_ViewSet_Tests** tests the HTTP contract of the REST API: status codes, search,
+   sorting, pagination, field expansion, and the full CRUD lifecycle.
+
+Write the Test Mixin
+....................
+
+Every test class needs a consistent, well-known database state before it can make meaningful
+assertions. Without a shared baseline, each test class would have to recreate the same users,
+parent objects, and fixture records independently, leading to duplication and drift. The test
+mixin solves this by centralising that setup in a single ``setUp()`` method that both
+``<Model>_Model_Tests`` and ``<Model>_ViewSet_Tests`` inherit.
+
+.. code-block:: python
+
+   from openbook.auth.middleware.current_user import reset_current_user
+   from openbook.auth.models.user             import User
+   from ..models.learning_goal                import LearningGoal
+
+
+   class LearningGoal_Test_Mixin:
+       def setUp(self):
+           super().setUp()
+           reset_current_user()
+
+           # Setup mock data and save it to instance attributes
+           self.user = User.objects.create_user(
+               username = "student",
+               email    = "student@test.com",
+               password = "password",
+           )
+
+           self.goal_active = LearningGoal.objects.create(
+               name      = "Understand mixins",
+               is_active = True,
+           )
+
+           self.goal_inactive = LearningGoal.objects.create(
+               name      = "Master serializers",
+               is_active = False,
+           )
+
+.. important::
+   Always call ``super().setUp()`` first, then ``reset_current_user()`` to clear the request-scoped
+   current-user context so that audit-trail fields set in one test do not bleed into another.
+
+   Also, keep the mixin free of ``test_*`` methods. Any test logic placed here would run twice ---
+   once for each subclass --- and may produce unexpected interactions between the model tests and the
+   ViewSet tests.
+
+Write Model Tests
+.................
+
+The model test class validates the low-level domain logic that lives directly on the model. This
+is where you confirm that the model enforces its own rules: that ``clean()`` rejects invalid data,
+that domain methods return the right objects, that side-effects on related records occur as
+promised, and that the correct exceptions are raised when preconditions are violated. These tests
+run entirely in Python without HTTP --- they are fast, focused, and independent of the REST layer.
+
+Inherit from the mixin first and ``TestCase`` last, so that Python's method resolution order (MRO)
+calls the mixin's ``setUp()`` before Django's test infrastructure:
+
+.. code-block:: python
+
+   from django.core.exceptions import ValidationError
+   from django.test            import TestCase
+
+
+   class LearningGoal_Model_Tests(LearningGoal_Test_Mixin, TestCase):
+       """
+       Tests for the ``LearningGoal`` model.
+       """
+
+       def test_inactive_goal_raises_on_enroll(self):
+           """
+           Enrolling against an inactive goal raises ``ValidationError``.
+           """
+           with self.assertRaises(ValidationError):
+               self.goal_inactive.enroll(user=self.user)
+
+       def test_complete_returns_assignment(self):
+           """
+           ``complete()`` returns the created completion record.
+           """
+           result = self.goal_active.complete(user=self.user)
+           self.assertIsNotNone(result)
+           self.assertEqual(result.goal, self.goal_active)
+
+Except for the self-written mixin class, this a straight-forward Django unit test class.
+Good candidates for tests are:
+
+- ``clean()`` validation rules,
+- domain method return types and return values,
+- database side-effects (rows created or deleted),
+- exceptions raised under invalid conditions.
+
+Give each test method a docstring that reads as a one-sentence specification that becomes the
+failure message when the test breaks.
+
+.. hint::
+
+   Prefer one focused assertion per test method. A test that checks five things at once gives you
+   a pass/fail result but no useful signal about *which* contract was broken.
+
+Write ViewSet Tests
+...................
+
+The ViewSet test class verifies the full HTTP contract that clients depend on. Where model tests
+check Python-level behaviour, ViewSet tests confirm that the right status codes are returned, that
+authentication and authorisation are enforced, that list responses support search, sorting, and
+pagination, and that create, update, and delete operations produce the expected database state.
+Writing these tests by hand for every endpoint would be tedious and error-prone; OpenBook's
+``ModelViewSetTestMixin`` generates the repetitive baseline tests automatically so developers
+can focus on the edge cases specific to each model.
+
+``LearningGoal_ViewSet_Tests`` tests the REST API layer. The bulk of the work is handled
+automatically by OpenBook's ``ModelViewSetTestMixin``, imported from ``openbook.test``.
+For every configured operation it produces three test methods at class-creation time:
+
+.. rst-class:: spaced-list
+
+- An unauthenticated request that must return 401 or 403.
+- An authenticated but unauthorised request that must return 403 or 404 for single objects
+  or an empty list for the ``list`` action.
+- An authorised request that must return the expected status code and produce the expected
+  database state.
+
+For the ``list`` action it additionally generates tests for search, sorting, and pagination. For
+``retrieve`` it generates an expand-fields test and a 404 test for an unknown primary key. For
+``update`` and ``partial_update`` it verifies that every field named in ``"updates"`` carries the
+expected value after the call. For ``destroy`` it checks that the object no longer exists.
+
+All of this runs without a single manual test method. Providing the class attributes below is
+enough to activate the entire baseline suite:
+
+.. code-block:: python
+
+   from django.test        import TestCase
+   from openbook.test      import ModelViewSetTestMixin
+   from ..models.goal      import LearningGoal
+
+
+   class LearningGoal_ViewSet_Tests(ModelViewSetTestMixin, LearningGoal_Test_Mixin, TestCase):
+       """
+       Tests for the ``LearningGoalViewSet`` REST API.
+       """
+       base_name         = "learning_goal"
+       model             = LearningGoal
+       count             = 2
+       search_string     = "mixins"
+       search_count      = 1
+       sort_field        = "name"
+       expandable_fields = ["created_by", "modified_by"]
+
+From top to bottom this defines:
+
+**Router base name** --- ``base_name`` is used to reverse URL names such as
+``learning_goal-list`` and ``learning_goal-detail``. It must match the ``basename`` argument
+passed to the router in ``routes.py``.
+
+**Model class** --- ``model`` lets the mixin derive permission strings automatically, for
+example ``openbook_learning_progress.view_learninggoal``.
+
+**Expected list count** --- ``count`` is the number of results the ``list`` endpoint must return
+when the test user has full permissions. Set it to the number of objects ``setUp()`` creates that
+are visible to the requesting user. Use a negative value to skip the count assertion.
+
+**Search configuration** --- ``search_string`` and ``search_count`` configure the search test.
+The mixin calls the ``list`` endpoint with ``?_search=<search_string>`` and asserts that exactly
+``search_count`` results are returned.
+
+**Sort and pagination field** --- ``sort_field`` names the field used for sort and pagination
+tests. The mixin calls the ``list`` endpoint with ``?_sort=<sort_field>`` and verifies the
+results are in order, then runs a pagination test with ``?_page_size=1&_page=1``.
+
+**Expandable relation names** --- ``expandable_fields`` lists the relation names to test with
+``?_expand=``. Append ``[]`` to a name for many-relations so the mixin expects a list of objects
+rather than a single object.
+
+Disable Unsupported Operations
+..............................
+
+Set ``"supported": False`` for an operation to assert that the endpoint returns 405 (Method Not
+Allowed). This is useful when a ViewSet intentionally omits ``destroy`` or another standard
+action:
+
+.. code-block:: python
+
+   class LearningGoal_ViewSet_Tests(ModelViewSetTestMixin, LearningGoal_Test_Mixin, TestCase):
+       ...
+       operations = {
+           "destroy": {
+               "supported": False,
+           },
+       }
+
+Override Permission Checks
+..........................
+
+When a model is visible without authentication because a scope grants public permissions, set
+``"model_permission": ()`` to skip the permission check for that operation in the ViewSet tests:
+
+.. code-block:: python
+
+   class LearningGoal_ViewSet_Tests(ModelViewSetTestMixin, LearningGoal_Test_Mixin, TestCase):
+       ...
+       operations = {
+           "list": {
+               "model_permission": (),
+           },
+       }
+
+Provide Request Data and Verify Updates
+.......................................
+
+Operations that write data need request bodies and post-save assertions. Declare these in the
+``operations`` dictionary by overriding only the keys that differ from the defaults:
+
+.. code-block:: python
+
+   class LearningGoal_ViewSet_Tests(ModelViewSetTestMixin, LearningGoal_Test_Mixin, TestCase):
+       ...
+       def setUp(self):
+           super().setUp()
+           self.url_list   = reverse("learning_goal-list")
+           self.url_detail = reverse("learning_goal-detail", args=[str(self.goal_active.pk)])
+
+       def pk_found(self):
+           return self.goal_active.id
+
+       def get_create_request_data(self):
+           return {
+               "name":      "New Learning Goal",
+               "is_active": True,
+           }
+
+       def get_update_request_data(self):
+           return {
+               "name":      "Updated Goal",
+               "is_active": False,
+           }
+
+       operations = {
+           "create": {
+               "request_data": get_create_request_data,
+           },
+           "update": {
+               "request_data": get_update_request_data,
+               "updates": {
+                   "name":      "Updated Goal",
+                   "is_active": False,
+               },
+           },
+           "partial_update": {
+               "request_data": {"is_active": False},
+               "updates":      {"is_active": False},
+           },
+       }
+
+``pk_found`` can be a method returning ``self.goal_active.id`` rather than a hard-coded string,
+so it is evaluated lazily after ``setUp()`` has run. ``request_data`` likewise accepts a method
+so the request body can reference objects created in ``setUp()``.
+
+The ``"updates"`` dictionary declares the assertions the mixin runs after a write operation
+completes. Only the fields listed here are checked. Any field omitted is not asserted at all.
+Each entry maps a field name to the value that field have in the database after the API call
+returns. Nested dicts traverse relations: ``{"role": {"slug": "student"}}`` follows the ``role``
+foreign key and asserts its ``slug`` field. For cases where this dict-based approach is
+too limited, provide a callable under ``"assertions"`` instead.
+
+Custom Actions and Additional Tests
+...................................
+
+For anything beyond standard CRUD webservice actions, the ViewSet test class can contain ordinary
+``test_*`` methods. Use them for custom ``@action`` endpoints, edge cases, and business rules
+expressed over HTTP. Use the helper methods inherited from ``ModelViewSetTestMixin`` to manage
+authentication:
+
+.. code-block:: python
+
+   class LearningGoal_ViewSet_Tests(ModelViewSetTestMixin, LearningGoal_Test_Mixin, TestCase):
+       ...
+       def test_enroll_no_passphrase(self):
+           """
+           Self-enrollment without a passphrase returns 200 and creates a role assignment.
+           """
+           self.login(username="student", password="password")
+           ...
+
+       def test_enroll_unauthenticated(self):
+           """
+           Unauthenticated enrollment is rejected.
+           """
+           self.logout()
+
+           response = self.client.put(self.url_enroll)
+           self.assertIn(response.status_code, [401, 403])
+
+Insidee your test methods you can use the following helpers:
+
+- ``self.login(username, password)`` to authenticate as a specific existing user
+- ``self.create_user_and_login(perm_strings)`` to create a temporary user
+- ``self.logout()`` to return to the unauthenticated state
+
+Register in ``__init__.py``
+...........................
+
+Register the module in ``tests/__init__.py`` so Django's test runner discovers it.
+Otherwise the tests won't run when ``manage.py test`` is executed.
+
+.. code-block:: python
+
+   from .learning_goal import *
+
+Checklist Before Moving On
+..........................
+
+Before committing the new feature, verify that:
+
+1. The test file is placed under ``tests/``, named after the model file.
+2. ``tests/__init__.py`` imports the module so the test runner discovers it.
+3. The test mixin calls ``super().setUp()`` and ``reset_current_user()`` an
+4. The test mixin class contains no ``test_*`` methods.
+5. ``<Model>_Model_Tests`` covers ``clean()`` validation and all domain methods.
+6. ``<Model>_ViewSet_Tests`` inherits ``ModelViewSetTestMixin``, the test mixin and then ``TestCase``.
+7. All required class attributes for ``ModelViewSetTestMixin`` are declared.
+8. The ``operations`` dict contains only the overrides that differ from the defaults.
+9. ``get_create_request_data`` is defined when create is supported.
+10. Likewise, ``get_update_request_data`` is defined when update is supported.
+11. Custom ``@action`` endpoints have at least one manual test method each.
+
+.. seealso::
+
+   Django testing documentation:
+   https://docs.djangoproject.com/en/stable/topics/testing/
+
+   Django REST Framework testing guide:
+   https://www.django-rest-framework.org/api-guide/testing/
