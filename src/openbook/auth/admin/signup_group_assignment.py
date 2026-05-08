@@ -33,7 +33,7 @@ class SignupGroupAssignmentResource(ImportExportModelResource):
     @classmethod
     def get_display_name(cls):
         return _("Group Assignments")
-    
+
 class SecurityAssertionResource(ImportExportModelResource):
     class Meta:
         model  = SecurityAssertion
@@ -41,15 +41,17 @@ class SecurityAssertionResource(ImportExportModelResource):
             "id", "delete",
             "parent", "name", "value", "match_strategy",
         ]
-    
+
     @classmethod
     def get_display_name(cls):
         return _("Checked Security Assertions")
 
     def filter_export(self, queryset, **kwargs):
         """
-        Needed because by default it is not possible to export another model than the one
-        from the admin view.
+        Export all rows for this model.
+
+        Use this because by default it is not possible to export another model than
+        the one from the admin view.
         """
         return self._meta.model.objects.all()
 

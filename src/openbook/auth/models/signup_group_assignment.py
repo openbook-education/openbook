@@ -19,9 +19,10 @@ from openbook.core.models.site          import Site
 
 class SignupGroupAssignment(UUIDMixin, ActiveInactiveMixin, NameDescriptionMixin):
     """
-    Automatic user group assignment after sign-up. For local accounts and most social providers,
-    all new users are added to the same user groups. For SAML it is possible to assign different
-    groups based on the assertions returned by the IdP.
+    Define automatic user group assignment after sign-up.
+
+    For local accounts and most social providers, all new users are added to the same user groups.
+    For SAML, it is possible to assign different groups based on the assertions returned by the IdP.
     """
     site = models.ForeignKey(
         to           =  Site,
@@ -73,13 +74,12 @@ class SignupGroupAssignment(UUIDMixin, ActiveInactiveMixin, NameDescriptionMixin
         for assertion in self.assertions.all():
             if not assertion.match(extra_data):
                 return False
-        
+
         return True
-    
+
 class SecurityAssertion(UUIDMixin):
     """
-    OAuth Scope or SAML Assertion to be checked after sign-up for automatic user
-    group assignment.
+    Define an OAuth scope or SAML assertion checked after sign-up for automatic user group assignment.
     """
     class MatchStrategy(models.TextChoices):
         EXACT       = "exact",       _("Exact Match"),
@@ -152,23 +152,23 @@ class SecurityAssertion(UUIDMixin):
         def _match_dict(data: dict) -> bool:
             if self.name not in data:
                 return False
-            
+
             value = data[self.name]
 
             if isinstance(value, list):
                 for child_value in value:
                     if _match_value(child_value):
-                        return True    
-                    
+                        return True
+
                 return False
             else:
                 return _match_value(value)
-            
+
         if isinstance(extra_data, list):
             for child_data in extra_data:
                 if _match_dict(child_data):
                     return True
-                
+
             return False
         else:
             return _match_dict(extra_data)

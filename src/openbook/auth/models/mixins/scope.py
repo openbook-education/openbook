@@ -21,10 +21,11 @@ from ...middleware.current_user         import get_current_user
 
 class RoleBasedObjectPermissionsMixin(models.Model):
     """
-    Mixin class for all models that support role-based object permissions. Use this instead of
-    `ScopedRolesMixin` for composite models, where the model itself is not the scope for the roles,
-    e.g. for course materials where the roles belong to the parent course. Override `get_scope()`
-    to return the parent model, which must inherit `ScopedRolesMixin`, instead.
+    Support role-based object permissions for models.
+
+    Use this instead of ``ScopedRolesMixin`` for composite models where the model itself is not the
+    scope for roles, for example course materials where roles belong to the parent course.
+    Override ``get_scope()`` to return the parent model, which must inherit ``ScopedRolesMixin``.
     """
     class Meta:
         abstract = True
@@ -38,14 +39,14 @@ class RoleBasedObjectPermissionsMixin(models.Model):
         This method can be overridden to implement custom permission checks. Usually
         `super().has_obj_perm(user_obj, perm)` should still be called, then.
 
-        Note, this method is called `has_obj_perm()` instead of `has_perm()` because the Django user model
-        already has a method `has_perm()`.
+        Note: This method is called ``has_obj_perm()`` instead of ``has_perm()`` because the Django
+        user model already has a method ``has_perm()``.
         """
         scope = self.get_scope()
 
         if hasattr(scope, "owner") and user_obj == scope.owner:
             return True
-        
+
         app_label, codename = perm.split(".")
 
         if scope.public_permissions.filter(
@@ -53,13 +54,13 @@ class RoleBasedObjectPermissionsMixin(models.Model):
             codename = codename
         ).count() > 0:
             return True
-        
+
         return user_obj.is_authenticated and scope.role_assignments.filter(
             user = user_obj,
             role__permissions__content_type__app_label = app_label,
             role__permissions__codename = codename
         ).count() > 0
-        
+
     def get_scope(self) -> "ScopedRolesMixin":
         """
         Get the model instance with the role assignments. Usually this is the object itself, but for
@@ -70,9 +71,11 @@ class RoleBasedObjectPermissionsMixin(models.Model):
 
 class ScopedRolesMixin(RoleBasedObjectPermissionsMixin):
     """
-    Mixin class for models that have scoped roles to grant permissions. Inheriting this mixin allows
-    the model to have roles, role assignment, enrollment methods and access requests. This includes the
-    `RoleBasedObjectPermissionsMixin`, so that object permissions can be checked on the model.
+    Provide scoped roles for models to grant permissions.
+
+    Inheriting this mixin allows a model to have roles, role assignments, enrollment methods, and
+    access requests. This includes ``RoleBasedObjectPermissionsMixin`` so that object permissions can
+    be checked on the model.
     """
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -99,11 +102,11 @@ class ScopedRolesMixin(RoleBasedObjectPermissionsMixin):
 
     class Meta:
         abstract = True
-    
+
     @staticmethod
     def content_type_is_scope(content_type: ContentType) -> bool:
         """
-        Check whether the given content type implements `ScopedRolesMixin` and therefor acts as
+        Check whether the given content type implements ``ScopedRolesMixin`` and therefore acts as
         a permission scope for user roles.
         """
         model = content_type.model_class()
@@ -112,8 +115,8 @@ class ScopedRolesMixin(RoleBasedObjectPermissionsMixin):
     @classmethod
     def get_scope_model_content_types(cls) -> list[ContentType]:
         """
-        Get a filtered list of content types (models) that implement the scoped roles mixin and
-        therefor act as a permission scope for user roles. Since this is a somewhat expensive
+        Get filtered content types (models) that implement the scoped roles mixin and therefore
+        act as a permission scope for user roles. Since this is a somewhat expensive
         operation, the result will be cached using the Django cache mechanism.
         """
         cache_key = "openbook_auth:scoped_roles_mixin:scope_models"
@@ -125,7 +128,7 @@ class ScopedRolesMixin(RoleBasedObjectPermissionsMixin):
         for content_type in ContentType.objects.all():
             if cls.content_type_is_scope(content_type):
                 result.append(content_type)
-        
+
         cache.set(cache_key, result)
         return result
 
@@ -138,7 +141,7 @@ class ScopedRolesMixin(RoleBasedObjectPermissionsMixin):
 
         for content_type in cls.get_scope_model_content_types():
             result.append(content_type.pk)
-        
+
         return result
 
     def save(self, *args, **kwargs):
@@ -156,9 +159,10 @@ class ScopedRolesMixin(RoleBasedObjectPermissionsMixin):
 
 class ScopeMixin(RoleBasedObjectPermissionsMixin):
     """
-    Abstract mixin for models that are linked to a scope via a generic relation. The scope will be
-    used for role assignments to assign scoped roles to users. This is used internally to add a
-    generic relation for the scope to models like `AccessRequest` or `EnrollmentMethod`.
+    Link models to a scope via a generic relation.
+
+    The scope is used for role assignments to assign scoped roles to users. This is used internally
+    to add a generic relation for the scope to models like ``AccessRequest`` or ``EnrollmentMethod``.
     """
     scope_type   = models.ForeignKey(ContentType, verbose_name=_("Scope Type"), null=True, on_delete=models.CASCADE, related_name = "+")
     scope_uuid   = models.UUIDField(verbose_name=_("Scope UUID"))
@@ -174,7 +178,7 @@ class ScopeMixin(RoleBasedObjectPermissionsMixin):
         scope reference and optionally the role.
         """
         from ..role import Role
-        
+
         obj = cls(**kwargs)
 
         if hasattr(other_obj, "scope_type") and hasattr(other_obj, "scope_uui"):
@@ -194,13 +198,13 @@ class ScopeMixin(RoleBasedObjectPermissionsMixin):
 
     def clean(self):
         """
-        Validate that role and this object refer to the same scope (if `role` field exists).
+        Validate that role and this object refer to the same scope (if a ``role`` field exists).
         """
         super().clean()
-        
+
         if not hasattr(self, "role") or not self.role:
             return
-        
+
         if not self.scope_type or not self.scope_uuid:
            self.scope_type = self.role.scope_type
            self.scope_uuid = self.role.scope_uuid
@@ -209,13 +213,15 @@ class ScopeMixin(RoleBasedObjectPermissionsMixin):
 
     def get_scope(self) -> models.Model:
         """
-        Access management requires appropriate permissions in the referenced scope.
+        Return the referenced scope used for access management permission checks.
         """
         return self.scope_object
 
     def has_obj_perm(self, user_obj: AbstractUser, perm: str) -> bool:
         """
-        Object-level permission for all models with a scope reference. If this is a role,
+        Check object-level permissions for models with a scope reference.
+
+        If this is a role,
         its priority must be of lower or equal priority than any of the user's roles.
         Otherwise the priority of the referenced role must be of lower or equal priority
         than any of the user's roles.
@@ -225,7 +231,7 @@ class ScopeMixin(RoleBasedObjectPermissionsMixin):
 
         if hasattr(scope, "owner") and user_obj == scope.owner:
             return True
-        
+
         # Next require the general permission granted in the scope
         principally_allowed = super().has_obj_perm(user_obj, perm)
 
@@ -235,11 +241,11 @@ class ScopeMixin(RoleBasedObjectPermissionsMixin):
         # Special case self-enrollment, the user likely has no role assigned, yet
         if perm == "openbook_auth.self_enroll":
             return True
-                
+
         # Viewing the information os okay, even if the role is of higher priority
         if ".view_" in perm:
             return True
-        
+
         # Updates are only allowed when the role is of same or lower priority than any own role
         if hasattr(self, "priority"):
             priority = self.priority

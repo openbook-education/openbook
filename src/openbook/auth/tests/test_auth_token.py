@@ -16,9 +16,7 @@ from ..models.user             import User
 from ..utils                   import permission_for_perm_string
 
 class AuthToken_ViewSet_Tests(ModelViewSetTestMixin, TestCase):
-    """
-    Tests for the `RoleViewSet` REST API.
-    """
+    """Test the AuthTokenViewSet REST API."""
     base_name         = "auth_token"
     model             = AuthToken
     search_string     = "user1"
@@ -90,9 +88,7 @@ class AuthToken_ViewSet_Tests(ModelViewSetTestMixin, TestCase):
     }
 
     def test_only_own_tokens(self):
-        """
-        Users can only access their own tokens.
-        """
+        """Ensure users can access only their own tokens."""
         self.login("user1", "password")
         response = self.client.get(self.url_list)
 
@@ -101,11 +97,9 @@ class AuthToken_ViewSet_Tests(ModelViewSetTestMixin, TestCase):
 
         for token in response.data["results"]:
             self.assertEqual(token["user"], "user1")
-        
+
     def test_create_other_user_forbidden(self):
-        """
-        Users cannot create tokens for other users
-        """
+        """Ensure users cannot create tokens for other users."""
         self.login("user1", "password")
 
         response = self.client.post(self.url_list, {
@@ -123,9 +117,7 @@ class AuthToken_ViewSet_Tests(ModelViewSetTestMixin, TestCase):
         self.assertStatusCode(response, 404)    # Not Found
 
     def test_change_user_forbidden(self):
-        """
-        Users cannot change the user of a token.
-        """
+        """Ensure users cannot change the token owner."""
         self.login("user1", "password")
 
         response = self.client.put(self.url_token1_1, {
@@ -134,11 +126,9 @@ class AuthToken_ViewSet_Tests(ModelViewSetTestMixin, TestCase):
         })
 
         self.assertEqual(response.data["user"], "user1")
-    
+
     def test_token_authentication_invalid_token(self):
-        """
-        Authentication with an invalid token must fail.
-        """
+        """Ensure authentication with an invalid token fails."""
         response = self.client.get(self.url_current_user, headers={
             "Authorization": "Token NOT-FOUND"
         })
@@ -146,9 +136,7 @@ class AuthToken_ViewSet_Tests(ModelViewSetTestMixin, TestCase):
         self.assertStatusCode(response, 403)
 
     def test_token_authentication_valid_token(self):
-        """
-        Authentication with a valid token must succeed.
-        """
+        """Ensure authentication with a valid token succeeds."""
         response = self.client.get(self.url_current_user, headers={
             "Authorization": f"Token {self.token1_1.token}"
         })

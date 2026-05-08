@@ -13,20 +13,16 @@ from django.utils.translation           import activate
 from ..                                 import utils
 
 class Utils_Test(TestCase):
-    """
-    Test cases for utility functions.
-    """
+    """Test utility functions."""
     def setUp(self):
         activate("en")  # Set the language to English for testing
-        
+
         self.model_string = "admin.logentry"
         self.perm_string  = "admin.view_logentry"
         self.permission   = Permission.objects.get(codename="view_logentry", content_type__app_label="admin")
 
     def test_for_permission(self):
-        """
-        Test functions that take a permission object.
-        """
+        """Test functions that take a permission object."""
         # Valid permission object
         self.assertEqual(utils.app_label_for_permission(self.permission),   "admin")
         self.assertEqual(utils.perm_string_for_permission(self.permission), self.perm_string)
@@ -44,9 +40,7 @@ class Utils_Test(TestCase):
         self.assertEqual(utils.perm_name_for_permission(None),   "")
 
     def test_for_perm_string(self):
-        """
-        Test functions that take a permission string.
-        """
+        """Test functions that take a permission string."""
         self.assertIsInstance(utils.permission_for_perm_string(self.perm_string), Permission)
 
         with self.assertRaises(Permission.DoesNotExist):

@@ -17,9 +17,10 @@ from ..utils                              import perm_string_for_permission
 
 class AnonymousPermission(UUIDMixin):
     """
-    Permissions for anonymous (not logged-in) users. Required for our implementation of
-    object-based permissions which by default fail for anonymous users. Note, that these
-    permissions are automatically valid for authenticated users, too.
+    Store permissions for anonymous (not logged-in) users.
+
+    This is required for our implementation of object-based permissions, which by default fail for
+    anonymous users. Note that these permissions are automatically valid for authenticated users, too.
     """
     permission = models.ForeignKey(
         to           =  Permission,
@@ -40,7 +41,7 @@ class AnonymousPermission(UUIDMixin):
 
     def __str__(self):
         return self.perm_name()
-    
+
     @admin.display(description=_("Permission"))
     def perm_name(self, obj=None):
         return perm_name_for_permission(self.permission)

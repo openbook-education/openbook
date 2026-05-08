@@ -15,16 +15,15 @@ from openbook.core.models.utils.file import calc_file_path
 
 class User(AbstractUser):
     """
-    Extension to Django's core user model to distinguish different user types and add
-    some user profile fields.
+    Extend Django's core user model to distinguish user types and add profile fields.
     """
     class UserType(models.TextChoices):
         HUMAN = "human",  _("Human User")
         APP   = "app",    _("App User")
-    
+
     def _calc_file_path(self, filename):
         return calc_file_path(self._meta, self.username, filename)
-    
+
     user_type   = models.CharField(verbose_name=_("User Type"), choices=UserType, default=UserType.HUMAN)
     email       = models.EmailField(_("E-Mail Address"), blank=False, null=False, validators=[EmailValidator])
     description = models.TextField(verbose_name=_("Description"), blank=True, null=False)
@@ -42,8 +41,9 @@ class User(AbstractUser):
     @display(header=True, description=_("Full Name"))
     def full_name(self, obj=None):
         """
-        Name, e-mail and profile picture. Note that Django Unfold only supports this in the
-        changelist not on the detail page.
+        Return name, e-mail, and profile picture.
+
+        Note that Django Unfold only supports this in the changelist, not on the detail page.
         """
         if self.first_name and self.last_name:
             initials = f"{self.first_name[0]}{self.last_name[0]}"

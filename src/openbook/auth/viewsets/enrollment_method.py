@@ -69,7 +69,7 @@ class EnrollmentMethodFilter(ScopeFilterMixin, CreatedModifiedByFilterMixin, Fil
 
     def role_filter(self, queryset, name, value):
         return queryset.filter(role__slug=value)
-    
+
 @extend_schema(
     extensions={
         "x-app-name":   "User Management",
@@ -99,9 +99,7 @@ class EnrollmentMethodViewSet(ModelViewSetMixin, ModelViewSet):
     )
     @action(detail=True, methods=["put"], url_path="enroll", permission_classes=[AllowAny])
     def enroll(self, request, pk=None):
-        """
-        Self-enrollment of the current user via given enrollment method.
-        """
+        """Enroll the current user with the selected enrollment method."""
         enrollment_method = self.get_object()
 
         kwargs = {

@@ -16,9 +16,7 @@ from ..middleware.current_user     import reset_current_user
 from ..models.permission_text      import PermissionText
 
 class PermissionText_ViewSet_Tests(ModelViewSetTestMixin, TestCase):
-    """
-    Tests for the `PermissionTextViewSet` REST API.
-    """
+    """Test the PermissionTextViewSet REST API."""
     base_name         = "permission_text"
     model             = PermissionText
     search_string     = "Permission"
@@ -48,7 +46,7 @@ class PermissionText_ViewSet_Tests(ModelViewSetTestMixin, TestCase):
             language= language_en,
             name    = "Test Permission Name",
         )
-        
+
         PermissionText.objects.create(
             parent  = permission,
             language= language_de,
@@ -57,6 +55,6 @@ class PermissionText_ViewSet_Tests(ModelViewSetTestMixin, TestCase):
 
         self.url_list   = reverse("permission-list")
         self.url_detail = reverse("permission-detail", args=[self.translated_en.id])
-        
+
     def pk_found(self):
         return self.translated_en.id

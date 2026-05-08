@@ -16,10 +16,11 @@ thread_local = threading.local()
 
 def CurrentUserMiddleware(get_response):
     """
-    Save the current user in a thread-local variable so that it can be accessed
-    within the model layer. This is done to auto-populate the `created_by` and
-    `modified_by` fields of models that use the `CreatedModifiedByMixin` without
-    needing to explicitly pass the user from the view layer to the model layer.
+    Save the current user in a thread-local variable.
+
+    Do this so it can be accessed within the model layer to auto-populate the
+    created_by and modified_by fields of models that use CreatedModifiedByMixin,
+    without explicitly passing the user from the view layer to the model layer.
     """
     def middleware(request):
         thread_local.current_user = request.user
@@ -29,15 +30,18 @@ def CurrentUserMiddleware(get_response):
 
 class CurrentUserTrackingAuthentication(BaseAuthentication):
     """
-    The same as above but for Django REST Framework, which wraps the plain Django
-    request object and resolves the user only when first accessed. Because of this
-    the middleware above only sees the initial anonymous user.
+    Track the current user for Django REST Framework authentication.
+
+    Django REST Framework wraps the plain Django request object and resolves the
+    user only when first accessed. Because of this, the middleware above only
+    sees the initial anonymous user.
     """
     def __init__(self):
         """
         Dynamically import classes in the DRF setting _DEFAULT_AUTHENTICATION_CLASSES.
-        We use this to re-implement the authentication logic in DRF, since we need to
-        override DEFAULT_AUTHENTICATION_CLASSES to hook into it.
+
+        Use this to re-implement the authentication logic in DRF, since we need
+        to override DEFAULT_AUTHENTICATION_CLASSES to hook into it.
         """
         self.auth_classes = []
 
@@ -46,7 +50,7 @@ class CurrentUserTrackingAuthentication(BaseAuthentication):
                 auth_module, _, auth_class_name = auth_class.rpartition('.')
                 auth_module = importlib.import_module(auth_module)
                 auth_class = getattr(auth_module, auth_class_name)
-            
+
             self.auth_classes.append(auth_class)
 
     def authenticate(self, request):
@@ -64,29 +68,26 @@ class CurrentUserTrackingAuthentication(BaseAuthentication):
                 break
 
         return result
-    
+
 def get_current_user():
-    """
-    Get the current request user, if any. Returns `None` otherwise.
-    """
+    """Return the current request user, if any, or None otherwise."""
     return getattr(thread_local, "current_user", None)
 
 def reset_current_user():
     """
-    Needed for unit tests which all run in a single thread. Forget previous tests's
-    user as it is probably not even existing anymore.
+    Reset the current user for unit tests.
+
+    Unit tests run in a single thread. Forget the previous test's user, as it
+    probably does not even exist anymore.
     """
     thread_local.current_user = None
 
 class CurrentUserTrackingAuthExtension(OpenApiAuthenticationExtension):
     """
-    To resolve the following warning: "could not resolve authenticator
-    <class 'openbook.auth.middleware.current_user.CurrentUserTrackingAuthentication'>.
-    There was no OpenApiAuthenticationExtension registered for that class.
-    Try creating one by subclassing it. Ignoring for now."
-    
+    Resolve the OpenApiAuthenticationExtension warning for the custom authenticator.
+
     As it is defined, we are using session authentication despite our custom
-    permission class (wich doesn't affect authentication at all)
+    permission class (which does not affect authentication at all).
     """
     target_class = CurrentUserTrackingAuthentication
     name         = "SessionAuthentication"  # name used in the schema"

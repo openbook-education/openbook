@@ -10,18 +10,19 @@ from django_filters.filters import CharFilter
 
 class PermissionsFilterMixin:
     """
-    Mixin filter class for any model that has a M2M relationship on the Django permission object.
+    Provide permission-string filtering for models with a many-to-many permission relation.
+
     This allows to filter queries by the full permission string. Use it like this:
 
-    ```python
-    class RoleFilter(PermissionsFilterMixin, filters.FilterSet):
-        class Meta:
-            model  = Role
-            fields = […] # Only fields from model allowed!
-            permissions_field = "public_permissions" # If not called `permissions`
-    ```
+    ::
 
-    This works hand in hand with the shared `PermissionSerializer` class.
+        class RoleFilter(PermissionsFilterMixin, filters.FilterSet):
+            class Meta:
+                model  = Role
+                fields = [...]  # Only fields from model allowed!
+                permissions_field = "public_permissions"  # If not called "permissions"
+
+    This works hand in hand with the shared PermissionSerializer class.
     """
     permissions = CharFilter(method="permissions_filter")
 
@@ -35,7 +36,7 @@ class PermissionsFilterMixin:
             app_label, codename = value.split(".", 1)
         except ValueError:
             return queryset.none()
-        
+
         permissions_field = self.Meta.permissions_field or "permissions"
 
         filters = {
@@ -46,9 +47,7 @@ class PermissionsFilterMixin:
         return queryset.filter(**filters)
 
 class PermissionFilterMixin(PermissionsFilterMixin):
-    """
-    Like `PermissionsFilterMixin` but for FK relationships to Django permissions
-    """
+    """Provide permission-string filtering for foreign-key permission relations."""
     permission  = CharFilter(method="permissions_filter")
     permissions = None
 

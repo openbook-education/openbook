@@ -14,38 +14,32 @@ from ..utils                    import permission_for_perm_string
 from ..utils                    import perm_string_for_permission
 
 class PermissionForeignKeyWidget(ForeignKeyWidget):
-    """
-    A customized foreign-key widget that exports and imports permissions as
-    Django-style permission strings.
-    """
+    """Export and import permissions as Django-style permission strings in foreign-key fields."""
     def __init__(self, *args, **kwargs):
         super().__init__(model=Permission, *args, **kwargs)
 
     def render(self, value, row=None, **kwargs):
         return perm_string_for_permission(value) if value else ""
-    
+
     def clean(self, value, obj=None, **kwargs):
         return permission_for_perm_string(value) if value else None
 
 class PermissionManyToManyWidget(ManyToManyWidget):
-    """
-    A customized many-to-many widget that exports and imports permissions as
-    Django-style permission strings.
-    """
+    """Export and import permissions as Django-style permission strings in many-to-many fields."""
     def __init__(self, *args, **kwargs):
         super().__init__(model=Permission, *args, **kwargs)
 
     def render(self, value, row=None, **kwargs):
         if not value:
             return ""
-        
+
         perm_strings = [perm_string_for_permission(p) for p in value.all()]
         return self.separator.join(perm_strings)
-    
+
     def clean(self, value, obj=None, **kwargs):
         if not value:
             return []
-        
+
         perm_strings = value.split(self.separator)
         perm_strings = filter(None, [ps.strip() for ps in perm_strings])
         return [permission_for_perm_string(ps) for ps in perm_strings]

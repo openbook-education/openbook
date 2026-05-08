@@ -49,13 +49,9 @@ class EnrollmentMethod_Test_Mixin:
         self.em_course_no_self_enroll.save()
 
 class EnrollmentMethod_Model_Tests(EnrollmentMethod_Test_Mixin, TestCase):
-    """
-    Tests for the `EnrollmentMethod` model.
-    """
+    """Test the EnrollmentMethod model."""
     def test_role_scope(self):
-        """
-        The assigned role must belong to the same scope.
-        """
+        """Ensure the assigned role belongs to the same scope."""
         wrong_scope = Course.objects.create(name="Other Course", slug="other-course")
         wrong_role  = Role.from_obj(wrong_scope, name="Wrong Scope", slug="wrong-scope", priority=0)
         wrong_role.save()
@@ -66,12 +62,10 @@ class EnrollmentMethod_Model_Tests(EnrollmentMethod_Test_Mixin, TestCase):
             enrollment_method.clean()
 
     def test_enroll_called(self):
-        """
-        `RoleAssignment.enroll()` should be called when a user self-enrolls.
-        """
+        """Ensure RoleAssignment.enroll() is called on self-enrollment."""
         with patch.object(RoleAssignment, "enroll") as mock_enroll:
             self.em_no_passphrase.enroll(user=self.user, check_passphrase=False)
-            
+
             mock_enroll.assert_called_once_with(
                 enrollment       = self.em_no_passphrase,
                 user             = self.user,
@@ -81,37 +75,26 @@ class EnrollmentMethod_Model_Tests(EnrollmentMethod_Test_Mixin, TestCase):
             )
 
     def test_return_role_assignment(self):
-        """
-        `RoleAssignment` object should be returned when a user self-enrolls.
-        """
+        """Ensure a RoleAssignment object is returned on self-enrollment."""
         result = self.em_no_passphrase.enroll(user=self.user, check_passphrase=False)
         self.assertIsInstance(result, RoleAssignment)
-    
+
     def test_self_enrollment_disabled_permission_denied(self):
-        """
-        `PermissionDenied` should be raised when public permissions of a scope
-        lack the `openbook_auth.self_enroll` permission.
-        """
+        """Ensure PermissionDenied is raised when self-enroll permission is missing."""
         with self.assertRaises(PermissionDenied):
             self.em_course_no_self_enroll.enroll(user=self.user)
 
     def test_wrong_passphrase_permission_denied(self):
-        """
-        `PermissionDenied` should be raised when a wrong passphrase is used.
-        """
+        """Ensure PermissionDenied is raised when an invalid passphrase is used."""
         with self.assertRaises(PermissionDenied):
             self.em_passphrase.enroll(user=self.user, passphrase="Wrong!")
 
     def test_skip_passphrase_check(self):
-        """
-        Wrong passphrase is ignored when `check_passphrase` is `False`.
-        """
+        """Ensure wrong passphrases are ignored when check_passphrase is False."""
         self.em_passphrase.enroll(user=self.user, passphrase="Wrong!", check_passphrase=False)
 
     def test_correct_passphrase(self):
-        """
-        Correct passphrase creates new role assignment.
-        """
+        """Ensure a correct passphrase creates a role assignment."""
         self.assertEqual(RoleAssignment.objects.filter(
             user = self.user,
             role = self.role,
@@ -123,11 +106,9 @@ class EnrollmentMethod_Model_Tests(EnrollmentMethod_Test_Mixin, TestCase):
             user = self.user,
             role = self.role,
         ).count(), 1)
-    
+
     def test_without_passphrase(self):
-        """
-        Users can always self-assign when no passphrase is required.
-        """
+        """Ensure users can self-assign when no passphrase is required."""
         self.assertEqual(RoleAssignment.objects.filter(
             user = self.user,
             role = self.role,
@@ -141,9 +122,7 @@ class EnrollmentMethod_Model_Tests(EnrollmentMethod_Test_Mixin, TestCase):
         ).count(), 1)
 
 class EnrollmentMethod_ViewSet_Tests(ModelViewSetTestMixin, EnrollmentMethod_Test_Mixin, TestCase):
-    """
-    Tests for the `EnrollmentMethodViewSet` REST API.
-    """
+    """Test the EnrollmentMethodViewSet REST API."""
     base_name         = "enrollment_method"
     model             = EnrollmentMethod
     count             = 2       # Only the two from self.course are visible!
@@ -161,7 +140,7 @@ class EnrollmentMethod_ViewSet_Tests(ModelViewSetTestMixin, EnrollmentMethod_Tes
         self.url_passphrase_detail    = reverse("enrollment_method-detail", args=[str(self.em_passphrase.pk)])
         self.url_passphrase_enroll    = reverse("enrollment_method-enroll", args=[str(self.em_passphrase.pk)])
         self.url_no_self_enroll       = reverse("enrollment_method-enroll", args=[str(self.em_course_no_self_enroll.pk)])
-    
+
     def pk_found(self):
         return self.em_passphrase.id
 
@@ -223,9 +202,7 @@ class EnrollmentMethod_ViewSet_Tests(ModelViewSetTestMixin, EnrollmentMethod_Tes
     }
 
     def test_self_enrollment_no_passphrase(self):
-        """
-        Self-enrollment with no password required.
-        """
+        """Ensure self-enrollment works without a passphrase."""
         self.login(username="new", password="password")
 
         response = self.client.put(self.url_no_passphrase_enroll)
@@ -235,11 +212,9 @@ class EnrollmentMethod_ViewSet_Tests(ModelViewSetTestMixin, EnrollmentMethod_Tes
             user = self.user,
             role = self.role,
         ).count(), 1)
-    
+
     def test_self_enrollment_correct_passphrase(self):
-        """
-        Self-enrollment with correct password.
-        """
+        """Ensure self-enrollment works with the correct passphrase."""
         self.login(username="new", password="password")
 
         response = self.client.put(self.url_passphrase_enroll, {"passphrase": "Correct!"})
@@ -251,9 +226,7 @@ class EnrollmentMethod_ViewSet_Tests(ModelViewSetTestMixin, EnrollmentMethod_Tes
         ).count(), 1)
 
     def test_self_enrollment_wrong_passphrase(self):
-        """
-        Self-enrollment with wrong password not possible.
-        """
+        """Ensure self-enrollment fails with a wrong passphrase."""
         self.login(username="new", password="password")
 
         response = self.client.put(self.url_passphrase_enroll, {"passphrase": "Wrong!"})
@@ -263,12 +236,9 @@ class EnrollmentMethod_ViewSet_Tests(ModelViewSetTestMixin, EnrollmentMethod_Tes
             user = self.user,
             role = self.role,
         ).count(), 0)
-    
+
     def test_self_enrollment_disabled_permission_denied(self):
-        """
-        `PermissionDenied` should be raised when public permissions of a scope
-        lack the `openbook_auth.self_enroll` permission.
-        """
+        """Ensure enrollment returns denied when self-enroll permission is missing."""
         self.login(username="new", password="password")
 
         response = self.client.put(self.url_no_self_enroll)
@@ -278,11 +248,9 @@ class EnrollmentMethod_ViewSet_Tests(ModelViewSetTestMixin, EnrollmentMethod_Tes
             user = self.user,
             role = self.role,
         ).count(), 0)
-    
+
     def test_self_enrollment_requires_auth(self):
-        """
-        Cannot self-enroll when public permissions of scope are not set.
-        """
+        """Ensure self-enrollment fails when public permissions are not set."""
         self.login(username="new", password="password")
 
         self.course.public_permissions.set([])

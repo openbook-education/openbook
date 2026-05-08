@@ -25,11 +25,12 @@ if TYPE_CHECKING:
 
 class EnrollmentMethod(UUIDMixin, ScopeMixin, NameDescriptionMixin, ActiveInactiveMixin, DurationMixin, CreatedModifiedByMixin):
     """
-    Enrollment methods all users to enroll themselves to get access. Enrollment is always bound to
-    a role that will be assigned to the users and can optionally have a limited duration. Also the
-    enrollment can be protected with a passphrase, that users must enter.
+    Allow users to enroll themselves to get access through enrollment methods.
 
-    NOTE: Take care to not reveal the passphrase when enrollment methods are queried or viewed.
+    Enrollment is always bound to a role that will be assigned to users and can optionally have a
+    limited duration. The enrollment can also be protected with a passphrase that users must enter.
+
+    Note: Take care not to reveal the passphrase when enrollment methods are queried or viewed.
     """
     role       = models.ForeignKey("Role", on_delete=models.CASCADE, related_name="enrollment_methods")
     end_date   = models.DateTimeField(verbose_name=_("Enrollment Ends on"), blank=True, null=True)
@@ -46,7 +47,7 @@ class EnrollmentMethod(UUIDMixin, ScopeMixin, NameDescriptionMixin, ActiveInacti
         permissions = (
             ("self_enroll", "Can self-enroll in a scope"),
         )
-    
+
     def __str__(self):
         return f"{self.name} {ActiveInactiveMixin.__str__(self)}".strip()
 
@@ -57,8 +58,9 @@ class EnrollmentMethod(UUIDMixin, ScopeMixin, NameDescriptionMixin, ActiveInacti
         check_permission: bool = True,
     ) -> "RoleAssignment":
         """
-        Enroll the given user, optionally checking the passphrase. Raises a `ValueError` when
-        the passphrase doesn't match.
+        Enroll the given user, optionally checking the passphrase.
+
+        Raise ``ValueError`` when the passphrase does not match.
         """
         from .role_assignment import RoleAssignment
 

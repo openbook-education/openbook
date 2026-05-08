@@ -13,9 +13,7 @@ from ..models.user              import User
 
 @extend_schema_field(str)
 class UserField(SlugRelatedField):
-    """
-    Serializer field to use the username for input and output instead of a user's raw PK.
-    """
+    """Use usernames instead of raw primary keys for input and output."""
     def __init__(self, **kwargs):
         super().__init__(slug_field="username", **kwargs)
 

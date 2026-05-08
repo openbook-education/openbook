@@ -10,10 +10,7 @@ from django_filters.filterset import FilterSet
 from django_filters.filters   import CharFilter
 
 class CreatedModifiedByFilterMixin(FilterSet):
-    """
-    Mixin filter class for any model that implements the `CreatedModifiedByMixin` and has the
-    `created_by`, `created_at`, `modified_by` and `modified_at` fields.
-    """
+    """Provide filters for models with CreatedModifiedByMixin audit fields."""
     created_by  = CharFilter(method="created_by_filter")
     modified_by = CharFilter(method="modified_by_filter")
 
@@ -27,6 +24,6 @@ class CreatedModifiedByFilterMixin(FilterSet):
 
     def created_by_filter(self, queryset, name, value):
         return queryset.filter(created_by__username=value)
-    
+
     def modified_by_filter(self, queryset, name, value):
         return queryset.filter(modified_by__username=value)

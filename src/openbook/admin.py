@@ -19,22 +19,22 @@ from unfold.admin               import ModelAdmin as UnfoldModelAdmin
 
 class ImportExportModelResource(ModelResource):
     """
-    Custom `ModelResource` that allows to delete entries when importing model data
-    in the Admin from CSV, YML, XLSX, … files. For this the files may include a row
-    called `delete` with a boolean value to indicate the rows to be deleted.
+    Allow deleting entries while importing model data in the admin.
+
+    The files may include a row called delete with a boolean value to indicate the
+    rows to be deleted.
     """
     delete = Field(column_name="delete")
 
     def dehydrate_delete(self, obj):
         return "false"
-    
+
     def for_delete(self, row, instance):
         return "delete" in row and row["delete"].upper() in ["1", "X", "YES", "TRUE"]
 
 class CustomModelAdmin(DjangoQLSearchMixin, UnfoldModelAdmin, ImportExportModelAdmin):
     """
-    Custom `ModelAdmin` to combines several mixins from Django Unfold, Django QL and
-    Django Import/Export into on common base-class.
+    Combine Django Unfold, Django QL, and Django Import/Export mixins in one base class.
     """
     save_as = True
     warn_unsaved_form = True
@@ -42,10 +42,10 @@ class CustomModelAdmin(DjangoQLSearchMixin, UnfoldModelAdmin, ImportExportModelA
 
 class CustomAdminSite(UnfoldAdminSite):
     """
-    Custom `AdminSite` class that allows us to override the default alphabetical
-    order of apps and models on the dashboard. Instead apps will be sorted in the
-    order they are listed in `settings.INSTALLED_APPS`. And models will be sorted
-    in the order they are registered with the admin site.
+    Override dashboard ordering of apps and models.
+
+    Apps are sorted in the order listed in settings.INSTALLED_APPS. Models are
+    sorted in the order in which they are registered with the admin site.
     """
     # Not used by Unfold Admin, but set in settings.py
     # site_title  = _("OpenBook: Admin")
@@ -54,16 +54,14 @@ class CustomAdminSite(UnfoldAdminSite):
 
     def __init__(self):
         """
-        Constructor. Defines `self._models_` which holdes the models in the order
-        they were registered.
+        Initialize the site and track model registration order.
         """
         super().__init__()
         self._models_ = []
 
     def register(self, model_or_iterable, admin_class, **options):
         """
-        Hook into Django Admin's `register()` method to remember the order in which
-        the models were registered.
+        Remember the order in which models are registered.
         """
         super().register(model_or_iterable, admin_class, **options)
 
@@ -78,8 +76,7 @@ class CustomAdminSite(UnfoldAdminSite):
 
     def unregister(self, model_or_iterable):
         """
-        Hook into Django Admin's `unregister()` method to remove a model from the
-        internal list.
+        Remove unregistered models from the internal order list.
         """
         super().unregister(model_or_iterable)
 
@@ -93,8 +90,7 @@ class CustomAdminSite(UnfoldAdminSite):
 
     def get_app_list(self, request, *args):
         """
-        Hook into Django Admin's `get_app_list()` method to override the order in
-        which the applications and models appear.
+        Return the app list with custom app and model ordering.
         """
         # Sort apps in the order they appear in the settings
         app_list = super().get_app_list(request, *args)
@@ -128,13 +124,13 @@ class CustomAdminSite(UnfoldAdminSite):
             changelist_tabs = settings.UNFOLD["TABS"]
         except KeyError:
             pass
-    
+
         for changelist_tab in changelist_tabs:
             hidden_model_names = [*hidden_model_names, *changelist_tab["models"][1:]]
 
             if "ob_group_name" in changelist_tab:
                 group_labels[changelist_tab["models"][0]] = changelist_tab["ob_group_name"]
-        
+
         for i in reversed(range(len(app_list))):
             admin_app = app_list[i]
 
@@ -148,7 +144,7 @@ class CustomAdminSite(UnfoldAdminSite):
                     del admin_app["models"][j]
                 elif model_string in group_labels:
                     admin_app["models"][j]["name"] = group_labels[model_string]
-            
+
             if not len(admin_app["models"]):
                 del app_list[i]
 

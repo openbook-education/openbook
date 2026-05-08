@@ -34,10 +34,12 @@ permissions_fieldset = (_("Permissions"), {
 
 class ScopedRolesResourceMixin(ImportExportModelResource):
     """
-    Mixin class for the import/export resource class of models that act as permissions
-    scopes for user roles. Handles the import and export of the owner and public permissions.
-    Note that the other scope fields (roles, enrollment methods, …) are not handled, because
-    they are reverse relations for objects that support import/export themselves.
+    Handle owner and public permission import/export for role scope models.
+
+    This mixin is for import/export resource classes of models that act as
+    permission scopes for user roles. The other scope fields (roles, enrollment
+    methods, ...) are not handled because they are reverse relations for objects
+    that support import/export themselves.
     """
     owner = Field(attribute="owner", widget=UserForeignKeyWidget())
     public_permissions = Field(attribute="public_permissions", widget=PermissionManyToManyWidget())
@@ -47,18 +49,19 @@ class ScopedRolesResourceMixin(ImportExportModelResource):
 
 class ScopeResourceMixin(ImportExportModelResource):
     """
-    Mixin class for the import/export resource class of models that reference an authorization
-    scope with the fields `scope_type` and `scope_uuid`.
+    Handle import/export for models that reference an authorization scope.
+
+    This mixin supports models with the scope_type and scope_uuid fields.
     """
     scope_type = Field(attribute="scope_type", widget=ScopeTypeForeignKeyWidget())
     scope_id   = Field(attribute="scope_uuid", column_name="scope_id")
 
     class Meta:
         fields = ["scope_type", "scope_id"]
-    
+
     def dehydrate_scope_id(self, instance) -> str:
         """
-        Export scope id using either slug (if existing as it should) or id of the scope model.
+        Export the scope ID using slug when available, otherwise object ID.
         """
         if not instance \
         or not hasattr(instance, "scope_type") or not instance.scope_type \
@@ -71,11 +74,11 @@ class ScopeResourceMixin(ImportExportModelResource):
 
     def before_save_instance(self, instance, row, **kwargs):
         """
-        Resolve slug from scope model back to UUID.
+        Resolve a scope slug back to UUID before saving.
         """
         if not instance or not instance.scope_type:
             return None
-        
+
         content_type: ContentType = instance.scope_type
         model_class = content_type.model_class()
 
@@ -85,16 +88,17 @@ class ScopeResourceMixin(ImportExportModelResource):
                 return
             except model_class.DoesNotExist:
                 return
-        
+
         instance.scope_uuid = row["scope_id"]
 
 class ScopeFormMixin(ModelForm):
     """
-    Form mixin class for model forms where the model implements the `ScopeMixin`
-    and therefor has two fields for scope type and scope uuid. The form mixin
-    (this class) limits the list of scope types to valid choices and automatically
-    updates the scope uuid list when the type is changed. Instead of the uuid the
-    scope name will be shown in the select box.
+    Limit scope type choices and keep scope object selection in sync.
+
+    Use this form mixin for models that implement ScopeMixin and therefore have
+    fields for scope type and scope UUID. It limits scope types to valid choices
+    and updates the scope UUID list when the type changes. It shows the scope
+    name in the select box instead of the UUID.
     """
     class Meta:
         fields = ("scope_uuid",)
@@ -152,10 +156,11 @@ class ScopeFormMixin(ModelForm):
 
 class ScopeRoleFieldFormMixin(ModelForm):
     """
-    Form mixin for the enrollment models that combine a scope with a role, e.g. User role
-    assignment, enrollment method etc. This mixin makes sure that only active roles of
-    the selected scope can be chosen and updates the role selection list accordingly
-    when the scope is changed.
+    Restrict role choices to active roles of the selected scope.
+
+    Use this for enrollment models that combine a scope with a role, for example
+    user role assignments and enrollment methods. It updates the role selection
+    list when the scope changes.
     """
     class Media:
         css = {"all": ()}
@@ -163,7 +168,7 @@ class ScopeRoleFieldFormMixin(ModelForm):
 
 class ScopeRoleFieldInlineMixin(TabularInline):
     """
-    Tabular inline mixin that restricts the choice of roles to the current scope.
+    Restrict inline role choices to the current scope.
     """
     def get_formset(self, request, obj=None, **kwargs):
         self.parent_obj = obj
@@ -174,18 +179,19 @@ class ScopeRoleFieldInlineMixin(TabularInline):
             scope_type = ContentType.objects.get_for_model(self.parent_obj)
             kwargs["queryset"] = Role.objects.filter(scope_type=scope_type, scope_uuid=self.parent_obj.id)
             pass
-    
+
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 class ScopedRolesFormMixin(ModelForm):
     """
-    Form mixin for model forms where the model implements the `ScopedRoles` mixin and
-    therefor acts as a permission scope for user roles. This mixin makes sure that
-    only allowed permissions are assigned as public permissions.
+    Restrict public permissions to allowed values for scoped role models.
+
+    Use this for model forms where the model implements the ScopedRoles mixin
+    and therefore acts as a permission scope for user roles.
     """
     def __init__(self, *args, **kwargs):
         """
-        Restrict visible choices in the HTML output to only allowed permissions.
+        Restrict visible choices in HTML output to allowed permissions.
         """
         super().__init__(*args, **kwargs)
 
@@ -200,6 +206,6 @@ class ScopedRolesFormMixin(ModelForm):
         """
         cleaned_data = super().clean()
         public_permissions = cleaned_data["public_permissions"]
-        
+
         validate_permissions(self._scope_type, public_permissions)
         return cleaned_data

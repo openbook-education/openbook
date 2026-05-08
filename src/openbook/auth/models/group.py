@@ -14,14 +14,15 @@ from openbook.core.models.mixins.slug import UniqueSlugMixin
 
 class Group(UniqueSlugMixin, DjangoGroup):
     """
-    Dummy class to move the Group model from `django.contrib.auth` into our own app,
-    so that users and groups stand together in the Admin.
+    Move the Group model from ``django.contrib.auth`` into our own app.
+
+    This makes users and groups appear together in the Admin.
     """
     class Meta:
         verbose_name        = _("User Group")
         verbose_name_plural = _("User Groups")
 
-    
+
     @display(label=True, description=_("User Count"))
     def user_count(self):
         return self.user_set.count()

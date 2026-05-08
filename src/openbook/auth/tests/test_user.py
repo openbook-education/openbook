@@ -15,13 +15,9 @@ from ..middleware.current_user import reset_current_user
 from ..models.user             import User
 
 class User_Model_Tests(TestCase):
-    """
-    Tests for the `User` model.
-    """
+    """Test the User model."""
     def test_user_creation_without_email(self):
-        """
-        The e-mail address should be obligatory when a new user is created.
-        """
+        """Ensure creating a user without an email fails validation."""
         # Directly saving without validation works
         User.objects.create_user("test1", password="test1234")
 
@@ -32,9 +28,7 @@ class User_Model_Tests(TestCase):
             user.save()
 
 class User_ViewSet_Test(ModelViewSetTestMixin, TestCase):
-    """
-    Tests for the `UserViewSet` REST API.
-    """
+    """Test the UserViewSet REST API."""
     base_name     = "user"
     model         = User
     pk_field      = "username"
@@ -93,11 +87,9 @@ class User_ViewSet_Test(ModelViewSetTestMixin, TestCase):
         self.admin = User.objects.create_user("admin", password="password", email="admin@test.com", is_staff=True, is_superuser=True)
 
         self.url_user2 = reverse("user-detail", args=[str(self.user2.username)])
-     
+
     def test_update_other_user_forbidden(self):
-        """
-        PUT method to update another user is not allowed.
-        """
+        """Ensure PUT cannot update another user."""
         self.login(username="user1", password="password")
 
         response = self.client.put(self.url_user2, {
@@ -108,19 +100,15 @@ class User_ViewSet_Test(ModelViewSetTestMixin, TestCase):
         })
 
         self.assertEqual(response.status_code, 404)
-    
+
     def test_partial_update_other_user_forbidden(self):
-        """
-        PATCH method to partially update another user is not allowed.
-        """
+        """Ensure PATCH cannot partially update another user."""
         self.login(username="user1", password="password")
         response = self.client.patch(self.url_user2, {"description": "Changed Description"}, format="json")
         self.assertEqual(response.status_code, 404)
 
     def test_delete_other_user_forbidden(self):
-        """
-        DELETE method to delete another user is not allowed.
-        """
+        """Ensure DELETE cannot remove another user."""
         self.login(username="user1", password="password")
         response = self.client.delete(self.url_user2)
         self.assertEqual(response.status_code, 404)

@@ -11,15 +11,11 @@ from import_export.widgets import ManyToManyWidget
 from ..models.group        import Group
 
 class GroupForeignKeyWidget(ForeignKeyWidget):
-    """
-    A customized foreign-key widget that exports and imports groups with their slug.
-    """
+    """Export and import groups by their slug in foreign-key fields."""
     def __init__(self, *args, **kwargs):
         super().__init__(model=Group, field="slug", *args, **kwargs)
 
 class GroupManyToManyWidget(ManyToManyWidget):
-    """
-    A customized many-to-many widget that exports and imports groups with their slug.
-    """
+    """Export and import groups by their slug in many-to-many fields."""
     def __init__(self, *args, **kwargs):
         super().__init__(model=Group, field="slug", *args, **kwargs)

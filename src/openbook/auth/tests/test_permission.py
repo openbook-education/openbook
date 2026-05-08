@@ -12,9 +12,7 @@ from django.test                import TestCase
 from openbook.test              import ModelViewSetTestMixin
 
 class Permission_ViewSet_Tests(ModelViewSetTestMixin, TestCase):
-    """
-    Tests for the `PermissionViewSet` REST API.
-    """
+    """Test the PermissionViewSet REST API."""
     base_name     = "permission"
     model         = Permission
     search_string = "logentry"
@@ -33,6 +31,6 @@ class Permission_ViewSet_Tests(ModelViewSetTestMixin, TestCase):
     def setUp(self):
         super().setUp()
         self.permission = Permission.objects.first()
-        
+
     def pk_found(self):
         return self.permission.id

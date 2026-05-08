@@ -11,26 +11,28 @@ from django.contrib.auth.models   import AbstractUser
 
 class RoleBasedObjectPermissionsBackend(ModelBackend):
     """
-    Customized version of the stock model authentication backend. For normal permission checks
-    without an object it behaves exactly the same. Object permissions are checked in the following
-    order, stopping at the first match:
+    Check object permissions with role-based fallbacks.
+
+    For normal permission checks without an object, behave exactly like the stock
+    model authentication backend. Check object permissions in the following order,
+    stopping at the first match:
 
     1. The user is a superuser
     2. The user and the object are the same
-    3. The user is the object's `owner` (optional).
-    4. The object's `has_obj_perm()` method (optional).
+    3. The user is the object's owner (optional).
+    4. The object's has_obj_perm() method (optional).
     5. Regular non-object permissions
-    
+
     Superusers can do anything. Users can change their own data. The owner is always authorized.
     Otherwise role-based permissions are checked. If this is not supported by the object or fails,
-    we fall back to regular user permissions. Thus, the `ModelBackend` doesn't need to be included
+    fall back to regular user permissions. Thus, the ModelBackend does not need to be included
     in the Django settings, as its function is already covered here.
     """
     def has_perm(self, user_obj: AbstractUser, perm: str, obj=None) -> bool:
         # Superuser can do anything
         if user_obj.is_superuser:
             return True
-        
+
         result = False
 
         # Anonymous permission always apply
@@ -51,7 +53,7 @@ class RoleBasedObjectPermissionsBackend(ModelBackend):
                 result = True
             elif hasattr(obj, "has_obj_perm"):
                 result = obj.has_obj_perm(user_obj, perm)
-        
+
         # Fallback to regular permission check
         if not result:
             result = super().has_perm(user_obj, perm)

@@ -45,9 +45,7 @@ class AuthTokenSerializer(FlexFieldsModelSerializer):
         }
 
 class AuthTokenUpdateSerializer(ModelSerializer):
-    """
-    Special serializer to prevent updating the user and token string.
-    """
+    """Prevent updating the user and token string."""
     __doc__ = "Authentication Token"
 
     user = UserField(read_only=True)
@@ -85,11 +83,14 @@ class AuthTokenFilter(CreatedModifiedByFilterMixin, FilterSet):
 )
 @with_flex_fields_parameters()
 class AuthTokenViewSet(ModelViewSetMixin, ModelViewSet):
-    """
-    Authentication tokens provide an authentication mechanism for remote clients without giving them
-    a username and password. This allows human users to grant access (in their name) to other apps,
-    though the apps then impersonate these human users. Thus, more importantly this allows to create
-    special technical app users for which the access token is the only allowed authentication mechanism.
+    """Provide authentication tokens for remote clients.
+
+    Authentication tokens provide an authentication mechanism for remote
+    clients without giving them a username and password. This allows human
+    users to grant access (in their name) to other apps, though those apps
+    then impersonate these users. More importantly, this allows creating
+    special technical app users for which the access token is the only
+    allowed authentication mechanism.
     """
     queryset        = AuthToken.objects.all()
     filterset_class = AuthTokenFilter

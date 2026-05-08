@@ -18,8 +18,9 @@ from ..utils                              import perm_string_for_permission
 
 class AllowedRolePermission(UUIDMixin):
     """
-    Allowed permission to be used in scoped roles. This is used to restrict the list of available
-    permissions when defining roles.
+    Store permissions that can be used in scoped roles.
+
+    This is used to restrict the list of available permissions when defining roles.
     """
     scope_type = models.ForeignKey(ContentType, verbose_name=_("Scope Type"), on_delete=models.CASCADE, related_name="+")
     permission = models.ForeignKey(Permission, verbose_name=_("Permission"), on_delete=models.CASCADE, related_name="+")
@@ -44,10 +45,10 @@ class AllowedRolePermission(UUIDMixin):
     @classmethod
     def get_for_scope_type(cls, scope_type: ContentType) -> "list[AllowedRolePermission]":
         """
-        Get a list of allowed permissions for the given scope type.
+        Return the allowed permissions for the given scope type.
         """
         return cls.objects.filter(scope_type=scope_type)
-    
+
     @admin.display(description=_("Permission"))
     def perm_name(self, obj=None):
         return perm_name_for_permission(self.permission)

@@ -11,15 +11,11 @@ from import_export.widgets import ForeignKeyWidget
 from import_export.widgets import ManyToManyWidget
 
 class UserForeignKeyWidget(ForeignKeyWidget):
-    """
-    A customized foreign-key widget that exports and imports users with their username.
-    """
+    """Export and import users by their username in foreign-key fields."""
     def __init__(self, *args, **kwargs):
         super().__init__(model=get_user_model(), field="username", *args, **kwargs)
 
 class UserManyToManyWidget(ManyToManyWidget):
-    """
-    A customized many-to-many widget that exports and imports users with their username.
-    """
+    """Export and import users by their username in many-to-many fields."""
     def __init__(self, *args, **kwargs):
         super().__init__(model=get_user_model(), field="username", *args, **kwargs)

@@ -22,7 +22,7 @@ from ..models.signup_group_assignment import SignupGroupAssignment
 
 class AccountAdapter(DefaultAccountAdapter):
     """
-    Adapted behavior for local account registration.
+    Customize behavior for local account registration.
     """
     def is_open_for_signup(self, request: HttpRequest):
         """
@@ -33,7 +33,7 @@ class AccountAdapter(DefaultAccountAdapter):
             return auth_config.local_signup_allowed
         except AuthConfig.DoesNotExist:
             pass
-        
+
         return True
 
     def clean_email(self, email: str) -> str:
@@ -48,9 +48,9 @@ class AccountAdapter(DefaultAccountAdapter):
                 raise ValidationError(_f("This e-mail is not allowed to sign-up. The e-mail must end with {suffix}", suffix=email_suffix))
         except AuthConfig.DoesNotExist:
             pass
-        
+
         return email
-    
+
     def save_user(self, request: HttpRequest, user: AbstractUser, form, commit=True) -> AbstractUser:
         """
         Add user to groups after sign-up.
@@ -72,22 +72,23 @@ class AccountAdapter(DefaultAccountAdapter):
         for group_assignment in group_assignments.all():
             for group in group_assignment.groups.all():
                 groups.append(group)
-        
+
         saved_user.groups.set(groups)
         return saved_user
 
     def authenticate(self, request, **credentials):
         """
-        Only allow human users to authenticate. App users need to authenticate with an
-        authentication token, instead. This is an extra security measure, since normally
-        app users should not have a passwort set and thus should not be able to login
-        with username/password, anyway.
+        Allow authentication only for human users.
+
+        App users must authenticate with an authentication token instead. This is
+        an extra security measure, since app users should normally not have a
+        password set and should not be able to log in with username and password.
         """
         user = super().authenticate(request, **credentials)
 
         if not user:
             return user
-        
+
         if hasattr(user, "user_type") and not user.user_type == user.UserType.HUMAN:
             # Cannot raise exception here
             return None
@@ -96,7 +97,7 @@ class AccountAdapter(DefaultAccountAdapter):
 
 class SocialAccountAdapter(DefaultSocialAccountAdapter):
     """
-    Adapted behavior for social account registration.
+    Customize behavior for social account registration.
     """
     def save_user(self, request: HttpRequest, sociallogin: SocialLogin, form=None) -> AbstractUser:
         """
@@ -110,7 +111,7 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
             social_app = SocialApp.objects.get(provider_id = sociallogin.account.provider)
         except SocialApp.DoesNotExist:
             pass
-    
+
         if not social_app:
             try:
                 social_app = SocialApp.objects.get(provider = sociallogin.account.provider)
@@ -133,13 +134,13 @@ class SocialAccountAdapter(DefaultSocialAccountAdapter):
                 if group_assignment.match(sociallogin.account.extra_data):
                     for group in group_assignment.groups.all():
                         groups.append(group)
-                    
+
                     if group_assignment.is_staff:
                         saved_user.is_staff = True
-                    
+
                     if group_assignment.is_superuser:
                         saved_user.is_superuser = True
-            
+
             saved_user.save()
             saved_user.groups.set(groups)
 

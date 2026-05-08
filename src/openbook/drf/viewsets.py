@@ -18,17 +18,19 @@ from rest_framework.settings    import api_settings
 class ModelViewSetMixin:
     """
     Ensure that object permissions are also checked when creating new model instances.
+
     DRF checks object permissions on database-loaded objects, but during creation,
     the object doesn't exist yet. Here we validate the input and construct the instance
     before saving to allow permission checks.
 
-    NOTE: This is a mixin that must be used together with `ModelViewSet` to avoid a mysterious
-    circular import in DRF. To overwrite the implementation of `post()` the mixin must come first.
+    NOTE: This is a mixin that must be used together with ``ModelViewSet`` to avoid a mysterious
+    circular import in DRF. To overwrite the implementation of ``post()`` the mixin must come
+    first.
 
-    ```python
-    class MyViewSet(ModelViewSetMixin, ModelViewSet):
-        pass
-    ```
+    Example::
+
+        class MyViewSet(ModelViewSetMixin, ModelViewSet):
+            pass
     """
 
     def create(self, request, *args, **kwargs):
@@ -50,9 +52,11 @@ class ModelViewSetMixin:
 
 class AllowAnonymousListRetrieveViewSetMixin:
     """
-    Small view set mixin class that allows unrestricted access to the `list` and `retrieve`
+    Allow unrestricted access to the ``list`` and ``retrieve`` actions.
+
+    This small view set mixin class allows unrestricted access to the ``list`` and ``retrieve``
     actions while deferring permission checks for all other actions to the permission classes
-    of the view set (usually defined in `settings.py`).
+    of the view set (usually defined in ``settings.py``).
     """
     def get_permissions(self):
         if self.action in ["list", "retrieve"]:
@@ -62,8 +66,12 @@ class AllowAnonymousListRetrieveViewSetMixin:
 
 def with_flex_fields_parameters():
     """
-    Decorator for view set classes to add the `drf-flex-fields?` query parameters, with which
-    clients can choose the fields they want to receive, to the OpenAPI description.
+    Add ``drf-flex-fields`` query parameters to OpenAPI descriptions.
+
+    Decorate view set classes to add query parameters with which clients can choose
+    the fields they want to receive.
+
+    :returns: A DRF Spectacular schema extension decorator.
     """
     return extend_schema(
         parameters=[
@@ -84,10 +92,14 @@ OPERATION_ID_SUMMARY = {
 
 def add_tag_groups(result, **kwargs):
     """
-    Builds x-tagGroups for drf-spectacular based on OpenAPI extensions:
+    Build ``x-tagGroups`` for drf-spectacular based on OpenAPI extensions.
 
-    - `x-app-name`:   used for tag group
-    - `x-model-name`: used as the tag for the endpoint
+    ``x-app-name`` is used for the tag group.
+    ``x-model-name`` is used as the tag for the endpoint.
+
+    :param result: OpenAPI schema dictionary to post-process.
+    :param kwargs: Additional keyword arguments provided by drf-spectacular.
+    :returns: The updated OpenAPI schema dictionary.
     """
     tag_groups = defaultdict(set)
 

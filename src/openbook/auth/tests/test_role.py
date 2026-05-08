@@ -22,9 +22,7 @@ from ..models.user                    import User
 from ..utils                          import permission_for_perm_string
 
 class Role_ViewSet_Tests(ModelViewSetTestMixin, TestCase):
-    """
-    Tests for the `RoleViewSet` REST API.
-    """
+    """Test the RoleViewSet REST API."""
     base_name         = "role"
     model             = Role
     search_string     = "teacher"

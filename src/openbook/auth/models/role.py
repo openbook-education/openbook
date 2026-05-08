@@ -20,9 +20,10 @@ from .mixins.scope                      import ScopeMixin
 
 class Role(UUIDMixin, ScopeMixin, NonUniqueSlugMixin, NameDescriptionMixin, ActiveInactiveMixin, CreatedModifiedByMixin):
     """
-    Object-based permissions are based on roles that users have in a given context (scope).
-    Roles bundle one or more permissions granted to all users assigned to them. For example
-    textbooks and courses use roles to restrict who can use them how.
+    Define roles for object-based permissions in a given context (scope).
+
+    Roles bundle one or more permissions granted to all users assigned to them. For example,
+    textbooks and courses use roles to restrict who can use them and how.
     """
     priority    = models.PositiveSmallIntegerField(verbose_name=_("Priority"), help_text=_("Low values mean less privileges. Make sure to correctly prioritize the rolls to avoid privilege escalation."))
     permissions = models.ManyToManyField(Permission, verbose_name=_("Permissions"), blank=True, related_name="roles")
@@ -38,6 +39,6 @@ class Role(UUIDMixin, ScopeMixin, NonUniqueSlugMixin, NameDescriptionMixin, Acti
         indexes = [
             models.Index(fields=("scope_type", "scope_uuid", "slug")),
         ]
-    
+
     def __str__(self):
         return f"{self.name} {ActiveInactiveMixin.__str__(self)}".strip()

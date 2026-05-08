@@ -31,6 +31,8 @@ from .utils.json                       import PrettyPrintJSONEncoder
 
 class HTMLLibrary(UUIDMixin, CreatedModifiedByMixin):
     """
+    Store metadata for an installed HTML library.
+
     Textbooks are basically static HTML pages that embed the OpenBook JavaScript libraries to render
     custom components (web components). Those web components might in turn communicate with the server
     if necessary, but usually are working stand-alone. For this the distribution bundle needs to be
@@ -48,7 +50,7 @@ class HTMLLibrary(UUIDMixin, CreatedModifiedByMixin):
     coderepo     = models.URLField(verbose_name=_("Code Repository"), blank=True, default="")
     bugtracker   = models.URLField(verbose_name=_("Bug Tracker"), blank=True, default="")
     readme       = models.TextField(verbose_name=_("Read Me"), null=False, blank=True)
-    
+
     text_format = models.CharField(
         verbose_name = _("Text Format"),
         max_length   = 10,
@@ -57,7 +59,7 @@ class HTMLLibrary(UUIDMixin, CreatedModifiedByMixin):
         blank        = False,
         default      = NameDescriptionMixin.TextFormatChoices.MARKDOWN,
     )
-    
+
     published = models.BooleanField(
         verbose_name = _("Published"),
         default      = True,
@@ -71,11 +73,11 @@ class HTMLLibrary(UUIDMixin, CreatedModifiedByMixin):
 
     def __str__(self):
         return self.fqn()
-    
+
     @display(description=_("Fully Qualified Name"))
     def fqn(self):
         return f"@{self.organization}/{self.name}"
-    
+
     @classmethod
     def get_by_fqn(cls, fqn):
         organization, name = split_library_fqn(fqn)
@@ -93,19 +95,20 @@ class HTMLLibrary(UUIDMixin, CreatedModifiedByMixin):
         verbosity:         int  = 0,
     ):
         """
-        Static method to install a new library version from a library archive file. Depending on
+        Install a new library version from a library archive file.
+
+        Depending on
         the flags, only the archive will be extracted or the database entries will also be updated.
         Missing database entries will then be created, already existing entries will be updated.
 
-        Parameters:
-            archive_file:      `File` object  for the library archive (usually inside `MEDIA/lib`)
-            extract_archive:   Extract archive file on filesystem
-            update_library:    Update header data of the library
-            update_version:    Update library version data
-            update_components: Update HTML component definitions
-            library_version:   Skip database lookup and update this library and version entries, instead,
-            stdout:            Output stream for console messages
-            verbosity:         Print details on the console (default: 0 = off)
+        :param archive_file: ``File`` object for the library archive (usually inside ``MEDIA/lib``).
+        :param extract_archive: Extract archive file on filesystem.
+        :param update_library: Update header data of the library.
+        :param update_version: Update library version data.
+        :param update_components: Update HTML component definitions.
+        :param library_version: Skip database lookup and update this library and version entries instead.
+        :param stdout: Output stream for console messages.
+        :param verbosity: Print details on the console (default: 0 = off).
         """
         from .language import Language
 
@@ -123,7 +126,7 @@ class HTMLLibrary(UUIDMixin, CreatedModifiedByMixin):
             stdout.write(line + "\n")
             stdout.write("=" * len(line) + "\n")
             stdout.write("\n")
-        
+
         # Validate archive file
         archive = HTMLLibraryArchive(archive_file)
 
@@ -133,9 +136,9 @@ class HTMLLibrary(UUIDMixin, CreatedModifiedByMixin):
         if not extract_archive and not update_library and not update_version and not update_components:
             if verbosity > 0:
                 stdout.write(_("No action selected. Nothing to do!") + "\n")
-            
+
             return
-        
+
         # Extract archive on filesystem
         if extract_archive:
             if verbosity > 0:
@@ -145,7 +148,7 @@ class HTMLLibrary(UUIDMixin, CreatedModifiedByMixin):
                 install_dir = os.path.join(settings.MEDIA_ROOT, "lib"),
                 verbosity   = verbosity,
             )
-        
+
         # Create or update HTMLLibrary and HTMLLibraryText database entries
         if update_library:
             if verbosity > 0:
@@ -185,7 +188,7 @@ class HTMLLibrary(UUIDMixin, CreatedModifiedByMixin):
                 library.bugtracker   = manifest.bugtracker
                 library.readme       = manifest.readme
                 library.save()
-            
+
             if verbosity > 0:
                 stdout.write(_("Updating library descriptions") + "\n")
 
@@ -213,7 +216,7 @@ class HTMLLibrary(UUIDMixin, CreatedModifiedByMixin):
         if update_version:
             if verbosity > 0:
                 stdout.write(_("Updating library version data") + "\n")
-            
+
             if not library_version:
                 if isinstance(archive_file, File):
                     file_data = archive_file
@@ -242,7 +245,7 @@ class HTMLLibrary(UUIDMixin, CreatedModifiedByMixin):
         if update_components:
             if verbosity > 0:
                 stdout.write(_("Updating component definitions") + "\n")
-            
+
             from .html_component import HTMLComponent
             from .html_component import HTMLComponentDefinition
 
@@ -251,7 +254,7 @@ class HTMLLibrary(UUIDMixin, CreatedModifiedByMixin):
             for component_manifest in archive.get_html_component_manifests().values():
                 if verbosity > 1:
                     stdout.write(f" > {component_manifest.tag_name}\n")
-                
+
                 try:
                     html_component = HTMLComponent.objects.get(
                         library          = library,
@@ -262,24 +265,24 @@ class HTMLLibrary(UUIDMixin, CreatedModifiedByMixin):
                         library  = library,
                         tag_name = component_manifest.tag_name,
                     )
-                
+
                 HTMLComponentDefinition.objects.create(
                     html_component  = html_component,
                     library_version = library_version,
                     definition      = component_manifest.to_dict(),
                 )
-            
+
             # Delete components without definition
             HTMLComponent.objects.filter(
                 library             = library,
                 definitions__isnull = True,
             ).distinct().delete()
-        
+
         # Finish
         if verbosity > 0:
             stdout.write("\n")
             stdout.write(_("Done!") + "\n")
-        
+
 class HTMLLibraryText(UUIDMixin, TranslatableMixin):
     parent            = models.ForeignKey(HTMLLibrary, on_delete=models.CASCADE, related_name="translations")
     short_description = models.CharField(verbose_name=_("Short Description"), max_length=255)
@@ -301,15 +304,15 @@ class HTMLLibraryVersion(UUIDMixin, FileUploadMixin, CreatedModifiedByMixin):
 
     def __str__(self):
         return f"{self.version}"
-    
+
     @display(description=_("Fully Qualified Name"))
     def fqn(self):
         return f"{self.parent.fqn()} {self.version}"
-    
+
     @display(description=_("Frontend URL"))
     def frontend_url(self) -> str:
         return f"{settings.MEDIA_URL}lib/{self.parent.organization}/{self.parent.name}/{self.version}/library.js"
-    
+
     @classmethod
     def get_by_fqn(cls, fqn) -> "HTMLLibraryVersion":
         organization, name, version = split_library_version_fqn(fqn)
@@ -324,7 +327,7 @@ class HTMLLibraryVersion(UUIDMixin, FileUploadMixin, CreatedModifiedByMixin):
 
     def calc_file_path_hook(self, filename):
         return f"lib/@{self.parent.organization}_{self.parent.name}_{self.version}.zip"
-    
+
     def unpack_archive(
         self,
         extract_archive:   bool = True,
@@ -335,23 +338,22 @@ class HTMLLibraryVersion(UUIDMixin, FileUploadMixin, CreatedModifiedByMixin):
         verbosity:         int  = 0,
     ):
         """
-        Unpack the archive uploaded to this HTML library version and optionally use the manifest
+        Unpack the archive uploaded to this HTML library version.
+
+        Optionally use the manifest
         data inside the archive to update the database entries.
 
-        Parameters:
-            extract_archive:   Extract archive file on filesystem
-            update_library:    Update header data of the library
-            update_version:    Update data of this library version
-            update_components: Update HTML component definitions
-            stdout:            Output stream for console messages
-            verbosity:         Print details on the console (default: 0 = off)
-        
-        Raises:
-            ObjectDoesNotExist: No archive file attached to this entry
+        :param extract_archive: Extract archive file on filesystem.
+        :param update_library: Update header data of the library.
+        :param update_version: Update data of this library version.
+        :param update_components: Update HTML component definitions.
+        :param stdout: Output stream for console messages.
+        :param verbosity: Print details on the console (default: 0 = off).
+        :raises ObjectDoesNotExist: No archive file attached to this entry.
         """
         if not self.file_data:
             raise ObjectDoesNotExist(_("Archive for HTML library version not found."))
-        
+
         self.parent.install_archive(
             archive_file      = self.file_data,
             extract_archive   = extract_archive,

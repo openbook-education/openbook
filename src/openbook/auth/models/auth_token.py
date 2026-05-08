@@ -29,8 +29,9 @@ def generate_token(length: int = 64):
 
 class AuthToken(UUIDMixin, NameDescriptionMixin, ActiveInactiveMixin, ValidityTimeSpanMixin, CreatedModifiedByMixin):
     """
-    Authentication token that remote clients can use for API authentication. This
-    allowed the clients to impersonate the user account associated with the token,
+    Store authentication tokens that remote clients can use for API authentication.
+
+    This allows clients to impersonate the user account associated with the token,
     which can be used in two ways:
 
     1. As the sole authentication method for app users (technical users).
@@ -50,7 +51,7 @@ class AuthToken(UUIDMixin, NameDescriptionMixin, ActiveInactiveMixin, ValidityTi
             models.Index(fields=("user",)),
             models.Index(fields=("token",)),
         ]
-    
+
     def __str__(self):
         if self.name:
             return f"{self.user}: {self.name}"
@@ -59,14 +60,16 @@ class AuthToken(UUIDMixin, NameDescriptionMixin, ActiveInactiveMixin, ValidityTi
 
     def has_obj_perm(self, user_obj: AbstractUser, perm: str) -> bool:
         """
-        Users can only manage their own access key, provided they have the `"openbook_auth.manage_own_authtoken"`
-        permission (directly assigned to the user or via user groups, since we don't have a RBAC scope here).
+        Allow users to manage only their own access key when they have ``openbook_auth.manage_own_authtoken``.
 
-        Note: Users must have the special permission `"openbook_auth.manage_own_authtoken"` in order to manage
+        The permission can be assigned directly to the user or via user groups,
+        since we do not have an RBAC scope here.
+
+        Note: Users must have the special permission ``openbook_auth.manage_own_authtoken`` in order to manage
         their own tokens. Because assigning the Django default permissions (add, change, delete, view)
-        would allow them to manage all tokens of all users (due to the fallback logic in or auth backend).
+        would allow them to manage all tokens of all users (due to the fallback logic in our auth backend).
         """
         if not self.user:
             return False
-        
+
         return self.user.username == user_obj.username and user_obj.has_perm("openbook_auth.manage_own_authtoken")

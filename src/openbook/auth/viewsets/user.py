@@ -39,7 +39,7 @@ class UserSerializer(FlexFieldsModelSerializer):
         read_only_fields  = ["username", "is_staff"]
         filterset_fields  = ["first_name", "last_name", "is_staff"]
         expandable_fields = {}
-    
+
     @extend_schema_field(str)
     def get_full_name(self, obj):
         return obj.get_full_name() if hasattr(obj, "get_full_name") else ""
@@ -74,9 +74,7 @@ class UserFilter(FilterSet):
 )
 @with_flex_fields_parameters()
 class UserViewSet(ModelViewSetMixin, ModelViewSet):
-    """
-    Read/write view set to query active users and update/delete the own user profile.
-    """
+    """Provide read/write operations for active user profiles."""
     __doc__ = "Users"
 
     lookup_field       = "username"
@@ -96,9 +94,10 @@ class UserViewSet(ModelViewSetMixin, ModelViewSet):
 @extend_schema_view(retrieve=extend_schema(exclude=True))
 @with_flex_fields_parameters()
 class CurrentUserViewSet(ModelViewSet):
-    """
-    GET endpoint to retrieve the user profile of the currently logged-in user. If the
-    user is not logged in, a simple response with `is_authenticated = false` is returned.
+    """Return the profile of the currently logged-in user.
+
+    If no user is logged in, return a simple response with
+    ``is_authenticated = false``.
     """
     __doc__ = "Current User"
 

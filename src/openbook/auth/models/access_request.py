@@ -19,11 +19,12 @@ from .mixins.scope                        import ScopeMixin
 
 class AccessRequest(UUIDMixin, ScopeMixin, DurationMixin, CreatedModifiedByMixin):
     """
-    To gain access, users may send access requests to the owners of a given scope. This contains the
-    scope and the requested role, so that the request can be converted into a role assignment, if the
-    request is granted.
+    Store access requests that users may send to the owners of a given scope.
 
-    NOTE: Take care to exclude `decision` and `decision_date` when creating and modifying objects.
+    This contains the scope and requested role, so that the request can be converted into a role
+    assignment if the request is granted.
+
+    Note: Take care to exclude ``decision`` and ``decision_date`` when creating and modifying objects.
     """
     class Decision(models.TextChoices):
         PENDING  = "pending",  _("Decision Pending")
@@ -44,15 +45,16 @@ class AccessRequest(UUIDMixin, ScopeMixin, DurationMixin, CreatedModifiedByMixin
             models.Index(fields=("scope_type", "scope_uuid", "role")),
             models.Index(fields=("user",), name="user_idx"),
         ]
-    
+
     def __str__(self):
         return f"{self.user.username}: {self.role.name}"
 
     def has_obj_perm(self, user_obj: AbstractUser, perm: str) -> bool:
         """
-        Always allow to view or delete own access requests, as well as to create new pending requests for
-        the own user. Otherwise use inherited object permission, that the target role's priority must be
-        lower or equal any priority of the own assigned roles.
+        Allow viewing or deleting own access requests and creating new pending requests for the same user.
+
+        Otherwise, use inherited object permission that the target role's priority must be lower or equal
+        to any priority of the own assigned roles.
         """
         if self.user == user_obj:
             if ".delete_" in perm or ".view_" in perm:
@@ -68,10 +70,10 @@ class AccessRequest(UUIDMixin, ScopeMixin, DurationMixin, CreatedModifiedByMixin
         accordingly when a decision is made.
         """
         from .role_assignment import RoleAssignment
-        
+
         if not self.decision:
             self.decision = self.Decision.PENDING
-        
+
         if self.decision == self.Decision.PENDING:
             self.decision_date = None
         elif self.pk is not None:

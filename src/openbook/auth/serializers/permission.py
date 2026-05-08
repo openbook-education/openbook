@@ -16,10 +16,7 @@ from ..utils                    import permission_for_perm_string
 
 @extend_schema_field(str)
 class PermissionField(RelatedField):
-    """
-    Serializer field to use permission string as input and output instead of a
-    permission's raw PK.
-    """
+    """Use permission strings instead of raw primary keys for input and output."""
     default_error_messages = {
         "not_found": _("Permission '{value}' not found."),
         "invalid":   _("Invalid format: Expected a permission string."),
@@ -36,7 +33,7 @@ class PermissionField(RelatedField):
                 self.fail("required")
             else:
                 return None
-            
+
         if not isinstance(data, str):
             self.fail("invalid")
 

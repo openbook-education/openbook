@@ -45,15 +45,17 @@ class AuthConfigTextResource(ImportExportModelResource):
             "id", "delete",
             "parent", "language", "logout_next_text",
         ]
-    
+
     @classmethod
     def get_display_name(cls):
         return _("Authorization Setting Texts")
 
     def filter_export(self, queryset, **kwargs):
         """
-        Needed because by default it is not possible to export another model than the one
-        from the admin view.
+        Export all rows for this model.
+
+        Use this because by default it is not possible to export another model than
+        the one from the admin view.
         """
         return self._meta.model.objects.all()
 

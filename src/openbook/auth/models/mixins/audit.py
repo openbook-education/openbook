@@ -15,8 +15,7 @@ from ...middleware.current_user import get_current_user
 
 class CreatedModifiedByMixin(models.Model):
     """
-    Mixin class for models that shall record the time and user of creation as well as
-    the time and user of the last modification.
+    Record the user and time of creation and last modification.
     """
     created_by  = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("Created By"), on_delete=models.SET_NULL, blank=True, null=True)
     created_at  = models.DateTimeField(verbose_name=_("Created At"), auto_now_add=True, blank=True, null=True)
@@ -45,7 +44,7 @@ class CreatedModifiedByMixin(models.Model):
     @admin.display(description=_("Last Changed"))
     def created_modified_by(self):
         """
-        Get formatted string to display in the Admin or on the website.
+        Return a formatted string for display in the Admin or on the website.
         """
         if self.created_by and self.created_at:
             created = _("Created by {created_by} at {created_at}.").format(

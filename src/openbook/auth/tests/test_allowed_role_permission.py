@@ -20,7 +20,7 @@ class AllowedRolePermissionTextest_Mixin:
     def setUp(self):
         super().setUp()
         reset_current_user()
-        
+
         self.scope_type = content_type_for_model_string("openbook_content.course")
 
         self.allowed_permission = AllowedRolePermission.objects.create(
@@ -34,16 +34,13 @@ class AllowedRolePermissionTextest_Mixin:
         )
 
 class AllowedRolePermission_Model_Tests(AllowedRolePermissionTextest_Mixin, TestCase):
-    """
-    Tests for the `AllowedRolePermission` model.
-    """
+    """Test the AllowedRolePermission model."""
     def test_validate_permissions(self):
-        """
-        Validation must only whitelisted permissions for roles or scopes.
+        """Validate that only whitelisted permissions are used for roles or scopes.
 
-        NOTE: Calling `add()` or `set()` on a relationship field automatically saves the relationship.
-        Validation must therefore be handled by higher levels, which is why only the implementation of
-        it is tested here.
+        Calling add() or set() on a relationship field automatically saves the
+        relationship. Validation must therefore be handled by higher levels,
+        which is why only the implementation is tested here.
         """
         allowed = [
             permission_for_perm_string("admin.add_logentry"),
@@ -58,11 +55,9 @@ class AllowedRolePermission_Model_Tests(AllowedRolePermissionTextest_Mixin, Test
 
         with self.assertRaises(ValidationError):
             validate_permissions(self.scope_type, disallowed)
-    
+
 class AllowedRolePermission_ViewSet_Tests(ModelViewSetTestMixin, AllowedRolePermissionTextest_Mixin, TestCase):
-    """
-    Tests for the `AllowedRolePermissionViewSet` REST API.
-    """
+    """Test the AllowedRolePermissionViewSet REST API."""
     base_name         = "allowed_role_permission"
     model             = AllowedRolePermission
     search_string     = "add_logentry"

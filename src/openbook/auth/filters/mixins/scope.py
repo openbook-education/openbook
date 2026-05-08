@@ -9,10 +9,7 @@
 from django_filters.filters import CharFilter
 
 class ScopedRolesFilterMixin:
-    """
-    Mixin filter class for any model that implements the `ScopedRolesMixin` and as such has
-    an `owner` field.
-    """
+    """Provide owner filtering for models that implement ScopedRolesMixin."""
     owner = CharFilter(method="owner_filter")
 
     class Meta:
@@ -22,16 +19,14 @@ class ScopedRolesFilterMixin:
         return queryset.filter(owner__username=value)
 
 class ScopeTypeFilterMixin:
-    """
-    Mixin filter class for any model that has a `scope_type` field.
-    """
+    """Provide scope-type filtering for models with a scope_type field."""
     scope_type = CharFilter(method="scope_type_filter")
 
     class Meta:
         fields = {
             "scope_type": ("exact",),
         }
-    
+
     def scope_type_filter(self, queryset, name, value):
         try:
             return queryset.filter(scope_type__pk=int(value))
@@ -44,10 +39,7 @@ class ScopeTypeFilterMixin:
             )
 
 class ScopeFilterMixin(ScopeTypeFilterMixin):
-    """
-    Mixin filter class for any model that implements the `ScopedMixin` and therefor has
-    a `scope_type` and `scope_uuid` field.
-    """
+    """Provide scope filtering for models that implement ScopedMixin."""
     class Meta:
         fields = {
             **ScopeTypeFilterMixin.Meta.fields,

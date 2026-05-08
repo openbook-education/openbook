@@ -27,8 +27,9 @@ if TYPE_CHECKING:
 
 class RoleAssignment(UUIDMixin, ScopeMixin, ActiveInactiveMixin, ValidityTimeSpanMixin, CreatedModifiedByMixin):
     """
-    A role assignment assigns a given role (defined in a given scope) to a user, effectively
-    granting the object-level permissions associated with them.
+    Assign a given role (defined in a given scope) to a user.
+
+    This effectively grants the object-level permissions associated with that role.
     """
     class AssignmentMethod(models.TextChoices):
         MANUAL          = "manual",          _("Manual Assignment")
@@ -59,8 +60,9 @@ class RoleAssignment(UUIDMixin, ScopeMixin, ActiveInactiveMixin, ValidityTimeSpa
 
     def clean(self):
         """
-        Set assignment method to manual, when it is empty. Needed for the Django Admin, because
-        this field cannot be set manually.
+        Set assignment method to manual when it is empty.
+
+        This is needed for the Django Admin because this field cannot be set manually.
         """
         if not self.assignment_method:
             self.assignment_method = self.AssignmentMethod.MANUAL
@@ -77,14 +79,15 @@ class RoleAssignment(UUIDMixin, ScopeMixin, ActiveInactiveMixin, ValidityTimeSpa
         check_permission: bool = True,
     ) -> "RoleAssignment":
         """
-        Apply the given enrollment method or access request to a user, effectively adding the role
-        assignment. For access requests the user should not be given, as it is already contained
-        in the access request object. For enrollment methods it must be given, however.
+        Apply the given enrollment method or access request to a user and add the role assignment.
 
-        Raises `PermissionDenied` when the `permission_user` or the current request users lacks
-        the `openbook_auth.add_roleassignment` permission.
+        For access requests, the user should not be given, as it is already contained in the access
+        request object. For enrollment methods, it must be given.
 
-        Also raises a `PermissionDenied` when the passphrase doesn't match or the user is missing.
+        Raise ``PermissionDenied`` when ``permission_user`` or the current request user lacks
+        ``openbook_auth.add_roleassignment``.
+
+        Also raise ``PermissionDenied`` when the passphrase does not match or the user is missing.
         """
         from .access_request    import AccessRequest
         from .enrollment_method import EnrollmentMethod
@@ -93,17 +96,17 @@ class RoleAssignment(UUIDMixin, ScopeMixin, ActiveInactiveMixin, ValidityTimeSpa
         if hasattr(enrollment, "passphrase") and check_passphrase:
             if enrollment.passphrase and enrollment.passphrase != passphrase:
                 raise PermissionDenied(_("Incorrect passphrase"))
-        
+
         if not user and hasattr(enrollment, "user"):
             user = enrollment.user
-        
+
         if not user:
             raise ValueError(_("User missing"))
-    
+
         # Check permissions
         if not permission_user:
             permission_user = get_current_user()
-        
+
         if check_permission and permission_user:
             if not permission_user.has_perm("openbook_auth.add_roleassignment", enrollment):
                     raise PermissionDenied()
@@ -113,7 +116,7 @@ class RoleAssignment(UUIDMixin, ScopeMixin, ActiveInactiveMixin, ValidityTimeSpa
             EnrollmentMethod: cls.AssignmentMethod.SELF_ENROLLMENT,
             AccessRequest:    cls.AssignmentMethod.ACCESS_REQUEST,
         }
-    
+
         try:
             role_assignment = cls.objects.get(
                 scope_type  = enrollment.scope_type,
@@ -147,26 +150,27 @@ class RoleAssignment(UUIDMixin, ScopeMixin, ActiveInactiveMixin, ValidityTimeSpa
         check_permission: bool = True,
     ) -> None:
         """
-        Withdraw role assignment for a given enrollment method or access request. For access requests the
-        user should not be given, as it is already contained in the access request object. For enrollment
-        methods it must be given, however.
+        Withdraw a role assignment for a given enrollment method or access request.
 
-        Raises a `ValueError` when the user is missing.
+        For access requests, the user should not be given, as it is already contained in the access
+        request object. For enrollment methods, it must be given.
 
-        Raises `PermissionDenied` when the `permission_user` or the current request users lacks
-        the `openbook_auth.delete_roleassignment` permission.
+        Raise ``ValueError`` when the user is missing.
+
+        Raise ``PermissionDenied`` when ``permission_user`` or the current request user lacks
+        ``openbook_auth.delete_roleassignment``.
         """
         # Check parameters
         if not user and hasattr(enrollment, "user"):
             user = enrollment.user
-        
+
         if not user:
             raise ValueError(_("User missing"))
 
         # Check permissions
         if not permission_user:
             permission_user = get_current_user()
-        
+
         if check_permission and permission_user:
             if not permission_user.has_perm("openbook_auth.delete_roleassignment", enrollment):
                     raise PermissionDenied()

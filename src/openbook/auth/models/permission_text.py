@@ -19,7 +19,7 @@ from ..utils                              import perm_string_for_permission
 
 class PermissionText(UUIDMixin, TranslatableMixin):
     """
-    Translated permission name.
+    Store translated permission names.
     """
     parent = models.ForeignKey(Permission, verbose_name=_("Permission"), on_delete=models.CASCADE, related_name="translations")
     name   = models.CharField(verbose_name=_("Translated Name"), max_length=255, null=False, blank=False)
@@ -31,11 +31,11 @@ class PermissionText(UUIDMixin, TranslatableMixin):
         constraints = (
             models.UniqueConstraint(fields=("parent", "language"), name="unique_permission_text_translation"),
         )
-    
+
     @admin.display(description=_("Application"))
     def appname(self, obj=None):
         return app_name_for_permission(self.parent)
-    
+
     @admin.display(description=_("Permission"))
     def perm_name(self, obj=None):
         return perm_name_for_permission(self.parent)

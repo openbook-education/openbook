@@ -63,13 +63,9 @@ class AccessRequest_Test_Mixin:
         RoleAssignment.from_obj(self.course, user=self.user_assistant, role=self.role_assistant).save()
 
 class AccessRequest_Model_Tests(AccessRequest_Test_Mixin, TestCase):
-    """
-    Tests for the `AccessRequest` model.
-    """
+    """Test the AccessRequest model."""
     def test_role_scope(self):
-        """
-        The assigned role must belong to the same scope.
-        """
+        """Ensure the assigned role belongs to the same scope."""
         wrong_scope = Course.objects.create(name="Other Course", slug="other-course", text_format=Course.TextFormatChoices.MARKDOWN)
         wrong_role  = Role.from_obj(wrong_scope, name="Wrong Scope", slug="wrong-scope", priority=0)
         wrong_role.save()
@@ -80,9 +76,7 @@ class AccessRequest_Model_Tests(AccessRequest_Test_Mixin, TestCase):
             access_request.clean()
 
     def test_new_pending_decision(self):
-        """
-        Decision should be pending and decision date be `None` when new access request is saved.
-        """
+        """Ensure decision is pending and decision_date is None for new requests."""
         access_request = AccessRequest.from_obj(self.course, user=self.user_new, role=self.role_student)
         access_request.save(check_permission=False)
 
@@ -90,9 +84,7 @@ class AccessRequest_Model_Tests(AccessRequest_Test_Mixin, TestCase):
         self.assertIsNone(access_request.decision_date)
 
     def test_decision_date_automatically_set_on_accept(self):
-        """
-        Decision date should be set when access request is accepted.
-        """
+        """Ensure decision_date is set when an access request is accepted."""
         access_request = AccessRequest.from_obj(self.course, user=self.user_new, role=self.role_student)
         access_request.save(check_permission=False)
 
@@ -105,9 +97,7 @@ class AccessRequest_Model_Tests(AccessRequest_Test_Mixin, TestCase):
         self.assertIsInstance(access_request.decision_date, timezone.datetime)
 
     def test_decision_date_automatically_set_on_deny(self):
-        """
-        Decision date should be set when access request is denied.
-        """
+        """Ensure decision_date is set when an access request is denied."""
         access_request = AccessRequest.from_obj(self.course, user=self.user_new, role=self.role_student)
         access_request.save(check_permission=False)
 
@@ -120,9 +110,7 @@ class AccessRequest_Model_Tests(AccessRequest_Test_Mixin, TestCase):
         self.assertIsInstance(access_request.decision_date, timezone.datetime)
 
     def test_enroll_on_accept(self):
-        """
-        `RoleAssignment.enroll()` should be called when access request is accepted.
-        """
+        """Ensure RoleAssignment.enroll() is called when a request is accepted."""
         with patch.object(RoleAssignment, "enroll") as mock_enroll:
             access_request = AccessRequest.from_obj(self.course,
                 user     = self.user_new,
@@ -134,9 +122,7 @@ class AccessRequest_Model_Tests(AccessRequest_Test_Mixin, TestCase):
             mock_enroll.assert_called_once_with(enrollment=access_request, permission_user=None, check_permission=False)
 
     def test_withdraw_on_deny(self):
-        """
-        `RoleAssignment.withdraw()` should be called when access request is denied.
-        """
+        """Ensure RoleAssignment.withdraw() is called when a request is denied."""
         with patch.object(RoleAssignment, "withdraw") as mock_withdraw:
             access_request = AccessRequest.from_obj(self.course,
                 user     = self.user_new,
@@ -146,11 +132,9 @@ class AccessRequest_Model_Tests(AccessRequest_Test_Mixin, TestCase):
 
             access_request.save(check_permission=False)
             mock_withdraw.assert_called_once_with(enrollment=access_request, permission_user=None, check_permission=False)
-    
+
     def test_role_assigned_on_accept(self):
-        """
-        Role should be assigned when access request is accepted.
-        """
+        """Ensure a role is assigned when an access request is accepted."""
         access_request = AccessRequest.from_obj(self.course, user=self.user_new, role=self.role_student)
         access_request.save(check_permission=False)
 
@@ -168,11 +152,9 @@ class AccessRequest_Model_Tests(AccessRequest_Test_Mixin, TestCase):
         ).count(), 1)
 
         self.assertEqual(access_request.decision, AccessRequest.Decision.ACCEPTED)
-    
+
     def test_role_unassigned_on_deny(self):
-        """
-        Role assignment should be deleted when access request is denied.
-        """
+        """Ensure role assignment is deleted when an access request is denied."""
         access_request = AccessRequest.from_obj(self.course, user=self.user_new, role=self.role_student)
         access_request.save(check_permission=False)
 
@@ -190,11 +172,9 @@ class AccessRequest_Model_Tests(AccessRequest_Test_Mixin, TestCase):
         ).count(), 0)
 
         self.assertEqual(access_request.decision, AccessRequest.Decision.DENIED)
-    
+
     def test_cannot_decide_higher_priority(self):
-        """
-        Users cannot decide access request for roles with higher priority than their own.
-        """
+        """Ensure users cannot decide requests for roles above their priority."""
         access_request = AccessRequest.from_obj(self.course, user=self.user_new, role=self.role_teacher)
         access_request.save(check_permission=False)
 
@@ -203,11 +183,9 @@ class AccessRequest_Model_Tests(AccessRequest_Test_Mixin, TestCase):
 
         with self.assertRaises(PermissionDenied):
             access_request.deny(permission_user=self.user_assistant)
-    
+
     def test_can_decide_same_priority(self):
-        """
-        Users can decide access request for roles with same priority than their own.
-        """
+        """Ensure users can decide requests for roles at their own priority."""
         access_request = AccessRequest.from_obj(self.course, user=self.user_new, role=self.role_assistant)
         access_request.save(check_permission=False)
 
@@ -215,19 +193,15 @@ class AccessRequest_Model_Tests(AccessRequest_Test_Mixin, TestCase):
         access_request.deny(permission_user=self.user_assistant)
 
     def test_can_decide_lower_priority(self):
-        """
-        Users can decide access request for roles with lower priority than their own.
-        """
+        """Ensure users can decide requests for roles below their own priority."""
         access_request = AccessRequest.from_obj(self.course, user=self.user_new, role=self.role_student)
         access_request.save(check_permission=False)
 
         access_request.accept(permission_user=self.user_assistant)
         access_request.deny(permission_user=self.user_assistant)
-    
+
     def test_accept_permission(self):
-        """
-        User's role must include "openbook_auth.add_roleassignment" permission to accept access requests.
-        """
+        """Ensure accepting requests requires openbook_auth.add_roleassignment."""
         # First try without permission
         access_request1 = AccessRequest.from_obj(self.course, user=self.user_new, role=self.role_student)
 
@@ -236,13 +210,13 @@ class AccessRequest_Model_Tests(AccessRequest_Test_Mixin, TestCase):
             role     = self.role_student,
             decision = AccessRequest.Decision.ACCEPTED,
         )
-        
+
         with self.assertRaises(PermissionDenied):
             access_request1.accept(permission_user=self.user_student)
 
         with self.assertRaises(PermissionDenied):
             access_request2.save(permission_user=self.user_student)
-        
+
         # Now add permission and retry
         self.role_student.permissions.set([
             permission_for_perm_string("openbook_auth.add_roleassignment"),
@@ -260,11 +234,9 @@ class AccessRequest_Model_Tests(AccessRequest_Test_Mixin, TestCase):
         access_request4.save(permission_user=self.user_student)
 
     def test_deny_permission(self):
-        """
-        User's role must include "openbook_auth.delete_roleassignment" permission to deny access requests.
-        """
+        """Ensure denying requests requires openbook_auth.delete_roleassignment."""
         # First try without permission
-        access_request1 = AccessRequest.from_obj(self.course, user=self.user_new, role=self.role_student)        
+        access_request1 = AccessRequest.from_obj(self.course, user=self.user_new, role=self.role_student)
 
         access_request2 = AccessRequest.from_obj(self.course,
             user     = self.user_new,
@@ -278,7 +250,7 @@ class AccessRequest_Model_Tests(AccessRequest_Test_Mixin, TestCase):
 
         with self.assertRaises(PermissionDenied):
             access_request2.save(permission_user=self.user_student)
-        
+
         # Now add permission and retry
         self.role_student.permissions.set([
             permission_for_perm_string("openbook_auth.delete_roleassignment"),
@@ -296,9 +268,7 @@ class AccessRequest_Model_Tests(AccessRequest_Test_Mixin, TestCase):
         access_request4.save(permission_user=self.user_student)
 
 class AccessRequest_ViewSet_Tests(ModelViewSetTestMixin, AccessRequest_Test_Mixin, TestCase):
-    """
-    Tests for the `AccessRequestViewSet` REST API.
-    """
+    """Test the AccessRequestViewSet REST API."""
     base_name         = "access_request"
     model             = AccessRequest
     search_string     = "student"
@@ -362,9 +332,7 @@ class AccessRequest_ViewSet_Tests(ModelViewSetTestMixin, AccessRequest_Test_Mixi
     }
 
     def test_permission_denied(self):
-        """
-        Operations without required permissions should return 404.
-        """
+        """Ensure operations without required permissions return 404."""
         self.login(username="student", password="password")
 
         # Try to accept without permission
@@ -378,9 +346,7 @@ class AccessRequest_ViewSet_Tests(ModelViewSetTestMixin, AccessRequest_Test_Mixi
         self.assertEqual(response.status_code, 404)
 
     def test_accept(self):
-        """
-        Accept should assign role when permitted.
-        """
+        """Ensure accept assigns the role when permitted."""
         self.login(username="assistant", password="password")
 
         url = reverse("access_request-accept", args=[str(self.access_request.pk)])
@@ -391,9 +357,7 @@ class AccessRequest_ViewSet_Tests(ModelViewSetTestMixin, AccessRequest_Test_Mixi
         self.assertEqual(self.access_request.decision, AccessRequest.Decision.ACCEPTED)
 
     def test_deny(self):
-        """
-        Deny should unassign role when permitted.
-        """
+        """Ensure deny unassigns the role when permitted."""
         self.login(username="assistant", password="password")
 
         url = reverse("access_request-deny", args=[str(self.access_request.pk)])

@@ -56,13 +56,14 @@ class ScopeTypeListSerializer(Serializer):
     }
 )
 class ScopeTypeViewSet(ViewSet):
-    """
-    Permission scopes. When a list is requested, a flat list of scope types will be returned.
-    If a single object is requested, full details including all scopes and allowed permissions
-    will be returned.
+    """Return permission scope information.
+
+    When a list is requested, return a flat list of scope types. If a single
+    object is requested, return full details including all scopes and allowed
+    permissions.
     """
     __doc__ = "Permission Scopes"
-    
+
     permission_classes = [IsAuthenticated]
     pagination_class   = None
     filter_backends    = []
@@ -73,9 +74,7 @@ class ScopeTypeViewSet(ViewSet):
 
     @extend_schema(responses=ScopeTypeListSerializer)
     def list(self, request, *args, **kwargs):
-        """
-        GET List: Return a flat list of scope types.
-        """
+        """Return a flat list of scope types."""
         result = []
 
         for content_type in ScopedRolesMixin.get_scope_model_content_types():
@@ -101,9 +100,7 @@ class ScopeTypeViewSet(ViewSet):
             responses=ScopeTypeRetrieveSerializer,
         )
     def retrieve(self, request, *args, **kwargs):
-        """
-        GET Scope Type: Return an object with all scopes and allowed permissions.
-        """
+        """Return a scope type with scopes and allowed permissions."""
         scope_type   = self.request.parser_context["kwargs"].get("id")
         content_type = None
 
@@ -123,7 +120,7 @@ class ScopeTypeViewSet(ViewSet):
         except FieldError:
             # PK references content type without id or name field
             return Response(status=status.HTTP_404_NOT_FOUND, data=[])
-        
+
         result = {
             "pk":                  content_type.pk,
             "id":                  model_string_for_content_type(content_type),
@@ -131,9 +128,9 @@ class ScopeTypeViewSet(ViewSet):
             "objects":             [],
             "allowed_permissions": [],
         }
-        
+
         for scope in query_set.all():
-            result["objects"].append({    
+            result["objects"].append({
                 "uuid":  scope.id,
                 "name":  scope.name if hasattr(scope, "name") else scope.id,
             })
@@ -144,7 +141,7 @@ class ScopeTypeViewSet(ViewSet):
         for allowed_role_permission in allowed_role_permissions:
             if allowed_role_permission.permission:
                 allowed_permissions.append(allowed_role_permission.permission)
-        
+
         translations = PermissionText.objects.filter(parent__in=allowed_permissions).all()
 
         for allowed_role_permission in allowed_role_permissions:
@@ -163,7 +160,7 @@ class ScopeTypeViewSet(ViewSet):
                 "model": model._meta.verbose_name,
                 "name":  translation.name if translation else permission.name,
             })
-        
+
         serializer = ScopeTypeRetrieveSerializer(data=result)
         serializer.is_valid()
         return Response(serializer.data)

@@ -39,11 +39,11 @@ class _UserInline(TabularInline):
 
     def has_add_permission(self, *args, **kwargs):
         return False
-    
+
     @admin.display(description=_("Username"))
     def get_username(self, obj):
         return obj.user.username
-    
+
     @admin.display(description=_("Full Name"))
     def get_full_name(self, obj):
         return obj.user.get_full_name()
@@ -51,12 +51,12 @@ class _UserInline(TabularInline):
     @admin.display(description=_("User Type"))
     def get_user_type(self, obj):
         return obj.user.user_type
-        
+
     @admin.display(description=_("Is Staff"))
     def get_is_staff(self, obj):
         widget = UnfoldBooleanSwitchWidget(attrs={"disabled": True})
         return widget.render("is_staff", obj.user.is_staff)
-    
+
     @admin.display(description=_("Is Superuser"))
     def get_is_superuser(self, obj):
         widget = UnfoldBooleanSwitchWidget(attrs={"disabled": True})
@@ -64,7 +64,7 @@ class _UserInline(TabularInline):
 
 class GroupAdmin(DjangoGroupAdmin, CustomModelAdmin):
     """
-    Sub-class of Django's Group Admin to allow importing and exporting groups.
+    Allow importing and exporting groups in Django's Group admin.
     """
     resource_classes    = [GroupResource]
     list_display        = ["name", "slug", "user_count"]

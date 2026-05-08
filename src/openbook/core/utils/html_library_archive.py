@@ -26,13 +26,14 @@ class HTMLLibraryArchive:
     def __init__(self, file: str|typing.BinaryIO, mode: str = "r", **zipfile_kwargs):
         """
         Open a HTML library archive given either a filename of file-object.
+
         Note that currently only read operations are supported, as it is
         assumed that the archives are built with external tools.
 
-        Parameters:
-            file: File name or file-like object
-            mode: Access mode to open the file (default = `"r"`)
-            **zipfile_kwargs: Additional keyword arguments for the `ZipFile` constructor.
+        :param file: File name or file-like object.
+        :param mode: Access mode to open the file (default = ``"r"``).
+        :param zipfile_kwargs: Additional keyword arguments for the
+            ``ZipFile`` constructor.
         """
         if is_zipfile(file):
             self._zip_file = ZipFile(file, mode, **zipfile_kwargs)
@@ -48,10 +49,12 @@ class HTMLLibraryArchive:
         else:
             self._zip_file = None
             self._manifest = HTMLLibraryManifest()
-    
+
     def close(self):
         """
-        Close the archive file when it is not needed anymore. Should always be called
+        Close the archive file when it is not needed anymore.
+
+        This method should always be called
         when done with the archive.
         """
         if self._zip_file:
@@ -59,67 +62,73 @@ class HTMLLibraryArchive:
 
     def is_valid_archive(self):
         """
-        Returns `True` is the archive is a valid HTML library archive. This is, if it
-        is a ZIP file, containing a single directory with the name `openbook-library`,
-        which in turn contains a `library.yml` file with at least the following content
+        Return ``True`` if the archive is a valid HTML library archive.
+
+        This is the case if it is a ZIP file, containing a single directory with
+        the name ``openbook-library``, which in turn contains a ``library.yml``
+        file with at least the following content
         with a valid library name and semver version:
 
-        ```yaml
-        name: "@organization/name"
-        version: 1.0.0
-        ```
+        ::
+
+            name: "@organization/name"
+            version: 1.0.0
         """
         if not self._zip_file:
             return False
-        
+
         if not self._manifest.organization or not self._manifest.name or not self._manifest.version:
             return False
-        
+
         try:
             validate_library_name_part(self._manifest.organization)
             validate_library_name_part(self._manifest.name)
             validate_version_number(self._manifest.version)
         except ValidationError:
             return False
-        
+
         return True
-    
+
     def get_library_manifest(self) -> "HTMLLibraryManifest":
         """
-        Returns a python object with the parsed content of the library manifest file.
-        Returns `None` when the archive is no ZIP file or lacks the library manifest.
+        Return a Python object with the parsed content of the library manifest file.
+
+        Return ``None`` when the archive is no ZIP file or lacks the library manifest.
         """
         return self._manifest
-    
+
     def get_html_component_manifests(self) -> dict[str, "HTMLComponentManifest"]:
         """
-        Returns a dictionary that maps HTML tag names to python objects that describe
-        the HTML custom components. Returns `None` when the archive is no ZIP file.
+        Return a dictionary that maps HTML tag names to Python objects.
+
+        The objects describe the HTML custom components. Return ``None`` when
+        the archive is no ZIP file.
         """
         if not self._zip_file:
             return None
-        
+
         result = {}
 
         for filename in self._zip_file.namelist():
             if filename.startswith("openbook-library/components/") and filename.endswith(".yml"):
                 with self._zip_file.open(filename) as manifest_file:
                     manifest_data = yaml_safe_load(manifest_file)
-        
+
                 manifest = HTMLComponentManifest.from_dict(manifest_data)
 
                 if manifest.tag_name:
                     result[manifest.tag_name] = manifest
-        
+
         return result
-    
+
     def get_raw_zip_file(self) -> ZipFile:
         """
-        Returns the raw `ZipFile` object so that its content can be inspected. Returns
-        `None`, if the file is no valid zip file.
+        Return the raw ``ZipFile`` object so that its content can be inspected.
+
+        Return ``None`` if the file is no valid ZIP file.
         """
         return self._zip_file
-    
+
     def extract(
         self,
         install_dir: str,
@@ -127,27 +136,29 @@ class HTMLLibraryArchive:
         verbosity:   int = 0,
     ):
         """
-        Extract archive content into the given installation directory. The directory should be
-        the root directory where all libraries are installed, because this method will create
-        the corresponding sub-directories for the library and its version. If a sub-directory
-        for the same version of the same library already exists it will be deleted first.
+        Extract archive content into the given installation directory.
+
+        The directory should be the root directory where all libraries are
+        installed, because this method will create the corresponding
+        sub-directories for the library and its version. If a sub-directory for
+        the same version of the same library already exists it will be deleted
+        first.
 
         Note, no validation of the archive is done here. It is assumed that the client already
-        called `is_valid_archive()` or wants to force-extract a possibly invalid archive.
+        called ``is_valid_archive()`` or wants to force-extract a possibly invalid archive.
 
         Does nothing if the archive is no ZIP file.
 
-        Parameters:
-            install_dir: Root directory where libraries are installed
-            stdout:      Output stream for console messages
-            verbosity:   Print details on the console (default: 0 = off)
+        :param install_dir: Root directory where libraries are installed.
+        :param stdout: Output stream for console messages.
+        :param verbosity: Print details on the console (default: 0 = off).
         """
         if not self._zip_file:
             return
-        
+
         if not self._manifest.organization or not self._manifest.name or not self._manifest.version:
             return
-        
+
         library_dir = os.path.join(install_dir, self._manifest.organization, self._manifest.name, self._manifest.version)
 
         if verbosity > 0:
@@ -155,7 +166,7 @@ class HTMLLibraryArchive:
 
         if os.path.exists(library_dir):
             shutil.rmtree(library_dir)
-        
+
         os.makedirs(library_dir)
 
         root_dirname = "openbook-library/"
@@ -185,26 +196,27 @@ class TypedAccessDict(dict):
 
     Nested dictionaries will automatically converted into typed dictionaries,
     to allow type-checking their content, too. Still the expected type must
-    be given as `dict`.
+    be given as ``dict``.
     """
     def __init__(self, data: any):
         """
-        Initialize typed dictionary from untyped dictionary. If `data` is no `dict`
+        Initialize typed dictionary from untyped dictionary.
+
+        If ``data`` is no ``dict``
         the initialized dictionary will be empty.
         """
         if not isinstance(data, dict):
             data = {}
-        
+
         super().__init__(data)
 
     def get_typed(self, key: str, expected_type: typing.Type[T], default_value: any = None) -> T|None:
         """
         Dictionary access with type checking.
 
-        Parameters:
-            key: Key name
-            expected_type: Type to be checked with `isinstance()`
-            default_value: Default value if key is missing or value has wrong type
+        :param key: Key name.
+        :param expected_type: Type to be checked with ``isinstance()``.
+        :param default_value: Default value if key is missing or value has wrong type.
         """
         value = self.get(key, default_value)
 
@@ -227,7 +239,7 @@ class TypedAccessDict(dict):
 
 class HTMLLibraryManifest:
     """
-    Content of the `library.yml` file that describes the library as a whole.
+    Content of the ``library.yml`` file that describes the library as a whole.
     """
     def __init__(
         self,
@@ -244,18 +256,19 @@ class HTMLLibraryManifest:
         dependencies: dict[str, str] = {},
     ):
         """
-        Parameters:
-            organization: Organization from the fully qualified library name
-            name:         Library name from the fully qualified library name
-            version:      Library version
-            author:       Author name and e-mail
-            license:      License short-code
-            website:      Website URL
-            coderepo:     Source code URL
-            bugtracker:   Bug tracker URL
-            description:  Short description in multiple languages (key = language, value = description)
-            readme:       Content of the README file, assumed to be in markdown format
-            dependencies: Dependencies on other libraries (key = library, value = version expression)
+        :param organization: Organization from the fully qualified library name.
+        :param name: Library name from the fully qualified library name.
+        :param version: Library version.
+        :param author: Author name and e-mail.
+        :param license: License short-code.
+        :param website: Website URL.
+        :param coderepo: Source code URL.
+        :param bugtracker: Bug tracker URL.
+        :param description: Short description in multiple languages
+            (key = language, value = description).
+        :param readme: Content of the README file, assumed to be in markdown format.
+        :param dependencies: Dependencies on other libraries
+            (key = library, value = version expression).
         """
         self.organization = organization
         self.name         = name
@@ -268,7 +281,7 @@ class HTMLLibraryManifest:
         self.description  = description
         self.readme       = readme
         self.dependencies = dependencies
-    
+
     @classmethod
     def from_dict(cls, manifest_data: dict) -> "HTMLLibraryManifest":
         """
@@ -308,14 +321,15 @@ class HTMLComponentManifest:
         events:           list[str]                             = [],
     ):
         """
-        Parameters:
-            tag_name:         HTML tag name
-            description:      Short description in multiple languages (key = language, value = description)
-            text_allowed:     Whether the element may contain text content
-            html_allowed:     Whether normal HTML child nodes are allowed
-            allowed_children: Names of the allowed HTML children, if `htmlAllowed` is `False`
-            attributes:       HTML attributes and their allowed values
-            events:           DOM events raised by the component
+        :param tag_name: HTML tag name.
+        :param description: Short description in multiple languages
+            (key = language, value = description).
+        :param text_allowed: Whether the element may contain text content.
+        :param html_allowed: Whether normal HTML child nodes are allowed.
+        :param allowed_children: Names of the allowed HTML children, if
+            ``htmlAllowed`` is ``False``.
+        :param attributes: HTML attributes and their allowed values.
+        :param events: DOM events raised by the component.
         """
         self.tag_name         = tag_name
         self.description      = description
@@ -331,7 +345,7 @@ class HTMLComponentManifest:
         Create new instance from a dictionary in the YAML manifest file.
         """
         manifest_data = TypedAccessDict(manifest_data)
-        
+
         def attribute_dict(key: str) -> dict[str, HTMLAttributeDescription]:
             attributes = manifest_data.get_typed(key, dict, {})
             result = {}
@@ -380,17 +394,17 @@ class HTMLAttributeDescription:
         enum:        list[str]      = [],
     ):
         """
-        Parameters:
-            name:        HTML attribute name
-            description: Short description in multiple languages (key = language, value = description)
-            regex:       Optional: Regular expression to check property values
-            enum:        Optional: Enumerated list of allowed property values
+        :param name: HTML attribute name.
+        :param description: Short description in multiple languages
+            (key = language, value = description).
+        :param regex: Optional regular expression to check property values.
+        :param enum: Optional enumerated list of allowed property values.
         """
         self.name        = name
         self.description = description
         self.regex       = regex
         self.enum        = enum
-    
+
     @classmethod
     def from_dict(cls, attribute_name: str, attribute_data: TypedAccessDict) -> "HTMLAttributeDescription":
         return cls(

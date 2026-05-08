@@ -12,9 +12,7 @@ from django.test                        import TestCase
 from openbook.test                      import ModelViewSetTestMixin
 
 class ScopeType_ViewSet_Tests(ModelViewSetTestMixin, TestCase):
-    """
-    Tests for the `ScopeTypeViewSet` REST API.
-    """
+    """Test the ScopeTypeViewSet REST API."""
     base_name = "scope_type"
     model     = ContentType
     count     = -1

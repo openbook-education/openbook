@@ -29,10 +29,7 @@ from openbook.auth.utils                       import permission_for_perm_string
 User = get_user_model()
 
 class _HttpMethod:
-    """
-    Utility class to call the right method on the API client depending on the HTTP method
-    used by a REST operation.
-    """
+    """Call the matching API client method for a REST operation HTTP method."""
     def __init__(self, name: str):
         self.name = name
 
@@ -61,63 +58,63 @@ class _HttpMethod:
                 client_method = client.delete
             case _:
                 raise ValueError(f"Unsupported HTTP method: {self.name}")
-        
+
         return client_method(path, data, query_params=query_params, format=format, content_type=content_type, **extra)
-        
+
 class ModelViewSetTestMixin:
     """
-    Shared unit tests for the ModelViewSet based REST APIs. Defines parametrized unit tests for
-    common behavior like searching, sorting and the usual REST HTTP methods. Use it like this:
+    Define shared unit tests for ModelViewSet-based REST APIs.
 
-    ```python
-    class MyModel_ViewSet_Test(ModelViewSetTestMixin, TestCase):
-        base_name         = "my_model"
-        model             = MyModel
-        pk_found          = 4711,
-        search_string     = "test"
-        search_count      = 2
-        sort_field        = "fieldname"
-        expandable_fields = ("fk_relation", "m2m_relation[]")
+    Define parametrized unit tests for common behavior like searching, sorting,
+    and the usual REST HTTP methods. Use it like this::
 
-        def get_create_data(self):
-            return {...}
+        class MyModel_ViewSet_Test(ModelViewSetTestMixin, TestCase):
+            base_name         = "my_model"
+            model             = MyModel
+            pk_found          = 4711,
+            search_string     = "test"
+            search_count      = 2
+            sort_field        = "fieldname"
+            expandable_fields = ("fk_relation", "m2m_relation[]")
 
-        operations = {
-            "create": {
-                "request_data": get_create_data,    # Dict or method that returns dict
-            },
-            "update": {
-                "request_data": {"some_field": "new value"},
-                "updates": {"some_obj": {"id": "new_value"}},
-            },
-            "partial_update": {
-                "request_data": {...},
-                "updates": {...},
-            },
+            def get_create_data(self):
+                return {...}
 
-            # Not supported operation
-            "delete": {
-                "supported": False,
-            },
+            operations = {
+                "create": {
+                    "request_data": get_create_data,    # Dict or method that returns dict
+                },
+                "update": {
+                    "request_data": {"some_field": "new value"},
+                    "updates": {"some_obj": {"id": "new_value"}},
+                },
+                "partial_update": {
+                    "request_data": {...},
+                    "updates": {...},
+                },
 
-            # Custom action (without authentication/authorization)
-            "custom": {
-                "supported":          True,
-                "http_method":        ModelViewSetTestMixin.HttpMethod.GET,
-                "status_code":        200,      # Okay
-                "url_suffix":         "custom",
-                "requires_auth":      False,
-                "model_permission":   (),
-                "assertions":         (assertHealthStatus,),
-            },
-        }
-    ```
+                # Not supported operation
+                "delete": {
+                    "supported": False,
+                },
+
+                # Custom action (without authentication/authorization)
+                "custom": {
+                    "supported":          True,
+                    "http_method":        ModelViewSetTestMixin.HttpMethod.GET,
+                    "status_code":        200,      # Okay
+                    "url_suffix":         "custom",
+                    "requires_auth":      False,
+                    "model_permission":   (),
+                    "assertions":         (assertHealthStatus,),
+                },
+            }
 
     See the source of this class for all supported properties. There are lots more to cover
     special cases like custom permissions, non-authenticated operations and so on.
 
     Use a custom assertion method to check the object after updates, if the check based on the
-    `"updates"` dict is too simple.
+    ``"updates"`` dict is too simple.
 
     This mixin creates lots of additional test methods via meta-programming to assert that
     for each endpoint (operation) the REST API uses authentication, authorization, returns
@@ -154,16 +151,16 @@ class ModelViewSetTestMixin:
     """String or method to get key value of a non-existing object for testing the 404 status code"""
 
     search_string = "",
-    """Search string to test the `_search` query parameter (will not be tested if string is empty)"""
+    """Search string to test the ``_search`` query parameter (will not be tested if string is empty)."""
 
     search_count = -1
-    """Number of expected search results when testing the `_search` query parameter"""
+    """Number of expected search results when testing the ``_search`` query parameter."""
 
     sort_field = ""
-    """Fieldname to test the `_sort` query parameter (will not be tested if string is empty)"""
+    """Fieldname to test the ``_sort`` query parameter (will not be tested if string is empty)."""
 
     expandable_fields = ()
-    """List of expandable relation fields to test that expansion doesn't crash. Fields ending with `[]` are tested as lists."""
+    """List of expandable relation fields to test that expansion does not crash. Fields ending with ``[]`` are tested as lists."""
 
     operations = {
         "list": {
@@ -179,7 +176,7 @@ class ModelViewSetTestMixin:
             "custom_permissions": [],                       # Additional custom permission strings to check
             "request_data":       None,                     # Dict or method that returns dict to get request body data (to create or update an object)
             "format":             None,                     # APIClient parameter format
-            "content_type":       "",                       # APIClient parameter content_type: 
+            "content_type":       "",                       # APIClient parameter content_type:
             "extra":              {},                       # APIClient parameter extra
             "updates":            {},                       # Dict or method that returns dict with expected values after an update
             "assertions":         (),                       # Callback functions that receive the response object to check extra assertions
@@ -276,18 +273,20 @@ class ModelViewSetTestMixin:
         },
     }
     """
-    Test configuration for each supported operation. Contains all the standard operations like
+    Define test configuration for each supported operation.
+
+    Contains all the standard operations like
     "list", "change", etc. but you can also add additional entries for custom actions defined
-    with the `@action` decorator in the view set. In that case use the constants defined in the
-    inner class `HttpMethod` to set the HTTP method for the new operation. The expected status
+    with the ``@action`` decorator in the view set. In that case use the constants defined in the
+    inner class ``HttpMethod`` to set the HTTP method for the new operation. The expected status
     codes will be automatically determined as per the other values.
 
-    When adding custom actions, make sure to set the `"url_suffix"` to the action name and to
-    set `"url_has_pk"` to `True`, when it is an action for a single object.
+    When adding custom actions, make sure to set the ``"url_suffix"`` to the action name and to
+    set ``"url_has_pk"`` to ``True``, when it is an action for a single object.
 
-    For unsupported operations the key `"supported"` should be set to `False`. This lets the test
+    For unsupported operations the key ``"supported"`` should be set to ``False``. This lets the test
     case test that it is really unsupported.
-    
+
     Note, that test users will be automatically created to test the permissions. The permissions
     will be directly assigned to the users as user permissions. Scoped permissions need to be
     checked separately, but usually it is not necessary to test scoped permissions for each view
@@ -298,6 +297,7 @@ class ModelViewSetTestMixin:
     def __init_subclass__(cls):
         """
         Merge configured operations from the subclass with the template defined in this class.
+
         In the subclass only the values to be changed need to be declared. All other values
         are copied from the base class.
         """
@@ -316,7 +316,7 @@ class ModelViewSetTestMixin:
                 else:
                     # Remove (disable) the whole operation
                     operations_merged[operation] = overrides
-        
+
         for operation, overrides in operations_subclass.items():
             if not operation in operations_merged:
                 # New operation defined in subclass
@@ -582,7 +582,7 @@ class ModelViewSetTestMixin:
             # Check HTTP response
             try:
                 self.assertStatusCode(response, status_code)
-                
+
                 for assertion in assertions:
                     assertion(self, response)
             except:
@@ -596,14 +596,14 @@ class ModelViewSetTestMixin:
                         print()
                     except TypeError:
                         print(request_data)
-                
+
                 print(f"Response: {response.status_code}")
 
                 try:
                     print(json.dumps(response.data, indent=4))
                 except TypeError:
                     print(response.data)
-                    
+
                 raise
 
         return test
@@ -616,7 +616,7 @@ class ModelViewSetTestMixin:
         super().setUp()
         self.client = APIClient()
         reset_current_user()
-    
+
     def login(self, username: str = None, password: str = None):
         """
         (Re)login with another user.
@@ -624,7 +624,7 @@ class ModelViewSetTestMixin:
         reset_current_user()
         self.client.logout()
         self.client.login(username=username, password=password)
-    
+
     def create_user_and_login(self, perm_strings: typing.Iterable[str]) -> AbstractUser:
         """
         Create new user with the given permissions and login.
@@ -652,11 +652,12 @@ class ModelViewSetTestMixin:
             self.assertIn(response.status_code, expected_status_code, f"Expected HTTP status code in {expected_status_code} but got {response.status_code}")
         else:
             self.assertEqual(response.status_code, expected_status_code, f"Expected HTTP status code {expected_status_code} but got {response.status_code}")
-    
+
     def assertResultList(self, response: Response, expected_count: int|QuerySet|Manager|typing.Iterable):
         """
         Assert response data contains a result list with the expected number of entries.
-        The result count will only be checked if `expected_count` is at least zero.
+
+        The result count will only be checked if ``expected_count`` is at least zero.
         """
         if isinstance(expected_count, typing.Iterable):
             expected_count = len(list(expected_count))
@@ -681,7 +682,7 @@ class ModelViewSetTestMixin:
                     real_count = len(response.data["results"])
 
                 self.assertEqual(real_count, expected_count, f"Expected {expected_count} results but got {real_count}")
-    
+
     def assertSortOrder(self, response: Response, sort_field: str):
         """
         Assert that the result list is sorted as expected.
@@ -694,7 +695,7 @@ class ModelViewSetTestMixin:
         def sort_key(obj):
             for field in sort_fields:
                 obj = obj[field]
-            
+
             return obj
 
         results = response.data["results"]
@@ -739,14 +740,14 @@ class ModelViewSetTestMixin:
             pk_found = pk_found(self)
 
         self.assertFalse(self.model.objects.filter(**{pk_field: pk_found}).exists())
-    
+
     def assertObjectUpdated(self, response: Response, pk_field: str, pk_found: str, updates: dict):
         """
         Assert that updates were fully applied.
         """
         if callable(pk_found):
             pk_found = pk_found(self)
-        
+
         if callable(updates):
             updates = updates(self)
 

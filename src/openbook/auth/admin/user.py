@@ -84,8 +84,7 @@ class UserResource(ImportExportModelResource):
 
 class UserAdmin(CustomModelAdmin, DjangoUserAdmin):
     """
-    Sub-class of Django's User Admin to integrate the additional fields of
-    Application Users.
+    Integrate additional application-user fields into Django's User admin.
     """
     form                 = UserChangeForm
     add_form             = UserCreationForm
@@ -107,7 +106,7 @@ class UserAdmin(CustomModelAdmin, DjangoUserAdmin):
             "user_permissions__content_type",
             "emailaddress_set",
         )
-    
+
     add_fieldsets = [
         (None, {
             "classes": ["wide"],
@@ -121,7 +120,8 @@ class UserAdmin(CustomModelAdmin, DjangoUserAdmin):
 
     def get_form(self, request, obj=None, **kwargs):
         """
-        Override e-mail to be obligatory.
+        Require the e-mail field.
+
         See: https://stackoverflow.com/a/66562177
         """
         form = super().get_form(request, obj, **kwargs)
@@ -130,7 +130,7 @@ class UserAdmin(CustomModelAdmin, DjangoUserAdmin):
             form.base_fields["email"].required = True
 
         return form
-    
+
 UserAdmin.fieldsets[0][1]["fields"] += ("user_type",)
 
 UserAdmin.fieldsets[1][1]["classes"] = ["tab"]

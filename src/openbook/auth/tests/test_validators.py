@@ -13,13 +13,9 @@ from openbook.core.utils.content_type import content_type_for_model_string
 from ..                               import validators
 
 class Validators_Test(TestCase):
-    """
-    Test cases for validator functions.
-    """
+    """Test validator functions."""
     def test_validate_scope_type(self):
-        """
-        Models for permission scopes must implement `ScopedRolesMixin`
-        """
+        """Ensure permission scope models implement ScopedRolesMixin."""
         scope_type_valid   = content_type_for_model_string("openbook_content.course")
         scope_type_invalid = content_type_for_model_string("openbook_auth.user")
 

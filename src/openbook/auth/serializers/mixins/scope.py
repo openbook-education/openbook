@@ -22,8 +22,9 @@ from ...validators                      import validate_permissions
 
 class ScopedRolesSerializerMixin(FlexFieldsModelSerializer):
     """
-    Mixin class for model serializers whose models implement the `ScopedRolesMixin` and as such
-    act as permission scope for user roles. Default serializer, that adds all scope fields.
+    Provide default scope fields for serializers of models with ScopedRolesMixin.
+
+    Use this as a default serializer that adds all scope fields.
     """
     owner              = UserField(read_only=True)
     public_permissions = PermissionField(many=True)
@@ -58,10 +59,7 @@ class ScopedRolesSerializerMixin(FlexFieldsModelSerializer):
 
 @extend_schema_field(str)
 class ScopeTypeField(RelatedField):
-    """
-    Serializer field for the `scope_type` to use the fully-qualified model name instead
-    of the PK for input and output.
-    """
+    """Use fully qualified model names instead of primary keys for scope_type values."""
     default_error_messages = {
         "not_found": _("Scope type '{value}' not found."),
         "invalid":   _("Invalid format: Expected a scope type string.")

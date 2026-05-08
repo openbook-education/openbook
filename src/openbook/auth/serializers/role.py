@@ -17,9 +17,7 @@ from ..models.role                      import Role
 
 @extend_schema_field(str)
 class RoleField(RelatedField):
-    """
-    Serializer field to use slug as input and output instead of a role's raw PK.
-    """
+    """Use role slugs instead of raw primary keys for input and output."""
     default_error_messages = {
         "not_found":           _("Role '{value}' not found."),
         "invalid-slug":        _("Invalid format: Expected a role slug."),
@@ -62,7 +60,7 @@ class RoleField(RelatedField):
             self.fail("invalid-scope_type")
         if not isinstance(scope_uuid, str) and not isinstance(scope_uuid, UUID):
             self.fail("invalid-scope_uuid")
-        
+
         if isinstance(scope_type, str):
             scope_type = content_type_for_model_string(scope_type)
 

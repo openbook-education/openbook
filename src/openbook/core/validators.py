@@ -16,8 +16,7 @@ from PIL                      import Image
 @deconstructible
 class ValidateImage:
     """
-    Validate image uploads so that only image files with an allowed maximum
-    size are accepted.
+    Validate image uploads against the allowed maximum file size.
     """
     def __init__(self, max_size=1024*1024):
         self.max_size = max_size
@@ -36,7 +35,10 @@ class ValidateImage:
 
 def validate_library_name_part(part: str) -> None:
     """
-    Each part of a library name must be alpha-numeric and at least three characters long.
+    Validate a library name part.
+
+    Each part of a library name must be alpha-numeric and at least three
+    characters long.
     """
     if len(part) < 3 \
     or not all(c.isalnum() \
@@ -46,45 +48,52 @@ def validate_library_name_part(part: str) -> None:
 
 def validate_version_number(version: str) -> None:
     """
-    Check that version numbers use semver with numeric major, minor, patch
-    and optional -prerelease and +build tags.
+    Validate a semantic version number.
+
+    Version numbers use semver with numeric major, minor, patch and optional
+    ``-prerelease`` and ``+build`` tags.
     """
     if not semver.Version.is_valid(version):
         raise ValidationError(_("The version must be in semver format with optional -prerelease and +build tags."))
 
 def validate_version_expression(version_expression: str) -> None:
     """
-    Check that the expression contains a valid semver, optionally with one of the following
-    operators supported by the `semver` package:
+    Validate a semantic version expression.
 
-    * `<`:  smaller than
-    * `>`:  greater than
-    * `<=`: smaller or equal than
-    * `>=`: greater or equal than
-    * `==`: equal
-    * `!=`: not equal
+    The expression contains a valid semver, optionally with one of the
+    following operators supported by the ``semver`` package:
 
-    See: https://python-semver.readthedocs.io/en/latest/usage/compare-versions-through-expression.html
+    * ``<``: smaller than
+    * ``>``: greater than
+    * ``<=``: smaller or equal than
+    * ``>=``: greater or equal than
+    * ``==``: equal
+    * ``!=``: not equal
+
+    See https://python-semver.readthedocs.io/en/latest/usage/compare-versions-through-expression.html.
     """
     if not version_expression:
         return
-    
+
     # Order is important: One-letter operators must come last!
     operators = ["<=", ">=", "==", "!=", "<", ">"]
 
     for operator in operators:
         if version_expression.startswith(operator):
             return validate_version_number(version_expression[len(operator):])
-    
+
     validate_version_number(version_expression)
 
 def validate_library_fqn(fqn: str) -> None:
     """
-    Check that the fully qualified name of a library roughly follows the same guidelines as
-    for Node.js packages in npmjs.org: `@organization/package`, whereas each part must be at
-    least three characters long and may only contain alpha-numerics, underline, minus or dot.
+    Validate a fully qualified library name.
 
-    Note: Unlike on npmjs.org the organization is mandatory for us.
+    The fully qualified name of a library roughly follows the same guidelines
+    as for Node.js packages in npmjs.org: ``@organization/package``. Each part
+    is at least three characters long and may only contain alpha-numerics,
+    underline, minus, or dot.
+
+    Unlike on npmjs.org, the organization is mandatory for us.
     """
     if not fqn.startswith("@") or not "/" in fqn:
         raise ValidationError(_("Expected format: @organization/package with each part alpha-numeric and at least three letters"))
@@ -97,19 +106,26 @@ def validate_library_fqn(fqn: str) -> None:
 
 def validate_library_version_fqn(fqn: str) -> None:
     """
-    Validate fully qualified library version: `@organization/library 1.0.0`.
+    Validate a fully qualified library version.
+
+    Expected format: ``@organization/library 1.0.0``.
     """
     if not " " in fqn:
         raise ValidationError(_("Library name and version expected"))
-    
+
     library_fqn, version = fqn.split(" ", 1)
     validate_library_fqn(library_fqn)
     validate_version_number(version)
 
 def split_library_fqn(fqn: str) -> tuple[str, str]:
     """
-    Split fully qualified library name into organization (without `@`) and library name.
-    Raises a `ValidationError` if the input string doesn't match the expected format.
+    Split a fully qualified library name into organization and library name.
+
+    The organization is returned without ``@``.
+
+    :param fqn: Fully qualified library name.
+    :returns: A tuple with organization and library name.
+    :raises ValidationError: If the input string does not match the expected format.
     """
     validate_library_fqn(fqn)
     organization, name = fqn.split("/", 1)
@@ -117,11 +133,16 @@ def split_library_fqn(fqn: str) -> tuple[str, str]:
 
 def split_library_version_fqn(fqn: str) -> tuple[str, str, str]:
     """
-    Split fully qualified library version into organization (without `@`), library name and version.
-    Raises a `ValidationError` if the input string doesn't match the expected format.
+    Split a fully qualified library version into organization, library, and version.
+
+    The organization is returned without ``@``.
+
+    :param fqn: Fully qualified library version.
+    :returns: A tuple with organization, library name, and version.
+    :raises ValidationError: If the input string does not match the expected format.
     """
     validate_library_version_fqn(fqn)
-    
+
     library_fqn, version = fqn.split(" ", 1)
     validate_library_fqn(library_fqn)
     validate_version_number(version)

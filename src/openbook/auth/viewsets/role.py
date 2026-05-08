@@ -52,9 +52,7 @@ class RoleSerializer(FlexFieldsModelSerializer):
         }
 
     def validate(self, attributes):
-        """
-        Check that only allowed permissions are assigned.
-        """
+        """Check that only allowed permissions are assigned."""
         scope_type  = attributes.get("scope_type", None)
         permissions = attributes.get("permissions", None)
 

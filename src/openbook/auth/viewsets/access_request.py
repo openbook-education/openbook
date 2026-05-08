@@ -101,24 +101,20 @@ class AccessRequestViewSet(ModelViewSetMixin, ModelViewSet):
     )
     @action(methods=["put"], detail=True)   # PUT since an existing access request is updated
     def accept(self, request, pk):
-        """
-        Accept request.
-        """
+        """Accept the request."""
         access_request = self.get_object()
         access_request.accept(permission_user=request.user)
         return Response(AccessRequestSerializer(instance=access_request).data)
 
     @extend_schema(
         operation_id = "auth_access_requests_deny",
-        request      = None, 
+        request      = None,
         responses    = AccessRequestSerializer,
         summary      = "Deny",
     )
     @action(methods=["put"], detail=True)   # PUT since an existing access request is updated
     def deny(self, request, pk):
-        """
-        Deny request.
-        """
+        """Deny the request."""
         access_request = self.get_object()
         access_request.deny(permission_user=request.user)
         return Response(AccessRequestSerializer(instance=access_request).data)

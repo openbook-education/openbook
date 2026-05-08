@@ -34,16 +34,14 @@ class RoleAssignment_Test_Mixin:
         self.role_teacher.save()
 
 class RoleAssignment_Model_Tests(RoleAssignment_Test_Mixin):
-    """
-    Tests for the `RoleAssignment` model.
+    """Test the RoleAssignment model.
 
-    NOTE: Methods `enroll()` and `withdraw()` require are enrollment method or access request
-    as first parameter. They are therefor already tested in the unit tests for these models.
+    Methods enroll() and withdraw() require an enrollment method or access
+    request as the first parameter. They are therefore already tested in unit
+    tests for those models.
     """
     def test_role_scope(self):
-        """
-        The assigned role must belong to the same scope.
-        """
+        """Ensure the assigned role belongs to the same scope."""
         wrong_scope = Course.objects.create(name="Other Course", slug="other-course", text_format=Course.TextFormatChoices.MARKDOWN)
         wrong_role  = Role.from_obj(wrong_scope, name="Wrong Scope", slug="wrong-scope", priority=0)
         wrong_role.save()
@@ -54,18 +52,14 @@ class RoleAssignment_Model_Tests(RoleAssignment_Test_Mixin):
             role_assignment.clean()
 
     def test_cannot_assign_twice(self):
-        """
-        The same role cannot be applied to the same user twice.
-        """
+        """Ensure the same role cannot be assigned to the same user twice."""
         RoleAssignment.from_obj(self.course, user=self.user, role=self.role_student).save()
 
         with self.assertRaises(IntegrityError):
             RoleAssignment.from_obj(self.course, user=self.user, role=self.role_student).save()
 
 class RoleAssignment_ViewSet_Tests(ModelViewSetTestMixin, RoleAssignment_Test_Mixin, TestCase):
-    """
-    Tests for the `RoleAssignmentViewSet` REST API.
-    """
+    """Test the RoleAssignmentViewSet REST API."""
     base_name         = "role_assignment"
     model             = RoleAssignment
     search_string     = "test-new"
@@ -81,10 +75,10 @@ class RoleAssignment_ViewSet_Tests(ModelViewSetTestMixin, RoleAssignment_Test_Mi
 
         self.ra_assistant = RoleAssignment.from_obj(self.course, role=self.role_assistant, user=self.user)
         self.ra_assistant.save()
-    
+
     def pk_found(self):
         return self.ra_student.id
-    
+
     def get_create_request_data(self):
         return {
             "scope_type": model_string_for_content_type(self.ra_student.scope_type),
