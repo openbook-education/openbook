@@ -328,13 +328,19 @@ UNFOLD = {
         },
         {
             "icon": "api",
-            "title": _("API Explorer"),
-            "link": reverse_lazy("api-root"),
+            "title": _("REST API Explorer"),
+            "link": reverse_lazy("api-redoc"),
+        },
+        {
+            # NOTE: Unfortunately. we cannot use reverse_lazy() to resolve the URL defined by Django-Alluth here
+            "icon": "api",
+            "title": _("Auth API Explorer"),
+            "link": "/auth-api/openapi.html",
         },
         {
             "icon": "menu_book",
             "title": _("Documentation"),
-            "link": "https://github.com/DennisSchulmeister/openbook/blob/main/README.md",
+            "link": "https://openbook-learning.readthedocs.org",
         },
         {
             "icon": "code",
