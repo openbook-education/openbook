@@ -171,10 +171,10 @@ these commands run:
 
 What these options do:
 
-- :option:`-T`: Print tracebacks on errors
-- :option:`-v`: Verbose output (``-v -v`` for even more detail)
+- ``-T``: Print tracebacks on errors
+- ``-v``: Verbose output (``-v -v`` for even more detail)
 
-:option:`--keep-going` is deliberately omitted because it can swallow errors silently.
+``--keep-going`` is deliberately omitted because it can swallow errors silently.
 
 
 ---------------------

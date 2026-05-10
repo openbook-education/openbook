@@ -1798,6 +1798,11 @@ Before committing the new feature, verify that:
 # Adding New Websocket Channels
 -------------------------------
 
+.. note::
+
+   This tutorial is still in flux. It will be updated as we figure the details
+   with regard to the OpenBook architecture out.
+
 TODO: Step-by-step tutorial for adding websocket communication in the backend.
 
 - What are WebSockets? Differences to regular synchronous Django? What is Django Channels?
@@ -1808,6 +1813,11 @@ TODO: Step-by-step tutorial for adding websocket communication in the backend.
 -----------------------------
 # Adding New Background Tasks
 -----------------------------
+
+.. note::
+
+   This tutorial is still in flux. It will be updated as we figure the details
+   with regard to the OpenBook architecture out.
 
 TODO: Step-by-step tutorial for implementing new background tasks with Celery.
 

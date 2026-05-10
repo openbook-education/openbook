@@ -93,7 +93,7 @@ download, install, and use **without restrictions**.
    :caption: Administrators
 
    administrators/changelog
-   administrators/installation-and-updates
+   administrators/installation-guide
    administrators/basic-configuration
    administrators/auth-setup
    administrators/library-structure

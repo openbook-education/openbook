@@ -1,0 +1,17 @@
+# Copy to openbook.service and adapt to your needs.
+# Create a symlink to the copied file in /etc/systemd/system/
+
+[Unit]
+Description=OpenBook Background Worker
+After=network.target redis.service
+
+[Service]
+User=openbook
+Group=openbook
+WorkingDirectory=/opt/openbook/src
+ExecStart=/opt/openbook/.venv/bin/python manage.py runworker default
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -91,6 +91,10 @@ instance/
 docs/_build/
 docs/_static/openapi/
 
+# SystemD service templates
+openbook.service
+openbook-worker.service
+
 # PyBuilder
 .pybuilder/
 target/

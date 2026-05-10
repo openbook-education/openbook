@@ -98,7 +98,7 @@ dependencies and utility scripts. The main logic is this:
 ......................
 
 This file is the central project configuration managed by `Poetry <https://python-poetry.org/>`_.
-:confval:`package-mode` is set to ``false`` because OpenBook is a Django application, not a Python package
+``package-mode`` is set to ``false`` because OpenBook is a Django application, not a Python package
 published to PyPI.
 
 :file:`poetry.lock`
