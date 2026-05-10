@@ -18,10 +18,11 @@ class RoleBasedObjectPermissionsBackend(ModelBackend):
     stopping at the first match:
 
     1. The user is a superuser
-    2. The user and the object are the same
-    3. The user is the object's owner (optional).
-    4. The object's has_obj_perm() method (optional).
-    5. Regular non-object permissions
+    2. Anonymous permissions contain the wanted permission
+    3. The user and the object are the same
+    4. The user is the object's owner (optional).
+    5. The object's has_obj_perm() method (optional).
+    6. Regular non-object permissions
 
     Superusers can do anything. Users can change their own data. The owner is always authorized.
     Otherwise role-based permissions are checked. If this is not supported by the object or fails,

@@ -91,11 +91,8 @@ headline is a bit overwhelming.
 
 # Code, Literals & Formatting
 
-- Use backticks for:
-    - inline code
-    - commands
-    - file paths
-    - variables
+- Use interpreted text roles for semantic markup (files, classes, methods, functions, ...)
+- Use verbatim blocks (two backticks) for other code elements that have no special roles
 - Use :: for code blocks.
 - Specify language for syntax highlighting where possible.
 - Indent code blocks with four spaces.

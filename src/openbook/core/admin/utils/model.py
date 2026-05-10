@@ -13,21 +13,22 @@ from django.http            import HttpRequest
 
 from unfold.admin           import ModelAdmin as UnfoldModelAdmin
 
+# Currently not used but kept in case we want to introduce object-level permissions in the Admin
 class ModelAdmin(UnfoldModelAdmin):
     """
-    Improved version of the stock `ModelAdmin` that checks object-permissions instead of
-    the regular model-permissions. The only difference is, that `obj` will be set to the
+    Improved version of the stock ``ModelAdmin`` that checks object-permissions instead of
+    the regular model-permissions. The only difference is, that ``obj`` will be set to the
     object to be viewed/changed/deleted, when the permission is checked.
-    
+
     This relies on our custom authentication backend to fallback to regular permissions
     checks when the object doesn't support object-permissions or the object-based permission
     check fails.
     """
     def save_form(self, request, form, change):
         """
-        The parent class calls `has_add_permission()` in `_changeform_view()` just before the form
-        data is validated and saved, but doesn't have the new object, yet. Therefor `has_add_permission()`
-        lacks the `obj` parameter. This method is called after the validation to actually save the object.
+        The parent class calls ``has_add_permission()`` in ``_changeform_view()`` just before the form
+        data is validated and saved, but doesn't have the new object, yet. Therefor ``has_add_permission()``
+        lacks the ``obj`` parameter. This method is called after the validation to actually save the object.
         As a hacky workaround we catch up on the permission check here.
         """
         if not change:

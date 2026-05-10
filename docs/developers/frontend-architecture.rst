@@ -31,3 +31,7 @@ the following frontend tools and frameworks.
      - Styling and themeing
    * - **DaisyUI**
      - Pre-defined UI components
+
+.. note::
+
+   More to come as the UI will be built.

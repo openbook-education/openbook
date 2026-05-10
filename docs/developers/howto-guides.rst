@@ -76,10 +76,10 @@ A typical app layout looks like this:
    │   ├── __init__.py
    │   └── 0001_initial.py
    ├── models/
-   ├── __init__.py
+   │   ├── __init__.py
    │   └── learning_goal.py
    ├── admin/
-   ├── __init__.py
+   │   ├── __init__.py
    │   └── learning_goal.py
    ├── viewsets/
    │   ├── __init__.py
@@ -101,20 +101,20 @@ commands, signals, or service classes. Start with the structure above and extend
 
    .. graphviz::
       :align: center
-      :caption: One domain model is mirrored across the main packages of an OpenBook app.
+      :caption: Mirrored source structure for the model and all layers above
 
       digraph app_layout {
          graph [bgcolor=transparent, rankdir=TB, nodesep=0.35, ranksep=0.6];
-         node [shape=box, style="rounded,filled", fontname="Sans"];
+         node [shape=box, style="rounded,filled", fontname="Sans", fontsize=11, width=2.8, height=0.5, fixedsize=true];
 
-         model  [label="models/learning_goal.py\nDjango model", fillcolor="#e3f2fd", color="#1e88e5"];
-         admin  [label="admin/learning_goal.py\nAdmin integration", fillcolor="#e8f5e9", color="#43a047"];
-         api    [label="viewsets/learning_goal.py\nREST API integration", fillcolor="#fff3e0", color="#fb8c00"];
-         routes [label="routes.py\nRegisters API endpoints", fillcolor="#fce4ec", color="#d81b60"];
+         model  [label=<<B>models/learning_goal.py</B><BR/>Django model>, fillcolor="#e3f2fd", color="#1e88e5"];
+         admin  [label=<<B>admin/learning_goal.py</B><BR/>Admin integration>, fillcolor="#e8f5e9", color="#43a047"];
+         api    [label=<<B>viewsets/learning_goal.py</B><BR/>REST API integration>, fillcolor="#fff3e0", color="#fb8c00"];
+         routes [label=<<B>routes.py</B><BR/>Registers API endpoints>, fillcolor="#fce4ec", color="#d81b60"];
 
-         model -> admin [label="same domain object", color="#43a047", fontcolor="#43a047"];
-         model -> api   [label="same domain object", color="#fb8c00", fontcolor="#fb8c00"];
-         api -> routes  [label="API wiring", color="#d81b60", fontcolor="#d81b60"];
+         model -> admin [color="#43a047"];
+         model -> api   [color="#fb8c00"];
+         api -> routes  [color="#d81b60"];
       }
 
 Define ``apps.py`` With Explicit Metadata
