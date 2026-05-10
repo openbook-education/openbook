@@ -16,8 +16,8 @@ Versioning Strategy
 OpenBook follows `Semantic Versioning <https://semver.org/>`_
 (SemVer). Given a version number ``MAJOR.MINOR.PATCH``:
 
-- **PATCH** is incremented for backwards-compatible bug fixes.
-- **MINOR** is incremented for backwards-compatible new features.
+- **PATCH** is incremented for backward-compatible bug fixes.
+- **MINOR** is incremented for backward-compatible new features.
 - **MAJOR** is incremented for breaking changes to the public API.
 
 There are currently no plans to introduce breaking changes. Users can safely
@@ -34,9 +34,9 @@ Release Checklist
 
 2. **Create release issue (recommended).**
 
-   Create a new issue for the release and describe remaining work to be done before
-   a new version is released. You don't need to repeat the individual release steps.
-   Just, what else needs to be done.
+   Create a new issue for the release and describe any remaining work to be done
+   before a new version is released. You do not need to repeat the individual
+   release steps, only what else needs to be done.
 
 3. **Align release planning on the GitHub Project board.**
 
@@ -45,20 +45,20 @@ Release Checklist
 
 4. **Create new branch.**
 
-   From within the release issue create a new release preparation branch. Checkout
-   the branch as the next steps must all be performed within that branch.
+   From within the release issue, create a new release preparation branch. Check
+   out the branch, as the next steps must all be performed within that branch.
 
 5. **Complete remaining work.**
 
-   If there is any remaining work to be done (e.g. updating documentation) push the
-   changes onto the release preparation branch.
+   If there is any remaining work to be done (e.g., updating documentation), push
+   the changes onto the release preparation branch.
 
 6. **Update the changelog.**
 
    Add a dated entry to :doc:`/administrators/changelog` summarising user-visible changes.
    See :ref:`changelog-format` below for the expected format.
 
-7. **Bump the version number** in ``pyproject.toml`` using Poetry:
+7. **Bump the version number** in :file:`pyproject.toml` using Poetry:
 
    .. code-block:: bash
 
@@ -74,11 +74,11 @@ Release Checklist
 
 9. **Open and merge pull request.**
 
-   Now open a pull request to merge the release preparation branch into main. At this
-   stage Copilot will review the branch, code quality and security will be scanned,
-   documentation will be built, and unit tests will run. Usually you will need to
-   push a few more commits to the release branch (which will automatically appear in
-   the PR and retrigger quality checks).
+   Now open a pull request to merge the release preparation branch into main. At
+   this stage, Copilot will review the branch, code quality and security will be
+   scanned, documentation will be built, and unit tests will run. Usually, you
+   will need to push a few more commits to the release branch (which will
+   automatically appear in the PR and retrigger quality checks).
 
    Once all is green, merge the pull request into main.
 
@@ -94,19 +94,19 @@ Release Checklist
       git tag -s vX.Y.Z -m "Release vX.Y.Z"
       git push origin --tags
 
-   The ``.github/workflows/release.yml`` workflow will automatically:
+   The :file:`.github/workflows/release.yml` workflow will automatically:
 
    - Verify the tag is a signed annotated tag with a valid signature
-   - Verify the tag version matches ``pyproject.toml``
+   - Verify the tag version matches :file:`pyproject.toml`
    - Run the full test suite and build the documentation again (for safety)
    - Build a versioned source archive artifact (``.tar.gz``)
-   - Generate a CycloneDX SBOM (``sbom.cyclonedx.json``)
+   - Generate a CycloneDX SBOM (:file:`sbom.cyclonedx.json`)
    - Create a GitHub release with release notes extracted from the changelog
-   - Create a release branch for hot fixes (if the release is no pre-release)
+   - Create a release branch for hotfixes (if the release is not a pre-release)
 
    Monitor the workflow run in the **Actions** tab.
 
-12. **Update website content.**
+11. **Update website content.**
 
    Ensure release-related website pages are updated as required.
 
@@ -117,7 +117,7 @@ Release Checklist
 Changelog Format
 ----------------
 
-The changelog is located in ``docs/administrators/changelog.rst`` and uses
+The changelog is located in :file:`docs/administrators/changelog.rst` and uses
 reStructuredText (RST) formatting. Each version entry must follow this structure,
 allowing the release workflow to extract the changelog entries for the GitHub
 release page.
@@ -136,7 +136,7 @@ Guidelines
 
 - Use the exact version number (e.g., ``2.1.0``) without the ``v`` prefix.
 - Add the release date in parentheses (e.g., ``(April 2026)``).
-- Add underline using ``^`` characters of same length.
+- Add an underline using ``^`` characters of the same length.
 - List changes as bullet points with clear, user-facing descriptions.
 - Start descriptions with the affected component.
 - Group related changes together logically.
@@ -187,7 +187,7 @@ To list available secret keys and find your key ID:
 
    gpg --list-secret-keys --keyid-format=long
 
-Only signed annotated tags (``git tag -s``) are accepted by the release
+Only signed annotated tags (:command:`git tag -s`) are accepted by the release
 workflow.
 
 Signing commits is also recommended as a general repository security practice,
@@ -209,8 +209,8 @@ Look for the ``tagger`` line, for example:
 
    tagger Name <email@example.com> ...
 
-When you create a signed tag with ``git tag -s``, Git embeds the tagger identity
-from your local Git configuration. That email address must:
+When you create a signed tag with :command:`git tag -s`, Git embeds the tagger
+identity from your local Git configuration. That email address must:
 
 - Be present in your GitHub account
 - Be verified in GitHub

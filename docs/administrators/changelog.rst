@@ -1,7 +1,7 @@
 Changelog
 =========
 
-This page described the user-visible changes for each release.
+This page describes the user-visible changes for each release.
 
 .. contents:: Page Content
    :local:
@@ -25,19 +25,19 @@ following activities:
 2026-03-17: Dependency updates and policy
 -----------------------------------------
 
-After the project reached a status, where the technical core is working (backend, REST API, ...)
-it was put aside for a few months. Now to continue with the development, all dependencies have
-been updated to their latest major versions and a policy for dependency handling as been documented.
+After the project reached a state where the technical core was working (backend, REST API, ...),
+it was put aside for a few months. To continue development, all dependencies have been updated
+to their latest major versions, and a policy for dependency handling has been documented.
 
 2024-08-06: Development started
 -------------------------------
 
-The plan to reimplement and extend the old lecture-slides.js application is not at least
+The plan to reimplement and extend the old lecture-slides.js application is at least
 two years old. :-) Now that I want to extend the application with some basic feedback
-elements (to collect feedback from students to improve my course materials) I finally
+elements (to collect feedback from students to improve my course materials), I finally
 have an excuse to start this project.
 
 Initial development will be slow. Initially I only want to implement the backend functionality
-for feedback surveys and integrate this in my existing materials. But while doing so I want
+for feedback surveys and integrate this into my existing materials. But while doing so I want
 to lay the groundwork for the following re-implementation, leveraging the scaffolding I did
 for Lernspiel Online (another platform I wanted to start for a long time).

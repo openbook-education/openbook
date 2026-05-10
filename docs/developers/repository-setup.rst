@@ -4,7 +4,7 @@ Repository Setup
 
 This page describes the GitHub repository settings and configuration files that make
 the CI/CD workflows and tooling of this project work. Its purpose is to record the
-operational state of the repository as well as to allow th setup to be reproduced
+operational state of the repository as well as to allow the setup to be reproduced
 for similar projects.
 
 .. contents:: Page Content
@@ -15,7 +15,7 @@ for similar projects.
 GitHub Repository Settings
 --------------------------
 
-This section documents all settings to the GitHub repository made directly on the
+This section documents all settings of the GitHub repository made directly on the
 platform outside the source tree.
 
 Repository Secrets
@@ -24,8 +24,8 @@ Repository Secrets
 Under **Settings → Secrets and variables → Actions**, the following repository
 secret is stored:
 
-``RENOVATE_TOKEN``: Fine-grained personal access token used by the Renovate bot
-(running as regular CI job) to authenticate against the GitHub API for opening
+:envvar:`RENOVATE_TOKEN`: Fine-grained personal access token used by the Renovate
+bot (running as a regular CI job) to authenticate against the GitHub API for opening
 and merging pull requests. The token must belong to a user with write access to
 the repository through the following permissions:
 
@@ -47,7 +47,7 @@ following rules apply to the default branch.
    - *Require status checks to pass* with *Status checks that are required*:
      ``tests``
 
-   ``tests`` is the final aggregator job from the testing CI workflow, that
+   ``tests`` is the final aggregator job from the testing CI workflow that
    collects the results from either the full test suite or the dummy test
    suite, depending on which files have been changed.
 
@@ -55,19 +55,19 @@ following rules apply to the default branch.
    code review* to review each pull request to the main branch.
 
 The setup ensures that during normal development commits to the main branch only
-occur via pull requests from feature branches. This allows to review the commits
-manually and machine-assisted (e.g. Copilot Code Review). Also the test suite,
-documentation building and other base quality checks must pass, before changes
+occur via pull requests from feature branches. This allows the commits to be reviewed
+manually and with machine assistance (e.g. Copilot Code Review). Also, the test suite,
+documentation builds, and other base quality checks must pass before changes
 land in main.
 
 .. note ::
 
-   As it turns out, AI-assisted code reviews help to identify edge cases and overlooked
+   As it turns out, AI-assisted code reviews help identify edge cases and overlooked
    changes for consistency. At the same time, they must be taken with a grain of salt,
-   as they tend to by nit-picky or decide on outdated knowledge:
+   as they tend to be nit-picky or rely on outdated knowledge:
 
    - The comment could be rewritten more clearly
-   - Renovate warns to migrate the config and Copilot advices to revert the very change
+   - Renovate warns to migrate the config and Copilot advises reverting the very change
    - ...
 
 
@@ -75,65 +75,65 @@ land in main.
 Project Configuration
 ---------------------
 
-This project uses a combination of Python in the backend and Typescript in the
-frontend. Therefore, the project configuration uses a ``pyproject.toml`` file as
-well as a ``package.json`` files in different locations to declare dependencies
-and utility scripts. The main logic is this:
+This project uses a combination of Python in the backend and TypeScript in the
+frontend. Therefore, the project configuration uses a :file:`pyproject.toml` file
+as well as multiple :file:`package.json` files in different locations to declare
+dependencies and utility scripts. The main logic is this:
 
 .. rst-class:: spaced-list
 
-1. All backend dependencies are collected in ``pyproject.toml`` at project root.
+1. All backend dependencies are collected in :file:`pyproject.toml` at the project root.
    Dependency groups are used to separate runtime dependencies from tooling.
 
 2. Additional Node.js-based development tools are declared as development dependencies
-   in the root-level ``package.json`` file. Additionally, this file contains run scripts
+   in the root-level :file:`package.json` file. Additionally, this file contains run scripts
    as shortcuts for typical development tasks. Workspaces are defined to centralize
    shared dependencies across the JavaScript sub-projects.
 
 3. Frontend sub-projects have their own ``package.json`` file as normal. But usually,
-   run scripts are declared so, that they can either be executed inside a single
+   run scripts are declared so that they can either be executed inside a single
    project directory for a single project or from the parent directory for all
    sub-projects alike.
 
-``pyproject.toml``
-..................
+:file:`pyproject.toml`
+......................
 
 This file is the central project configuration managed by `Poetry <https://python-poetry.org/>`_.
-``package-mode = false`` is set because OpenBook is a Django application, not a Python package
+:confval:`package-mode` is set to ``false`` because OpenBook is a Django application, not a Python package
 published to PyPI.
 
-``poetry.lock``
-...............
+:file:`poetry.lock`
+...................
 
 This file is generated by Poetry and committed to the repository so every
 environment resolves identical dependency versions.
 
-``package.json``
-................
+:file:`package.json`
+....................
 
 This file is the npm workspace root manifest. All JavaScript and TypeScript
 sub-projects — the frontend application and the component libraries — are
-declared as workspaces under ``src/frontend/*`` and ``src/libraries/*``.
+declared as workspaces under :file:`src/frontend/*` and :file:`src/libraries/*`.
 
-Run scripts across all ``package.json`` files follow a similar pattern.
+Run scripts across all :file:`package.json` files follow a similar pattern.
 Simple scripts like ``lint`` normally don't do anything by themselves,
 except running other scripts with the same prefix, e.g. ``lint:frontend``
-and ``lint:backend``. On the root-level these are just different steps
+and ``lint:backend``. At the root level, these are just different steps
 of a pipeline. In the source directories these are wrappers around similar
-scripts in child-directories.
+scripts in child directories.
 
-For example, the projects in ``src/frontend/admin`` and ``src/frontend/app``
-both define ``build`` scripts, that run different build steps one after
+For example, the projects in :file:`src/frontend/admin` and :file:`src/frontend/app`
+both define ``build`` scripts that run different build steps one after
 another, like ``build:src``, ``build:tailwind`` and so on. To simplify
-integration in bigger pipelines, the file ``src/frontend/package.json``
+integration in bigger pipelines, the file :file:`src/frontend/package.json`
 defines the wrappers ``build:admin`` and ``build:app`` that are called
-by a sinlge ``build`` script.
+by a single ``build`` script.
 
-``package-lock.json``
-.....................
+:file:`package-lock.json`
+.........................
 
 Auto-generated npm lock file. Committed to the repository to ensure reproducible
-installs (when installing with ``npm ci`` as opposed to ``npm install``).
+installs (when installing with :command:`npm ci` as opposed to :command:`npm install`).
 
 
 ------------
@@ -148,40 +148,40 @@ Test Suite / Documentation
 ..........................
 
 The following workflows run tests and test builds when source files change.
-Some effort is done, to limit test run to relevant source files, but there
-can still be false-positives. We don't try to over-optimize the checks as
-a testrun too often causes not much harm.
+Some effort is made to limit test runs to relevant source files, but there
+can still be false positives. We don't try to over-optimize the checks, as
+an extra test run too often causes little harm.
 
-``.github/workflows/run-tests.yml`` (and friends)
-.................................................
+:file:`.github/workflows/run-tests.yml` (and friends)
+.....................................................
 
 Testing is always started via this workflow. It analyzes the changed files
-and decides whether to route to ``.github/workflows/run-tests-full.yml``
-for the real test suite or ``.github/workflows/run-tests-dummy.yml`` for
+and decides whether to route to :file:`.github/workflows/run-tests-full.yml`
+for the real test suite or :file:`.github/workflows/run-tests-dummy.yml` for
 dummy testing. This gives a lightweight success path for pull requests
 that don't need the full test suite running.
 
-``.github/workflows/build-docs.yml``
-....................................
+:file:`.github/workflows/build-docs.yml`
+........................................
 
 This workflow test-builds the Sphinx manual. Build output is not retained,
-as Read the Docs rebuilds the documentation, anyway. But it helps to catch
+as Read the Docs rebuilds the documentation anyway. But it helps to catch
 build errors during the development cycle.
 
 Dependency Upgrades
 ...................
 
-``.github/workflows/run-renovate.yml``
-......................................
+:file:`.github/workflows/run-renovate.yml`
+..........................................
 
 Scheduled dependency updates via Renovate, running weekly every Monday.
-Can also be triggered manually.
+It can also be triggered manually.
 
 Release Automation
 ..................
 
-``.github/workflows/release.yml``
-.................................
+:file:`.github/workflows/release.yml`
+.....................................
 
 Creates a GitHub Release from a signed version tag (e.g. ``v0.0.1-rc1``).
 See :doc:`/developers/versioning-and-releases` for details.
@@ -191,23 +191,23 @@ See :doc:`/developers/versioning-and-releases` for details.
 Read the Docs
 -------------
 
-The repository includes ``.readthedocs.yaml`` and ``docs/conf.py``, but Read
+The repository includes :file:`.readthedocs.yaml` and :file:`docs/conf.py`, but Read
 the Docs still requires one-time project configuration outside the repository.
 The project is configured in Read the Docs with the following settings:
 
 - GitHub Repository: https://github.com/openbook-education/openbook
 - Enable the GitHub webhook
-- ``latest`` tracks the ``main`` branch and ``stable`` the last version.
+- ``latest`` tracks the ``main`` branch, and ``stable`` tracks the last version.
 - Versions are tagged with ``v*``, e.g. ``v2.0.0``.
 
-``docs/conf.py``
-................
+:file:`docs/conf.py`
+....................
 
 This file serves as the primary Sphinx documentation configuration. It defines
 extensions, the sphinx-rtd-theme, and build options.
 
-``.readthedocs.yaml``
-.....................
+:file:`.readthedocs.yaml`
+.........................
 
 This file is the Read the Docs build configuration. It installs
 Poetry after environment creation, overrides the install step to install the
@@ -219,8 +219,8 @@ Sphinx.
 Dependency Updates
 ------------------
 
-``renovate.json5``
-..................
+:file:`renovate.json5`
+......................
 
 This file is the configuration for `Renovate <https://docs.renovatebot.com/>`_.
 It manages dependencies across all package managers: ``poetry``, ``npm``,
@@ -238,14 +238,14 @@ Lock-file maintenance PRs are also automerged.
 Local Development Tools
 -----------------------
 
-``.editorconfig``
-.................
+:file:`.editorconfig`
+.....................
 
 `EditorConfig <https://editorconfig.org/>`_ settings applied by supporting editors
 (VS Code, JetBrains IDEs, …) to enforce project-wide formatting defaults.
 
-``eslint.config.js``
-....................
+:file:`eslint.config.js`
+........................
 
 `ESLint <https://eslint.org/>`_ configuration in the new flat config format.
 
@@ -256,25 +256,25 @@ use ``eslint-plugin-import`` and ``eslint-plugin-unused-imports``.
 Auto-generated directories such as the API client and auth client are excluded
 from linting.
 
-``.gitignore``
-..............
+:file:`.gitignore`
+..................
 
 This file defines ignore rules for Python cache directories, virtual
 environments, and local build artifacts.
 
-``.prettierrc``
-...............
+:file:`.prettierrc`
+...................
 
 `Prettier <https://prettier.io/>`_ code formatter settings. Notable settings:
 
 - ``"printWidth": 130`` — wider than the Prettier default of 80.
-- ``"tabWidth": 4`` — consistent with ``.editorconfig``.
+- ``"tabWidth": 4`` — consistent with :file:`.editorconfig`.
 - ``"singleQuote": false`` — double quotes everywhere.
 - ``"trailingComma": "es5"`` — trailing commas where valid in ES5.
 - ``"semi": true`` — semicolons required.
 
-``tsconfig.base.json``
-......................
+:file:`tsconfig.base.json`
+..........................
 
 This file is the base TypeScript configuration shared by all frontend
 sub-projects. It extends ``@tsconfig/svelte`` and sets:
@@ -288,11 +288,11 @@ sub-projects. It extends ``@tsconfig/svelte`` and sets:
 - ``"verbatimModuleSyntax": true`` — enforces explicit ``import type`` for
   type-only imports.
 
-``tsconfig.nodejs.json``
-........................
+:file:`tsconfig.nodejs.json`
+............................
 
 This file is a companion TypeScript configuration for Node.js scripts such as
-the esbuild build scripts under ``bin/``. It overrides the base configuration
+the esbuild build scripts under :file:`bin/`. It overrides the base configuration
 with ``"module": "nodenext"`` and ``"moduleResolution": "NodeNext"`` for
 correct native ESM resolution, and enables output emission with source maps
 and declaration files.

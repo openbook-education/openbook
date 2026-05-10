@@ -28,7 +28,7 @@ The OpenBook Server is built with the following technology:
    * - **Django Allauth**
      - Authentication, user management, single sign-on
    * - **Django REST Framework**
-     - RESTS API for the frontend and external clients
+     - REST API for the frontend and external clients
    * - **Django Channels**
      - WebSocket support
    * - **Celery**
@@ -67,7 +67,7 @@ REST API and Single Page App
     filterset -> viewset  [color="#43a047"];
   }
 
-Django applications traditionally use server-side rendering for the UI. This is, because when
+Django applications traditionally use server-side rendering for the UI. This is because, when
 Django was invented, web applications in general used server-side rendering to dynamically
 create HTML. JavaScript was only used for visual effects and small UX enhancements. Nowadays,
 web apps often consist of a single page app running completely in-browser and a server backend
@@ -76,22 +76,23 @@ allows us to provide a much more dynamic and interactive UI and the REST API fee
 also be consumed by other clients or even 3rd-party systems.
 
 Understanding RESTful principles is easy. Writing a good REST API isn't. OpenBook uses Django
-REST Framework and a few related libraries to provide a flexible and modern REST API, that not
+REST Framework and a few related libraries to provide a flexible and modern REST API that not
 only serves data over HTTP. In particular:
 
 **Flexible response structure** --- Simpler REST APIs use fixed request and response structures,
-meaning that always the full ressource data is exchanged between client and server. But:
+meaning that the full resource data is always exchanged between client and server. But:
 
-- What if the client only needs a small subset of fields from a much larger ressource?
+- What if the client only needs a small subset of fields from a much larger resource?
 - What if the client just wants to update a single field or two?
-- What if the ressource has a deep structure with relations to other ressources?
-- What if the client needs to query (aka search or filter) the list of ressources?
+- What if the resource has a deep structure with relations to other resources?
+- What if the client needs to query (also known as search or filter) the list of resources?
 
 Clearly, one size doesn't fit all. For this reason, OpenBook allows the clients to narrow down
-which fields to read or write and to decied which relations to expand and which relations to
-reduce to a single foreign key id. This is made possible through the ``drf-flex-fields2`` library
-(our own maintained fork of the great ``drf-flex-fields`` by Robert Singer). Additionally,
-Django Filters is included to allow clients to not only list ressources but to filter the result
+which fields to read or write and to decide which relations to expand and which relations to
+reduce to a single foreign key ID. This is made possible through the :mod:`drf-flex-fields2`
+library (our own maintained fork of the great :mod:`drf-flex-fields` by Robert Singer).
+Additionally, Django Filters is included to allow clients not only to list resources but also to
+filter the result
 list with queries.
 
 For each model, the following three classes must be written, to pull this off:
@@ -105,17 +106,17 @@ For each model, the following three classes must be written, to pull this off:
    * - ViewSet
      - Definition and handling of RESTful HTTP endpoints
    * - FilterSet
-     - Definition of query parameters and filiterung the result list
+     - Definition of query parameters and filtering the result list
    * - Serializer
      - JSON (de)serialization, flexible response shaping
 
-**OpenAPI Schema** --- For a long time REST webservices were missing a universaly accepted
-machine readable description like WSDL in the SOAP-world. In recent times, OpenAPI --- formally
-known as Swagger --- has since filled this gap. This allows to generate typesafe client stubs,
-validate requests and responses and much more. Unlike other projects, in OpenBook is OpenAPI
+**OpenAPI Schema** --- For a long time, REST web services were missing a universally accepted
+machine-readable description like WSDL in the SOAP world. In recent times, OpenAPI --- formerly
+known as Swagger --- has filled this gap. This allows us to generate type-safe client stubs,
+validate requests and responses, and much more. Unlike in other projects, in OpenBook the OpenAPI
 schema is generated from the Python source, which means it will always be up to date.
 
-**User documentation** --- Another advantage of OpenAPI is, that browsable API documentation
+**User documentation** --- Another advantage of OpenAPI is that browsable API documentation
 can be generated from it. To this end, OpenBook integrates ReDoc to provide human-readable
 API documentation.
 
@@ -140,15 +141,15 @@ Enhanced Django Admin
   }
 
 The Admin is a very useful and rather unique feature to Django. With just a few lines of code
-any model can be integrated, supporting the all CRUD (Create, Read, Update, Delete) operations.
+any model can be integrated, supporting all CRUD (Create, Read, Update, Delete) operations.
 In OpenBook the Django Admin is used for developers and administrators to customize the system,
 inspect live data and create mock data even before the corresponding part in the frontend app
 has been built. For this reason, even though the primary end users (lecturers and students)
-never use the Admin, it is treated as a first-class citizen, providing an optimized user interace
+never use the Admin, it is treated as a first-class citizen, providing an optimized user interface
 for each model. In particular:
 
 - Django Unfold is integrated to provide a modern user experience throughout.
-- Related models and grouped in sub-categories below each technical app.
+- Related models are grouped in sub-categories below each technical app.
 - Inline models and tab pages are used extensively to optimize data maintenance.
 - DjangoQL is integrated to provide additional search capabilities beyond traditional filters.
 - Django Import/Export is integrated to allow importing and exporting models from/to files.
@@ -163,17 +164,17 @@ Therefore, for each model, at least the following classes must be written:
      - Responsibility
    * - Admin
      - Definition of the change and list views
-   * - Ressource
+   * - Resource
      - File-based import and export of model data
 
-Role-based Persmissions
-.......................
+Role-Based Permissions
+......................
 
 Another difference to regular Django apps lies in the permission handling. By default, Django uses coarse
 permissions that define what a user can do with a given type of data (model), e.g. "can view textbooks".
 While perfectly sensible for applications like news pages or blog engines, this falls short in educational
 contexts. Because in education it is not enough to say, that "teachers can edit course contents" or that
-"teacers can assess tests". One must also say *which courses* they can edit or *which tests* for *which students*
+"teachers can assess tests". One must also say *which courses* they can edit or *which tests* for *which students*
 they may assess.
 
 Django provides object-level permission hooks for this, but ships no concrete implementation. Similar to most
@@ -222,12 +223,12 @@ Database Models
    }
 
 Most business models inherit a small set of abstract mixins instead of redefining technical
-fields in each app. ``UUIDMixin`` replaces numeric ids with UUIDs, ``CreatedModifiedByMixin``
-adds an audit trail, and further mixins such as ``ActiveInactiveMixin`` or the scope-related
+fields in each app. :class:`UUIDMixin` replaces numeric IDs with UUIDs, :class:`CreatedModifiedByMixin`
+adds an audit trail, and further mixins such as :class:`ActiveInactiveMixin` or the scope-related
 mixins add recurring behavior only where needed.
 
 Translatable content is modeled separately. A main model keeps the stable business identity and
-relations, while a companion ``*Text`` model in the same file inherits ``TranslatableMixin`` and
+relations, while a companion ``*Text`` model in the same file inherits :class:`TranslatableMixin` and
 stores the language-specific labels, titles, and descriptions for that parent object.
 
 .. hint::
@@ -257,7 +258,7 @@ Source Code Structure
    }
 
 Typically, Django Apps define all models in a single source file called :file:`models.py`, the
-Admin views in file called :file:`admin.py`, the REST endpoints in a file called :file:`viewsets.py`
+Admin views in a file called :file:`admin.py`, the REST endpoints in a file called :file:`viewsets.py`
 and so on. In OpenBook these are directories with one source file per domain concept, e.g:
 
 .. code-block:: text
@@ -278,13 +279,13 @@ and so on. In OpenBook these are directories with one source file per domain con
        └── learning_goal.py
 
 To make these directories behave like single source files, they contain a :file:`__init__.py` file,
-the reexports all public contents of the other files. Additionaly, as can be seen, each directory
-contains the same set of files. This is, because each model must be integrated with the Django Admin
+that re-exports all public contents of the other files. Additionally, as can be seen, each directory
+contains the same set of files. This is because each model must be integrated with the Django Admin
 as well as be exposed through the REST API.
 
-To simplify these tasks as little and enfore uniform behaviour, the OpenBook core and auth apps
+To simplify these tasks a little and enforce uniform behavior, the OpenBook core and auth apps
 contain several mixins for recurring concepts. These serve as conceptual building blocks throughout
-the system that reduce variation and helps developers understand new features by analogy with
+the system that reduce variation and help developers understand new features by analogy with
 existing ones.
 
 
@@ -294,13 +295,13 @@ Permission Handling in Detail
 
 This section describes permission handling in Django and how it is used in the application. It
 explains the implementation strategy to make regular model-based permissions (for example,
-"Can create textbook") co-exist with object-level permissions (for example,
+"Can create textbook") coexist with object-level permissions (for example,
 "Can change THIS textbook").
 
 Default Permissions for Each Model
 ..................................
 
-When the app ``django.contrib.auth`` is installed, Django automatically creates four permission objects
+When the app :mod:`django.contrib.auth` is installed, Django automatically creates four permission objects
 in the database for each model:
 
 .. list-table::
@@ -320,30 +321,31 @@ in the database for each model:
      - Delete existing objects
 
 ``{app_label}`` is the owning app's label (as defined in the ``App`` class), and ``{model}`` is the name
-of the model in lower-case (no other transformation done).
+of the model in lowercase (no other transformation done).
 
 How Permissions Are Checked on Model Level
 ..........................................
 
 **Django Admin** -- By default, model permissions are checked in the Django Admin (in the
-``ModelAdmin`` class, methods ``has_..._permission(self, request)``) to check whether a user is allowed
+:class:`ModelAdmin` class, methods :meth:`has_..._permission(self, request)`) to check whether a user is allowed
 to perform the corresponding action.
 
 **Own Code** -- No permissions check is done when directly accessing the database with the Django ORM.
 Permission checks must be performed in the higher levels (views), of which the Django Admin happens
-to be one. The easiest way to check a permission is to call ``has_perm()`` on the user object, for
-example ``user.has_perm("myapp.view_model")``. This in turn iterates over the installed authentication
-backends and calls ``has_perm(user_obj, perm)`` until one backend grants the permission.
+to be one. The easiest way to check a permission is to call :meth:`has_perm()` on the user object, for
+example :meth:`user.has_perm("myapp.view_model")`. This, in turn, iterates over the installed
+authentication backends and calls :meth:`has_perm(user_obj, perm)` until one backend grants the
+permission.
 
 **Django REST Framework** -- Django REST Framework does not do permission checks unless specifically
-asked in the ``ViewSet``. Permission checks are encapsulated in ``permission_classes`` that may
-implement arbitrary logic. These classes inherit from a ``BasePermission`` that defines the method
-``has_permission(self, request, view)``. Most implementations do not use the ``django.contrib.auth``
-permissions but rather implement simpler checks like ``IsAuthenticated`` or ``AllowAny``.
-``DjangoModelPermissions`` applies permission checks similar to Django Admin's ``ModelAdmin``, though
+asked in the :class:`ViewSet`. Permission checks are encapsulated in :attr:`permission_classes` that may
+implement arbitrary logic. These classes inherit from a :class:`BasePermission` that defines the method
+:meth:`has_permission(self, request, view)`. Most implementations do not use the :mod:`django.contrib.auth`
+permissions but rather implement simpler checks like :class:`IsAuthenticated` or :class:`AllowAny`.
+:class:`DjangoModelPermissions` applies permission checks similar to Django Admin's :class:`ModelAdmin`, though
 they do not share any code.
 
-When a ``ViewSet`` contains multiple permission classes as a list, permission is only granted if all
+When a :class:`ViewSet` contains multiple permission classes as a list, permission is only granted if all
 of them return ``True``:
 
 .. code-block:: python
@@ -374,32 +376,32 @@ API. The API is a compatible extension to the regular API:
    * - Extension Point
      - API
    * - Django User
-     - ``User.has_perm(self, perm, obj=None)``
+     - :meth:`User.has_perm(self, perm, obj=None)`
    * - Authentication Backend
-     - ``has_perm(user_obj, perm, obj=None)``
+     - :meth:`has_perm(user_obj, perm, obj=None)`
    * - Django Admin
-     - ``ModelAdmin.has_..._permission(self, request, obj=None)``
+     - :meth:`ModelAdmin.has_..._permission(self, request, obj=None)`
    * - Django REST Framework
-     - ``BasePermission.has_object_permission(self, request, view, obj)``
+     - :meth:`BasePermission.has_object_permission(self, request, view, obj)`
 
 There are still framework-level limitations to keep in mind.
 
-**Query Set Visibility** --- Neither Django, Django Admin, nor Django REST Framework apply object
-permissions to query sets. This means users can always query objects and read all data even when
+**Queryset Visibility** --- Neither Django, Django Admin, nor Django REST Framework apply object
+permissions to querysets. This means users can always query objects and read all data even when
 they lack "view" permissions.
 
-**Default ModelBackend Behavior** --- Django's default ``ModelBackend`` always returns ``False`` when
+**Default ModelBackend Behavior** --- Django's default :class:`ModelBackend` always returns ``False`` when
 object-level permissions are checked, even when the user has the global permission.
 
-**ModelAdmin Object Parameter** --- ``ModelAdmin`` ignores the ``obj`` parameter and always checks
+**ModelAdmin Object Parameter** --- :class:`ModelAdmin` ignores the ``obj`` parameter and always checks
 model permissions.
 
 **Create Permission Gap in DRF** --- Django REST Framework checks object-level permissions only in
-class ``DjangoObjectPermissions``, but despite the documentation it seems the add permission is not
+class :class:`DjangoObjectPermissions`, but despite the documentation, it seems the add permission is not
 checked (because the new object does not yet exist).
 
 **Limitations Around get_object()** --- Django REST Framework checks object permissions in the
-``get_object()`` method. It may be necessary to manually call the inherited method when it is
+:meth:`get_object()` method. It may be necessary to manually call the inherited method when it is
 replaced with a custom implementation or when the generic REST views are not used. Limitations of
 object permissions in Django REST Framework
 (`Source <https://www.django-rest-framework.org/api-guide/permissions/>`_):
@@ -413,9 +415,9 @@ object permissions in Django REST Framework
   appropriately to ensure that users only have visibility onto instances that they are permitted to
   view.
 
-* Because the ``get_object()`` method is not called, object-level permissions from the
-  ``has_object_permission()`` method are not applied when creating objects. In order to restrict
-  object creation, you need to implement the permission check either in the ``Serializer`` class or
+* Because the :meth:`get_object()` method is not called, object-level permissions from the
+  :meth:`has_object_permission()` method are not applied when creating objects. In order to restrict
+  object creation, you need to implement the permission check either in the :class:`Serializer` class or
   override ``perform_create()`` in the ``ViewSet`` class.
 
 How Our Custom Authentication Backend Is Implemented
@@ -448,22 +450,22 @@ Typical scopes are courses and textbooks. They often contain related objects (fo
 materials or textbook pages) that also support object permissions but share the scope of their parent
 object. This allows permissions like "In this course (scope object), teachers (role) can create
 materials (related object)" to be expressed. For this, the related objects must inherit
-``RoleBasedObjectPermissionsMixin`` and override the ``get_scope()`` method. In both cases (scope
-objects and related objects), the method ``has_obj_perm()`` can be overridden to implement additional
+:class:`RoleBasedObjectPermissionsMixin` and override the :meth:`get_scope()` method. In both cases (scope
+objects and related objects), the method :meth:`has_obj_perm()` can be overridden to implement additional
 custom checks.
 
 **Authentication Backend** -- We provide a custom authentication backend in class
-``openbook.auth.backends.RoleBasedObjectPermissionsBackend`` that extends the stock Django
-``ModelBackend``. This is simpler than reusing third-party libraries like Django Guardian,
+:class:`openbook.auth.backends.RoleBasedObjectPermissionsBackend` that extends the stock Django
+:class:`ModelBackend`. This is simpler than reusing third-party libraries like Django Guardian,
 which requires explicitly persisting and keeping in sync who can do what for every single object.
 
-``RoleBasedObjectPermissionsBackend`` changes permission resolution as follows:
+:class:`RoleBasedObjectPermissionsBackend` changes permission resolution as follows:
 
 1. The user is a superuser.
-2. A matching global entry exists in ``AnonymousPermission``.
+2. A matching global entry exists in :class:`AnonymousPermission`.
 3. The user and the object are the same.
 4. The user is the object's ``owner`` (optional).
-5. The object's ``has_obj_perm()`` method (via mixins, optional).
+5. The object's :meth:`has_obj_perm()` method (via mixins, optional).
 
    1. Public permissions of the scope.
    2. Roles assigned to the user.
@@ -472,47 +474,47 @@ which requires explicitly persisting and keeping in sync who can do what for eve
 7. If ``view`` fails, retry as ``change`` (including object-aware checks).
 
 This keeps object-level behavior consistent while preserving Django's model-level permission model.
-Because this backend inherits from ``ModelBackend``, the default backend does not need to be added
+Because this backend inherits from :class:`ModelBackend`, the default backend does not need to be added
 separately in settings.
 
-Unlick Django's ``ModelBackend``, the Django Admin first checks "view" then "change" permissions when
-a object should be displayed. This logic is mirrored in our ``RoleBasedObjectPermissionsBackend`` to
+Unlike Django's :class:`ModelBackend`, the Django Admin first checks "view" then "change" permissions when
+an object should be displayed. This logic is mirrored in our :class:`RoleBasedObjectPermissionsBackend` to
 unify the behavior in all parts of the application.
 
 How We Iron Out the Inconsistencies
 ...................................
 
 **Querying and Filtering** -- For REST APIs, querysets are filtered with
-``openbook.drf.filters.DjangoObjectPermissionsFilter``. This filter evaluates
-``request.user.has_perm("{app_label}.view_{model}", obj)`` for each object and returns only visible
+:class:`openbook.drf.filters.DjangoObjectPermissionsFilter`. This filter evaluates
+:meth:`request.user.has_perm("{app_label}.view_{model}", obj)` for each object and returns only visible
 records. This closes DRF's default queryset visibility gap for list endpoints.
 
-**Django Admin** -- The active admin base class is ``openbook.admin.CustomModelAdmin``. Admin model
+**Django Admin** -- The active admin base class is :class:`openbook.admin.CustomModelAdmin`. Admin model
 classes inherit from this shared base, while permission decisions still flow through
 
-**Django Admin** -- The code contains ``openbook.core.admin.utils.model.ModelAdmin`` as a replacement
-for the  stock ``ModelAdmin`` to make sure that object-level permissions are checked. But we currently
-don't use it. If we want to use it in future, ``openbook.admin.CustomModelAdmin`` must the inheritance
-chain of ``openbook.admin.CustomModelAdmin`` must be adapted.
+**Django Admin** -- The code contains :class:`openbook.core.admin.utils.model.ModelAdmin` as a replacement
+for the stock :class:`ModelAdmin` to make sure that object-level permissions are checked. But we currently
+do not use it. If we want to use it in the future, the inheritance chain of
+:class:`openbook.admin.CustomModelAdmin` must be adapted.
 
-**Django REST Framework** -- In ``settings.py``, the default permissions are
-``IsAuthenticated`` and ``DjangoObjectPermissionsOnly``. In practice this means all endpoints are
-protected by default unless a view explicitly overrides ``permission_classes`` (for example with
-``AllowAny``).
+**Django REST Framework** -- In :file:`settings.py`, the default permissions are
+:class:`IsAuthenticated` and :class:`DjangoObjectPermissionsOnly`. In practice, this means all endpoints are
+protected by default unless a view explicitly overrides :attr:`permission_classes` (for example with
+:class:`AllowAny`).
 
-The module ``openbook.drf`` adds focused building blocks around DRF:
+The module :mod:`openbook.drf` adds focused building blocks around DRF:
 
 .. rst-class:: spaced-list
 
-* ``openbook.drf.permissions.DjangoObjectPermissionsOnly`` customizes DRF object-permission behavior,
+* :class:`openbook.drf.permissions.DjangoObjectPermissionsOnly` customizes DRF object-permission behavior,
   includes ``view`` in the permission map, and keeps model checks compatible with the backend logic.
 
-* ``openbook.drf.flex_serializers.FlexFieldsModelSerializer`` calls ``full_clean()`` before saving to
+* :class:`openbook.drf.flex_serializers.FlexFieldsModelSerializer` calls :meth:`full_clean()` before saving to
   reuse model-level validation.
 
-* ``openbook.drf.viewsets.ModelViewSetMixin`` performs object permission checks during ``POST`` by
-  constructing a pre-filled instance before ``perform_create()``.
+* :class:`openbook.drf.viewsets.ModelViewSetMixin` performs object permission checks during ``POST`` by
+  constructing a pre-filled instance before :meth:`perform_create()`.
 
-``DjangoObjectPermissionsOnly`` is a specialized version of ``DjangoObjectPermissions`` that includes
+:class:`DjangoObjectPermissionsOnly` is a specialized version of :class:`DjangoObjectPermissions` that includes
 ``view`` checks and delegates the final model-versus-object fallback behavior to our authentication
 backend.

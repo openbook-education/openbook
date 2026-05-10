@@ -56,7 +56,7 @@ From Idea to Feature
 
 .. graphviz::
    :align: center
-   :caption: Feature planing and development process
+   :caption: Feature planning and development process
 
    digraph workflow {
       graph [bgcolor=transparent];
@@ -95,21 +95,21 @@ The community turns ideas into working features through a transparent and iterat
 2. The GitHub Project board is used to plan short- and mid-term development. Here the issues are
    assigned to milestones (planned releases), and the overall project progress is tracked.
 
-3. For each issue under development a feature branch is created in Git (see
+3. For each issue under development, a feature branch is created in Git (see
    :doc:`development process <../developers/development-process>`). It is
    typically branched off from the main branch, which later becomes the next
    release.
 
-4. Once ready, a pull request is opened to merge a feature branch into the main line. At this point,
+4. Once ready, a pull request is opened to merge a feature branch into the mainline. At this point,
    feature development is typically finished. Sometimes, however, it makes sense to split larger developments
    into smaller chunks and merge them early, even when the feature is not yet usable for end-users. In any case,
    the pull request facilitates code review by other developers.
 
 5. When a new release is ready, it is tagged on the main branch and a GitHub release page is created.
    The release page collects the source code tarballs, Software Bill of Materials (SBOM), and changelogs.
-   A release branch is created to allow subsequent hot fixes.
+   A release branch is created to allow subsequent hotfixes.
 
-6. Documentation and website will be updated as required.
+6. Documentation and the website will be updated as required.
 
 Because this is still a relatively small project, there are currently no dedicated module maintainers
 (sometimes called product owners or product managers). Instead, feature and development decisions are

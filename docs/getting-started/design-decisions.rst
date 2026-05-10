@@ -17,7 +17,7 @@ Educational Design Decisions
 OpenBook shares surface similarities with established Learning Management Systems such as Moodle
 or ILIAS: It organises courses, tracks learner progress, and delivers interactive content. But
 it differs from them in scope, focus, and underlying assumptions about how learning works.
-While recognizing the value of said LMS, both didactically and to promote Free Software in
+While recognising the value of those LMSs, both didactically and to promote Free Software in
 education, these differences are intentional and stem from three educational design decisions.
 
 The Textbook as a Learning Medium
@@ -46,8 +46,8 @@ Traditional LMS platforms accumulated their feature sets over decades, resulting
 are powerful but often difficult to navigate for both educators and learners. OpenBook takes a
 different position: it is built by educators and students, for educators and students, and its
 feature set reflects what those groups actually need rather than what is technically possible.
-In certain cases, traditional LMS are therefore be a better choice to satisfy special demands,
-but day to day teaching and learning can be greatly improved with OpenBook.
+In certain cases, traditional LMS are therefore a better choice to satisfy special demands,
+but day-to-day teaching and learning can be greatly improved with OpenBook.
 
 At the heart of the system is an explicit learner model. Every learner has associated learning
 targets, competency goals, and a progress record that grows as they work through content. This
@@ -96,7 +96,7 @@ Modern LMS platforms have grown into sprawling systems that try to serve every p
 The result is that they are difficult to deploy, difficult to maintain, and difficult for end
 users to navigate. OpenBook takes the opposite approach: a lean, focused feature set that covers
 the core teaching and learning workflow well, rather than everything marginally. Though we have
-to admit, that hosting PHP applications is easier.
+to admit that hosting PHP applications is easier.
 
 This philosophy has a direct structural consequence: there is no plugin marketplace. Marketplaces
 tend to fragment the ecosystem, introduce unpredictable maintenance burdens, and gradually erode
@@ -110,7 +110,7 @@ Frontend and Admin Panel Separation
 
 OpenBook maintains a clear architectural boundary between the educator and learner-facing frontend
 and the Django-based administration panel. The frontend is a TypeScript/Svelte application that
-communicates with the backend through a REST API and Websocket endpoint. The admin panel, by contrast,
+communicates with the backend through a REST API and WebSocket endpoint. The admin panel, by contrast,
 uses Django's built-in administration framework, extended with Unfold for an improved interface.
 
 This separation keeps the two surfaces focused: the frontend is optimised for the learner and
@@ -129,13 +129,13 @@ version 3 (AGPL-3.0) or later. That choice is intentional. Education and the tec
 supports it must be accessible to everyone, without financial barriers, vendor lock-in, or
 closed-source components that undermine trust in the tools learners and institutions depend on.
 
-There is no premium version of OpenBook, no closed-source addon market, and no hosted-only
+There is no premium version of OpenBook, no closed-source add-on market, and no hosted-only
 feature tier. Every capability in the system is available in the publicly distributed source
 code. Anyone is free to download, install, modify, and redistribute OpenBook under the terms
 of the AGPL-3.0. The copyleft provision of that licence ensures that improvements made to the
 codebase remain available to the community, which sustains the project over time.
 
-Side-note to other AI-assisted educational products: This should be the norm for any project
+Side note to other AI-assisted educational products: This should be the norm for any project
 that receives even the smallest amount of public funding. Using public funding to build
 closed-source systems is unacceptable to us!
 

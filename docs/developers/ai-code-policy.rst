@@ -18,10 +18,10 @@ actively working toward that outcome. We disagree. AI coding assistants are powe
 like any tool they have real limitations. Knowing those limitations, and how to work with them,
 is what separates effective use from blind reliance.
 
-OpenBook is an educational software built by people who care about both software quality and
+OpenBook is educational software built by people who care about both software quality and
 learning. We do not see AI tools as a replacement for human developers. We see them as an
 accelerant for developers who already know what they are doing, as well as an aid for developers
-who are still learning (like we always do).
+who are still learning (as we always do).
 
 
 --------------
@@ -38,7 +38,7 @@ your work, but do not hand over whole features to an autonomous agent with no hu
 loop. Every significant decision about behaviour, structure, and quality must involve a developer
 who understands the consequences.
 
-Remember, that you are responsible for every line of code you submit, regardless of how it was
+Remember that you are responsible for every line of code you submit, regardless of how it was
 produced. Specifically:
 
 .. rst-class:: spaced-list
@@ -69,7 +69,7 @@ Improving the Tools
 The quality of AI assistance depends directly on the quality of the instructions it receives.
 When you find that an agent produces poor results, misses project conventions, or requires
 excessive hand-editing, feel free to improve the tooling rather than accept the friction.
-Extend the agent and skill prompts in ``.agents/`` to encode the missing knowledge. If you
-find better tools, that aid AI coding assistants to achieve better results, let is know.
+Extend the agent and skill prompts in :file:`.agents/` to encode the missing knowledge. If you
+find better tools that help AI coding assistants achieve better results, let us know.
 Better instructions and tools benefit every contributor who uses them after you.
 

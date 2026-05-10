@@ -26,9 +26,9 @@ indicates the issue number and type of work, e.g.
 - ``<issue>/docs/<short-description>`` for documentation updates, and
 - ``<issue>/quality/<short-description>`` for refactoring or tooling work.
 
-The patterns are no hard rules. You might especially find a better word for the second part,
+The patterns are not hard rules. You might especially find a better word for the second part,
 depending on the work you plan to do. Throughout development, try to keep branch changes focused
-to one logical change (though this may not be always possible).
+to one logical change (though this may not always be possible).
 
 .. note::
 
@@ -47,7 +47,7 @@ to ensure quality:
 2. Describe behavior changes and optionally test coverage if not obvious from the issue.
 3. Add or update documentation for any user-facing changes.
 4. Update :doc:`/administrators/changelog` for notable user-facing updates.
-5. Keep backend test coverage at or above the configured threshold in ``pyproject.toml``.
+5. Keep backend test coverage at or above the configured threshold in :file:`pyproject.toml`.
 
 For larger developments, split work into smaller pull requests when this reduces risk or improves
 review quality. Early merges are acceptable even if a feature is not yet end-user complete, as
@@ -60,13 +60,13 @@ Checks and Review
 
 All pull requests must pass automated checks and receive manual review before merging.
 
-**Automated Checks** --- The ``tests`` status check from ``.github/workflows/run-tests.yml``
-is the required branch protection check. For changes under ``src/``, this workflow routes to
-``run-tests-full.yml``, which runs linting, security checks, backend tests, and related quality
+**Automated Checks** -- The ``tests`` status check from :file:`.github/workflows/run-tests.yml`
+is the required branch protection check. For changes under :file:`src/`, this workflow routes to
+:file:`run-tests-full.yml`, which runs linting, security checks, backend tests, and related quality
 gates. For non-relevant changes, the dummy workflow path satisfies branch protection without
 running the full suite.
 
-**Manual Review** --- Copilot review is requested automatically. A maintainer then reviews the
+**Manual Review** -- Copilot review is requested automatically. A maintainer then reviews the
 pull request, examining correctness and regression risk, test completeness, API and documentation
 consistency, and overall clarity and maintainability.
 

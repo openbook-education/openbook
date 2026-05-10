@@ -8,9 +8,9 @@ Under Construction
    :height: 15em
    :align: center
 
-Hang on. This project is still in early stages, under heavy development. This manual was set up
+Hang on. This project is still in its early stages and under heavy development. This manual was set up
 early to assist developers and others interested in joining the project by documenting our vision
-and how much of it has already been built. Stay tuned until the first version is released or better
+and how much of it has already been built. Stay tuned until the first version is released, or better
 yet, join us in shaping the future of education.
 
 Welcome to OpenBook
@@ -33,16 +33,17 @@ just answer questions. It actively supports you by:
 For Teachers & Lecturers
 ........................
 
-One could say, OpenBook is your traditional learning management system reimagined in the 21st century.
+One could say OpenBook is your traditional learning management system reimagined in the 21st century.
 But OpenBook is much more than that. OpenBook serves as your always available **teaching assistant**,
+But OpenBook is much more than that. OpenBook serves as your always-available **teaching assistant**,
 supporting the entire teaching lifecycle:
 
-* Structuring and presenting content – the core of OpenBook's functionality.
+* Structuring and presenting content - the core of OpenBook's functionality.
 * supporting student self-studies,
 * running interactive exercises,
 * answering student questions,
 * providing detailed progress reports,
-* and much more
+* and much more.
 
 Interactive Learning, Redefined
 ...............................
@@ -55,8 +56,8 @@ entire learning experience.
 Free, Open, and for Everyone
 ............................
 
-OpenBook is **100% Free and Libre Software**. No exceptions, no excuses. We believe education --- and
-the technology that powers it --- should be accessible to everyone, with no exceptions. There are no
+OpenBook is **100% Free and Libre Software**. No exceptions, no excuses. We believe education -- and
+the technology that powers it -- should be accessible to everyone, with no exceptions. There are no
 premium versions or hidden paywalls. OpenBook is fully open-source, available for anyone to
 download, install, and use **without restrictions**.
 

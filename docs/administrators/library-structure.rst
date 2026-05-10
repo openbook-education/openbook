@@ -2,10 +2,10 @@
 # Defining the Library Structure
 ================================
 
-.. TODO: Write documentation according to plan below. Then remove `#` from headline
+.. TODO: Write documentation according to the plan below. Then remove `#` from the headline.
 
 This page describes how the OpenBook content library is organised and explains how administrators
-can customise its structure and assign textbooks and courses to it.
+can customize its structure and assign textbooks and courses to it.
 
 .. contents:: Page Content
    :local

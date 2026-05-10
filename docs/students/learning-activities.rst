@@ -2,7 +2,7 @@
 # Learning Activities
 =====================
 
-.. TODO: Write documentation according to plan below. Then remove `#` from headline
+.. TODO: Write the documentation according to the plan below. Then remove `#` from the heading.
 
 This page explains what you will find inside a textbook or course and how to make the most of
 the interactive elements, AI assistance, and learning progress tracking available to you.

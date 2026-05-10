@@ -10,10 +10,10 @@ Frontend Architecture
 Technology Choices
 ------------------
 
-The frontend is a single-page app, composed of a core library and several add-on libraries, that can
-also run stand-alone without a server backend. In part, this is due to the development history of the
-project starting as a pure static single-page app in 2017. To upgrade the tech stack we are now using
-the following frontend tools and frameworks.
+The frontend is a single-page app composed of a core library and several add-on libraries that can
+also run standalone without a server backend. In part, this is due to the development history of the
+project, which started as a pure static single-page app in 2017. To upgrade the tech stack, we are
+now using the following frontend tools and frameworks.
 
 .. list-table::
    :width: 100%
@@ -28,7 +28,7 @@ the following frontend tools and frameworks.
    * - **Svelte**
      - Core frontend framework
    * - **TailwindCSS**
-     - Styling and themeing
+     - Styling and theming
    * - **DaisyUI**
      - Pre-defined UI components
 

@@ -26,7 +26,7 @@ these kinds of tasks to an AI agent:
 
 - **Security-critical logic** — authentication flows, permission checks, input sanitization, and
   cryptographic operations must be written by a human who understands the threat model. AI agents
-  are getting better at this every day but weaker language models still can produce plausible-looking
+  are getting better at this every day, but weaker language models can still produce plausible-looking
   but subtly incorrect security code.
 
   Using AI to *review* security logic, on the other hand, is fine and actually makes a lot of sense.
@@ -70,7 +70,7 @@ When working in VS Code with GitHub Copilot (or similar AI coding harnesses), se
 directly from the chat interface. For example, use ``ob-python-developer`` for backend work,
 ``ob-frontend-developer`` for Svelte components, or ``ob-tech-writer`` for documentation.
 If the tool does not support direct agent selection, name the agent explicitly in your first
-prompt. The AI will then discover the agent definition via the ``AGENTS.md`` file at the
+prompt. The AI will then discover the agent definition via the :file:`AGENTS.md` file at the
 repository root.
 
 Skills extend agents with narrower domain knowledge (for example, how to write Django model unit
@@ -96,7 +96,7 @@ context. Do not rely on the agent to discover relevant code on its own — point
 similar existing implementation in the codebase. This communicates style, conventions, and
 structure far more precisely than prose instructions alone.
 
-**State your constraints upfront** — tell the agent what it should *not* do as early as what it
+**State your constraints upfront** — tell the agent what it should *not* do as early as you tell it
 should. For example: "Add a ``validated`` field to this model. Do not refactor existing fields or
 change the migration history." Constraints prevent the agent from over-engineering or making
 unrequested changes.
@@ -137,7 +137,7 @@ A mixed approach works best: let the agent generate a first draft, then hand-edi
 matter most and prompt the agent again for remaining adjustments.
 
 .. code-block:: text
-   :caption: **Example** --- Plan-fist prompt
+   :caption: **Example** --- Plan-first prompt
 
    Look at openbook/courses/serializers.py and plan how to add validation for the
    start_date field — it must not be set in the past. Do not make any changes yet,

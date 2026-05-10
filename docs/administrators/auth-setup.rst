@@ -2,7 +2,7 @@
 # Authentication Setup
 ======================
 
-.. TODO: Write documentation according to plan below. Then remove `#` from headline
+.. TODO: Write the documentation according to the plan below. Then remove `#` from the headline.
 
 This page explains how authentication works in OpenBook, how to control local user signups, and
 how to connect external identity providers.
@@ -13,5 +13,5 @@ how to connect external identity providers.
 
 1. Capabilities of Django Allauth
 2. Signup rules for local users
-3. Customizing of remote identity providers
+3. Customization of remote identity providers
 4. What else?

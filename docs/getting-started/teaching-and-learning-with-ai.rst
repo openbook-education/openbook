@@ -16,9 +16,9 @@ AI and Modern Education
 -----------------------
 
 The widespread availability of large language model (LLM) based AI assistants has sparked a global
-debate about modern teaching and learning practices. But, the core question — whether our established
+debate about modern teaching and learning practices. But the core question, whether our established
 educational approaches remain valid in the age of AI — is not entirely new. Anyone with long enough
-experience in education will recognise that educators have long questioned whether each successive
+experience in education will recognize that educators have long questioned whether each successive
 generation learns as deeply as the last. At the same time, many teaching and learning methods have
 been proposed to enhance student-centeredness and improve the teaching and learning experience.
 What is truly new is the pace of change.
@@ -56,7 +56,7 @@ over the years by increasingly goal-oriented and economised approaches to studyi
 the picture.
 
 **Limited Progress Visibility** --- Learning Management Systems (LMS) such as Moodle or ILIAS offer
-powerful didactical tools, but many educators cannot or do not use them effectively -- whether through
+powerful didactical tools, but many educators cannot or do not use them effectively --- whether through
 lack of awareness, limited technical skills, or local institutional restrictions. These platforms have
 also accumulated decades of features, which makes it hard for them to quickly respond to emerging
 technology and trends. As a result, though invaluable teaching tools, they can feel dated. Educators
@@ -104,10 +104,10 @@ past achievements, and remaining work consistently visible.
 
 ELISA is fundamentally different from AI chatbots or assistants that respond to prompts and fall
 silent otherwise. It acts proactively, not by pursuing autonomous background goals, but by remaining
-in constant interaction with the human learner. The humans is always in the loop. ELISA's purpose
+in constant interaction with the human learner. The human is always in the loop. ELISA's purpose
 is to maximise learning outcomes: it assesses prior knowledge and understanding, finds and selects
 the most relevant materials and activities, and suggests or creates additional exercises like quizzes,
-programming tasks, assessment simulations and more, tailored to individual needs.
+programming tasks, assessment simulations, and more, tailored to individual needs.
 
 Lecturers benefit equally. Learning dashboards summarise progress across a group, highlight where
 understanding broke down, and help educators direct their attention where it is most needed. The

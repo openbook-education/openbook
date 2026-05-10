@@ -15,8 +15,8 @@ REST API
 --------
 
 The OpenBook REST API contains machine-readable OpenAPI descriptions for clients to generate
-typesafe remote stubs. Additionally, an interactive API browser using ReDoc is included.
-The following URLs expose the API schema on your running OpenBook installation. Or you can
+type-safe remote stubs. Additionally, an interactive API browser powered by ReDoc is included.
+The following URLs expose the API schema on your running OpenBook installation, or you can
 preview the latest version included in this manual.
 
 .. list-table::
@@ -41,7 +41,7 @@ preview the latest version included in this manual.
 Authentication API
 ------------------
 
-All things user management are handled by Django Allauth, which implements its own REST API.
+All user management is handled by Django Allauth, which implements its own REST API.
 The following URLs expose the API schema on your running OpenBook installation:
 
 .. list-table::
@@ -63,6 +63,6 @@ The following URLs expose the API schema on your running OpenBook installation:
 
 .. hint::
 
-   We recommend using the API schema shipped with your OpenBook installation. During
-   development you can run ``npm start`` and substitute ``<your-openbook-host>`` with
-   ``localhost:8000`` in the URLs above.
+  We recommend using the API schema shipped with your OpenBook installation.
+  During development, you can run :command:`npm start` and substitute
+  ``<your-openbook-host>`` with ``localhost:8000`` in the URLs above.

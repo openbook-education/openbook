@@ -23,33 +23,33 @@ Creating New Apps
 -----------------
 
 Domain-specific features for OpenBook live in separate Django apps within the OpenBook Django project,
-in line with best-practices recommended by the Django developers. Technically speaking, both are Python
-project directories with pre-defined sub-modules (either single Python files or directories with an
-``__init__.py`` file --- from Python or Django's point of view, there is no difference). And theoretically
-a Django project doesn't need to be split into smaller apps. But the split improves clarity, separation
+in line with best practices recommended by the Django developers. Technically speaking, both are Python
+project directories with predefined submodules (either single Python files or directories with a
+:file:`__init__.py` file --- from Python's or Django's point of view, there is no difference). Theoretically,
+a Django project does not need to be split into smaller apps. But the split improves clarity, separation
 of concerns and code reuse. Imagine the difference like this:
 
 A Django project is the full server application, while a Django app is a focused domain module inside
 that project. In OpenBook, apps are the unit for organizing data models, admin integration, REST API
-endpoints, and migration history around one bounded topic. Therefore, the first step, when implementing
+endpoints, and migration history around one bounded topic. Therefore, the first step when implementing
 a new feature is either to find the right app to extend or to create a new app from scratch. This tutorial
 shows how to do the latter.
 
 Create and Register a New App
 .............................
 
-Create the app with Django, then place it under ``src/openbook`` with a short, domain-specific name.
-After that, register it in ``INSTALLED_APPS`` in ``src/openbook/settings.py`` so migrations, admin
+Create the app with Django, then place it under :file:`src/openbook` with a short, domain-specific name.
+After that, register it in :attr:`INSTALLED_APPS` in :file:`src/openbook/settings.py` so migrations, admin
 discovery, and app startup hooks run automatically.
 
-Imagine, we wanted to create a new app for tracking learning progress. The typical process would be:
+Imagine we wanted to create a new app for tracking learning progress. The typical process would be:
 
 .. code-block:: bash
 
    cd src
    python manage.py startapp learning_goals src/openbook/progress
 
-Then add the app import path to ``INSTALLED_APPS``:
+Then add the app import path to :attr:`INSTALLED_APPS`:
 
 .. code-block:: python
 
@@ -93,11 +93,11 @@ commands, signals, or service classes. Start with the structure above and extend
 
 .. note::
 
-   Note the many files named ``learning_goal.py`` or similar. As we will see in the sub-sequent
-   tutorials, most feature apps resolve around database models which are exposed in the Django
-   admin and the REST API. The three directories ``models/``, ``admin/`` and ``viewsets/`` serve
+   Note the many files named :file:`learning_goal.py` or similar. As we will see in the subsequent
+   tutorials, most feature apps revolve around database models that are exposed in the Django
+   admin and the REST API. The three directories :file:`models/`, :file:`admin/`, and :file:`viewsets/` serve
    exactly this purpose. To simplify navigation, each file is concerned with exactly one model
-   (from a user's perspective) and we mirror the file-structure between most directories.
+   (from a user's perspective), and we mirror the file structure between most directories.
 
    .. graphviz::
       :align: center
@@ -117,14 +117,14 @@ commands, signals, or service classes. Start with the structure above and extend
          api -> routes  [color="#d81b60"];
       }
 
-Define ``apps.py`` With Explicit Metadata
-.........................................
+Define :file:`apps.py` With Explicit Metadata
+.............................................
 
-Next you need to expose an ``AppConfig`` with a stable ``name`` and explicit ``label``.
+Next you need to expose an :class:`AppConfig` with a stable :attr:`name` and explicit :attr:`label`.
 Though not strictly required, the label is important because OpenBook uses app labels
 in places like fixture model names and generic scope references.
 
-Create the file `app.py` (inside the app directory) with following content:
+Create the file :file:`apps.py` inside the app directory with the following content:
 
 .. code-block:: python
 
@@ -140,21 +140,21 @@ Create the file `app.py` (inside the app directory) with following content:
 .. note::
 
    Note the pattern for the class attribute values. The app name and label must follow
-   similar conventions as module names in Python: No spaces, start with a letter,
-   `snake_case` capitalization, etc. The name is always ``openbook.<app_label>`` and
-   the app label the package name.
+   conventions similar to Python module names: no spaces, start with a letter,
+   ``snake_case`` capitalization, etc. The name is always ``openbook.<app_label>``, and
+   the app label is the package name.
 
    The verbose name is used in the admin and in other places in the UI. So it must be
-   marked with ``_()`` as a translatable text.
+   marked with :func:`_` as a translatable text.
 
-Register API Rememberoutes in ``routes.py``
-....................................
+Register API Routes in :file:`routes.py`
+........................................
 
 OpenBook app structure focuses on models, admin, and REST APIs. We do not define server-rendered
-pages and thus typically don't have app-level ``urls.py`` files. Instead, each app provides
-API routes through ``routes.py``, and the project registers them from ``src/openbook/urls.py``.
-To this end, each app must expose a ``register_api_routes(router, prefix)`` function in
-``routes.py``, that registers the URL routes for the REST API endpoints.
+pages and thus typically do not have app-level :file:`urls.py` files. Instead, each app provides
+API routes through :file:`routes.py`, and the project registers them from :file:`src/openbook/urls.py`.
+To this end, each app must expose a :func:`register_api_routes` function in :file:`routes.py`
+that registers the URL routes for the REST API endpoints.
 
 Example:
 
@@ -164,10 +164,10 @@ Example:
 
 
    def register_api_routes(router, prefix):
-       # Will be filled-in later, when REST API viewsets are defined
+       # Will be filled in later, when REST API viewsets are defined
        pass
 
-Then wire the app-level route registration into ``src/openbook/urls.py`` like so:
+Then wire the app-level route registration into :file:`src/openbook/urls.py` like so:
 
 .. code-block:: python
 
@@ -177,7 +177,7 @@ Then wire the app-level route registration into ``src/openbook/urls.py`` like so
    # Existing register_<app_label>_api_routes
    register_learning_progress_api_routes(api_router, "learning_progress")
 
-.. note ::
+.. note::
 
    Note again the pattern, where the app label is used for consistent naming.
 
@@ -187,10 +187,10 @@ Checklist Before Moving On
 Before implementing models and APIs, verify that:
 
 1. The app lives under ``src/openbook/<app_name>``.
-2. The app is listed in ``INSTALLED_APPS``.
-3. ``apps.py`` defines ``name``, ``label``, and ``verbose_name``.
-4. ``routes.py`` exposes ``register_api_routes(router, prefix)``.
-5. ``src/openbook/urls.py`` imports and calls your route registration function.
+2. The app is listed in :attr:`INSTALLED_APPS`.
+3. :file:`apps.py` defines :attr:`name`, :attr:`label`, and :attr:`verbose_name`.
+4. :file:`routes.py` exposes :func:`register_api_routes`.
+5. :file:`src/openbook/urls.py` imports and calls your route registration function.
 
 
 -------------------
@@ -199,15 +199,15 @@ Creating New Models
 
 Models are the heart of each Django app. They define the database schema, enforce data integrity,
 and provide the Python interface for all persistent data. In OpenBook, every major domain concept
-gets its own model file inside the app's ``models/`` directory, mirroring the structure of the
-``admin/`` and ``viewsets/`` directories that build on top of it.
+gets its own model file inside the app's :file:`models/` directory, mirroring the structure of the
+:file:`admin/` and :file:`viewsets/` directories that build on top of it.
 
 Create the Model
 ................
 
-Create one Python file per domain concept inside ``models/``. Closely related helper models ---
+Create one Python file per domain concept inside :file:`models/`. Closely related helper models ---
 such as a translation companion for internationalised text fields --- live in the same file.
-Continuing the learning progress example, let's add ``models/learning_goal.py``.
+Continuing the learning progress example, let's add :file:`models/learning_goal.py`.
 
 Each model class is built by inheriting the appropriate mixin classes together with any
 domain-specific fields. A minimal starting point looks like this:
@@ -256,21 +256,21 @@ domain-specific fields. A minimal starting point looks like this:
          def __str__(self):
             return f"{self.name} ({self.get_level_display()})"
 
-Always list ``UUIDMixin`` first in the inheritance chain, followed by other core mixins, and auth
+Always list :class:`UUIDMixin` first in the inheritance chain, followed by other core mixins, and auth
 mixins last. This order keeps Python's Method Resolution Order (MRO) predictable and ensures that
-the ``save()`` and ``clean()`` overrides defined in each mixin chain correctly through
-``super()``.
+the :meth:`save` and :meth:`clean` overrides defined in each mixin chain correctly through
+:func:`super`.
 
-Note, how model fields are declared as class attributes using Django's ``models.<FieldType>`` classes.
-Each field type maps to a Python value type and a database column type, e.g. ``models.CharField`` for
-short text, ``models.TextField`` for longer text, ``models.BooleanField`` for true/false flags,
-and ``models.ForeignKey`` for relations.
+Note how model fields are declared as class attributes using Django's :class:`models.<FieldType>` classes.
+Each field type maps to a Python value type and a database column type, e.g. :class:`models.CharField` for
+short text, :class:`models.TextField` for longer text, :class:`models.BooleanField` for true/false flags,
+and :class:`models.ForeignKey` for relations.
 
 .. hint::
 
-   In OpenBook, prefer explicit ``verbose_name`` values wrapped in ``_()`` for all user-facing
+   In OpenBook, prefer explicit :attr:`verbose_name` values wrapped in :func:`_` for all user-facing
    fields, so labels in admin forms and API-driven UIs stay consistent and translatable. Also
-   use ``get_level_display()`` in ``__str__()`` whenever a field defines ``choices``. This returns
+   use :meth:`get_level_display` in :meth:`__str__` whenever a field defines :attr:`choices`. This returns
    the human-readable (and translated) label instead of the raw stored value.
 
 .. seealso::
@@ -284,15 +284,15 @@ and ``models.ForeignKey`` for relations.
 Add Meta Class and Utility Methods
 ..................................
 
-Every model must define an inner ``Meta`` class with at least ``verbose_name`` and
-``verbose_name_plural``. Both values must be wrapped in ``_()`` for translation. Add
-``ordering`` to define a sensible default sort order, and declare ``indexes`` and
-``constraints`` as the domain requires
+Every model must define an inner :class:`Meta` class with at least :attr:`verbose_name` and
+:attr:`verbose_name_plural`. Both values must be wrapped in :func:`_` for translation. Add
+:attr:`ordering` to define a sensible default sort order, and declare :attr:`indexes` and
+:attr:`constraints` as the domain requires.
 
-Additionaly, provide a ``__str__()`` method so the model displays as a human-readable string
-in the admin and in log output. When ``NameDescriptionMixin`` is included it already supplies a
-``__str__`` that returns ``self.name``, so override it only when the default output is not
-descriptive enough. ``ActiveInactiveMixin`` provides a companion ``__str__`` that returns
+Additionally, provide a :meth:`__str__` method so the model displays as a human-readable string
+in the admin and in log output. When :class:`NameDescriptionMixin` is included it already supplies a
+:meth:`__str__` that returns ``self.name``, so override it only when the default output is not
+descriptive enough. :class:`ActiveInactiveMixin` provides a companion :meth:`__str__` that returns
 ``"(inactive)"`` when the object is inactive, which you can compose into a richer string
 like shown below.
 
@@ -313,11 +313,11 @@ like shown below.
       def __str__(self):
          return f"{self.name} {ActiveInactiveMixin.__str__(self)}".strip()
 
-On top of that you may override additional methods to fine-tune model behaviour as well as
-add domain-logic in additional free-style methods. But always consider that domain-logic
-methods may modify a model instance's values but should not call ``save()`` to persist the
-changes. Calling ``save()`` or any other method modifying the database should be handled at
-the call-site.
+On top of that, you may override additional methods to fine-tune model behaviour as well as
+add domain logic in additional freestyle methods. But always consider that domain-logic
+methods may modify a model instance's values but should not call :meth:`save` to persist the
+changes. Calling :meth:`save` or any other method that modifies the database should be handled at
+the call site.
 
 Add Companion Models for Translations etc.
 ..........................................
@@ -327,10 +327,10 @@ language-neutral and store translatable texts in a companion model in the same s
 This keeps core business fields stable while allowing any number of translations per object.
 Use this pattern for companion translation models:
 
-1. Inherit from ``UUIDMixin`` and ``TranslatableMixin``.
-2. Add a ``parent`` foreign key to the main model with ``related_name="translations"``.
+1. Inherit from :class:`UUIDMixin` and :class:`TranslatableMixin`.
+2. Add a :attr:`parent` foreign key to the main model with ``related_name="translations"``.
 3. Add only the fields that are truly language-dependent.
-4. Inherit the companion model ``Meta`` class from ``TranslatableMixin.Meta``.
+4. Inherit the companion model :class:`Meta` class from :class:`TranslatableMixin.Meta`.
 
 Example:
 
@@ -358,10 +358,10 @@ Example:
 Keep translation companion models close to their parent model in structure and naming so that
 admin, API serializers, and tests can follow the same conventions across apps.
 
-Export From ``models/__init__.py``
-..................................
+Export From :file:`models/__init__.py`
+......................................
 
-After creating the model file, import all classes in ``models/__init__.py`` so Django's
+After creating the model file, import all classes in :file:`models/__init__.py` so Django's
 app registry discovers it during startup and migration commands include it:
 
 .. code-block:: python
@@ -372,91 +372,91 @@ app registry discovers it during startup and migration commands include it:
 Available Core Model Mixins
 ...........................
 
-The core app provides abstract mixin classes in ``openbook.core.models.mixins`` that capture
-common model patterns. ``UUIDMixin`` must always appear first in the inheritance chain.
+The core app provides abstract mixin classes in :mod:`openbook.core.models.mixins` that capture
+common model patterns. :class:`UUIDMixin` must always appear first in the inheritance chain.
 Beyond that, inherit only the mixins that match the model's actual requirements.
 
-**UUID primary key** --- ``UUIDMixin`` replaces Django's default auto-increment integer primary
+**UUID primary key** --- :class:`UUIDMixin` replaces Django's default auto-increment integer primary
 key with a UUID. Including this mixin first in the MRO is mandatory for all OpenBook models.
 It prevents predictable IDs in API responses and URLs, and avoids accidental enumeration of
 resources by external clients.
 
-**Name and description** --- ``NameDescriptionMixin`` adds name, description, and text format
-fields, where the description can be plain text, HTML, or Markdown. Provides a ``__str__`` that
-returns ``self.name`` and a ``get_formatted_description()`` helper for rendering.
+**Name and description** --- :class:`NameDescriptionMixin` adds name, description, and text format
+fields, where the description can be plain text, HTML, or Markdown. Provides a :meth:`__str__` that
+returns ``self.name`` and a :meth:`get_formatted_description` helper for rendering.
 
-**Active/inactive flag** --- ``ActiveInactiveMixin`` adds an ``is_active`` boolean field. Its
-``__str__`` returns the string "(inactive)" when the object is not active, which is useful for
-composing a richer ``__str__`` on the main model.
+**Active/inactive flag** --- :class:`ActiveInactiveMixin` adds an :attr:`is_active` boolean field. Its
+:meth:`__str__` returns the string "(inactive)" when the object is not active, which is useful for
+composing a richer :meth:`__str__` on the main model.
 
-**Validity time span** --- ``ValidityTimeSpanMixin`` adds start and end date fields with
+**Validity time span** --- :class:`ValidityTimeSpanMixin` adds start and end date fields with
 built-in validation that the end date comes after the start date. Use this for content that is
 only valid within a defined calendar window.
 
-**Duration** --- ``DurationMixin`` adds a duration expressed in configurable units: minutes,
+**Duration** --- :class:`DurationMixin` adds a duration expressed in configurable units: minutes,
 hours, days, weeks, months, or years. Use this for time-boxed activities such as assignments or
 timed exercises.
 
-**URL-friendly slug** --- ``UniqueSlugMixin`` and ``NonUniqueSlugMixin`` each add a ``slug``
+**URL-friendly slug** --- :class:`UniqueSlugMixin` and :class:`NonUniqueSlugMixin` each add a :attr:`slug`
 field. Use the globally unique variant when the slug must never repeat across the whole table.
-Use the context-scoped variant together with a ``UniqueConstraint`` in the model's ``Meta``
+Use the context-scoped variant together with a :class:`UniqueConstraint` in the model's :class:`Meta`
 class when uniqueness only applies within a parent context, for example a slug that must be
 unique per course but not globally.
 
-**Translation companion marker** --- ``TranslatableMixin`` marks a companion model as a set of
+**Translation companion marker** --- :class:`TranslatableMixin` marks a companion model as a set of
 translations for a parent model. Create a separate class holding the translatable text fields
-and use the provided ``LanguageField()`` helper for the language reference. See the companion
+and use the provided :class:`LanguageField` helper for the language reference. See the companion
 translations pattern later in this section for a full example.
 
-**File upload metadata** --- ``FileUploadMixin`` is for models that store uploaded files. It
+**File upload metadata** --- :class:`FileUploadMixin` is for models that store uploaded files. It
 automatically populates file name, file size, and MIME type fields when the model is saved.
 
 Additional Auth Model Mixins
 ............................
 
 In addition to the core mixins, the auth app adds mixins that connect models to the role-based
-permission system. These live in ``openbook.auth.models.mixins``.
+permission system. These live in :mod:`openbook.auth.models.mixins`.
 
-**Audit trail** --- ``CreatedModifiedByMixin`` records who created and last modified an object,
-and when. The overridden ``save()`` reads the currently logged-in user from the request context
+**Audit trail** --- :class:`CreatedModifiedByMixin` records who created and last modified an object,
+and when. The overridden :meth:`save` reads the currently logged-in user from the request context
 and populates these fields automatically. Add this mixin to most non-trivial models to support
 auditing and accountability.
 
-**Permission scope boundary** --- ``ScopedRolesMixin`` makes the model itself a top-level
+**Permission scope boundary** --- :class:`ScopedRolesMixin` makes the model itself a top-level
 permission scope. A scope owns an owner and carries relations for roles, role assignments,
 enrollment methods, access requests, and public permissions. Use this only for container objects
 such as courses --- models that define a permission boundary for everything they contain.
 
-**Scope membership** --- ``ScopeMixin`` is for models that belong to a scope rather than define
+**Scope membership** --- :class:`ScopeMixin` is for models that belong to a scope rather than define
 one. It adds generic foreign key fields pointing at the parent scope object. This is used
 internally by models such as enrollment methods and access requests.
 
-**Object-level permission check** --- ``RoleBasedObjectPermissionsMixin`` adds a
-``has_obj_perm()`` method for checking object-level permissions on composite models, for example
+**Object-level permission check** --- :class:`RoleBasedObjectPermissionsMixin` adds a
+:meth:`has_obj_perm` method for checking object-level permissions on composite models, for example
 course materials, where permission checks should be delegated to a parent scope. Override
-``get_scope()`` to return the parent object.
+:meth:`get_scope` to return the parent object.
 
 .. note::
 
-   In practice most feature models inherit ``UUIDMixin``, one or two content-describing core
-   mixins, and ``CreatedModifiedByMixin``. Only top-level container objects that define a
-   permission boundary, like courses, also need ``ScopedRolesMixin``.
+   In practice most feature models inherit :class:`UUIDMixin`, one or two content-describing core
+   mixins, and :class:`CreatedModifiedByMixin`. Only top-level container objects that define a
+   permission boundary, like courses, also need :class:`ScopedRolesMixin`.
 
 Common Field Options
 ....................
 
-In practice, most field declarations combine a type with options such as ``verbose_name``,
-``default``, ``choices``, ``null``, ``blank``, ``db_index``, ``unique``, ``help_text``, and
-``related_name`` (for relations). Use these options intentionally, because each one affects
+In practice, most field declarations combine a type with options such as :attr:`verbose_name`,
+:attr:`default`, :attr:`choices`, :attr:`null`, :attr:`blank`, :attr:`db_index`, :attr:`unique`, :attr:`help_text`, and
+:attr:`related_name` (for relations). Use these options intentionally, because each one affects
 validation, database constraints, query performance, or API behavior.
 
-**Human-readable label** --- Always supply an explicit ``verbose_name`` wrapped in ``_()`` so
+**Human-readable label** --- Always supply an explicit :attr:`verbose_name` wrapped in :func:`_` so
 the label is translatable. It appears in admin forms, error messages, and API schema
 documentation. Without it Django generates a label from the attribute name, which can be
 misleading (for example ``"course_id"`` instead of ``"Course"``).
 
-**Database nullability vs. form emptiness** --- ``null`` controls whether the database column
-may store NULL; ``blank`` controls whether Django forms and serializers accept an empty value.
+**Database nullability vs. form emptiness** --- :attr:`null` controls whether the database column
+may store NULL; :attr:`blank` controls whether Django forms and serializers accept an empty value.
 For text fields, prefer ``null=False`` and ``blank=True`` when the value is optional, so you
 store an empty string rather than mixing two representations of "no value" in the same column.
 For non-text fields such as date and time fields, model optional values with both ``null=True``
@@ -467,17 +467,17 @@ impossible by business rule, for example a globally unique external ID. That con
 creates a database index as a side effect. When duplicate values are allowed but lookups are
 frequent --- for example filtering by status or slug --- use ``db_index=True`` instead.
 
-**Safe initial values** --- Add a ``default`` only when there is one genuinely correct
+**Safe initial values** --- Add a :attr:`default` only when there is one genuinely correct
 initial value for the domain. Avoid hiding missing data with an arbitrary default.
 
-**Fixed enumerations** --- Use ``choices`` for small, stable sets of values such as workflow
+**Fixed enumerations** --- Use :attr:`choices` for small, stable sets of values such as workflow
 states, taxonomy levels, or category sets. Define the choices as an inner class on the model
 so they travel with the model and are easy to reference from tests and serializers.
 
-**Editorial guidance** --- Add ``help_text`` for any field where an editor might misunderstand
+**Editorial guidance** --- Add :attr:`help_text` for any field where an editor might misunderstand
 the expected meaning or format. The text appears as a hint beneath the widget in admin forms.
 
-**Reverse relation name** --- Always set an explicit ``related_name`` on foreign keys and
+**Reverse relation name** --- Always set an explicit :attr:`related_name` on foreign keys and
 many-to-many fields. A clear name keeps reverse lookups readable and avoids clashes when the
 same model is referenced from multiple places.
 
@@ -524,13 +524,13 @@ Checklist Before Moving On
 
 Before you continue with admin and API integration, verify that:
 
-1. The model is placed in the correct file under ``models/`` (one concept plus companion models).
-2. Required core/auth mixins are inherited, with ``UUIDMixin`` first.
-3. User-facing labels (``verbose_name`` and choice labels) are wrapped in ``_()``.
-4. Field options are intentional, especially ``null`` vs ``blank`` and ``unique`` vs ``db_index``.
-5. ``Meta`` includes at least ``verbose_name`` and ``verbose_name_plural``, plus optional ordering/indexes.
-6. ``__str__()`` returns a concise, human-readable identifier.
-7. The model is imported in ``models/__init__.py``.
+1. The model is placed in the correct file under :file:`models/` (one concept plus companion models).
+2. Required core/auth mixins are inherited, with :class:`UUIDMixin` first.
+3. User-facing labels (:attr:`verbose_name` and choice labels) are wrapped in :func:`_`.
+4. Field options are intentional, especially :attr:`null` vs :attr:`blank` and :attr:`unique` vs :attr:`db_index`.
+5. :class:`Meta` includes at least :attr:`verbose_name` and :attr:`verbose_name_plural`, plus optional ordering/indexes.
+6. :meth:`__str__` returns a concise, human-readable identifier.
+7. The model is imported in :file:`models/__init__.py`.
 
 
 --------------------------
@@ -540,26 +540,26 @@ Adding Models to the Admin
 Django Admin is the primary tool for administrators and developers to inspect live data, diagnose
 problems, and create test content during development before a full UI exists. For this reason,
 every model should have an admin integration. The work follows the same file-mirroring pattern
-as models and viewsets: one source file per domain concept in the ``admin/`` directory, wired
-together through ``__init__.py``.
+as models and viewsets: one source file per domain concept in the :file:`admin/` directory, wired
+together through :file:`__init__.py`.
 
 Create the Admin File
 .....................
 
-To integrate a model into the Django Admin create a new file in the ``admin/`` directory with
-the same name as its source file in the ``model/`` directory. Within the new file define a
-class that inherits from ``CustomModelAdmin``, imported from ``openbook.admin``. This base class
+To integrate a model into the Django Admin, create a new file in the :file:`admin/` directory with
+the same name as its source file in the :file:`models/` directory. Within the new file, define a
+class that inherits from :class:`CustomModelAdmin`, imported from :mod:`openbook.admin`. This base class
 combines three things, which is why, unlike in traditional Django projects, you never touch
-Django's built-in ``ModelAdmin`` class directly:
+Django's built-in :class:`ModelAdmin` class directly:
 
 1. Django Unfold for the styled admin UI, and
 2. DjangoQL for advanced search expressions in the change list,
 3. Django Import/Export for CSV, YAML, and XLSX data exchange.
 
-A minimal admin class needs only the ``model``, ``list_display``, ``ordering``, and
-``search_fields`` properties to link it to the model class and name the fields used
-in the overview list.  Again, using learning goals as an example, the file would be
-named ``admin/learning_goal.py`` (like the model file) and have the following conent:
+A minimal admin class needs only the :attr:`model`, :attr:`list_display`, :attr:`ordering`, and
+:attr:`search_fields` properties to link it to the model class and name the fields used
+in the overview list. Again, using learning goals as an example, the file would be
+named :file:`admin/learning_goal.py` (like the model file) and have the following content:
 
 .. code-block:: python
 
@@ -583,10 +583,10 @@ Isn't Django great? 🙂
    Always import models from the file in which they are defined, e.g. ``..models.learning_goal``.
    Never import them from ``..models`` to reduce the risk of circular imports.
 
-Register in ``__init__.py``
-...........................
+Register in :file:`__init__.py`
+...............................
 
-Once the class exists, register it in ``admin/__init__.py``:
+Once the class exists, register it in :file:`admin/__init__.py`:
 
 .. code-block:: python
 
@@ -596,14 +596,14 @@ Once the class exists, register it in ``admin/__init__.py``:
 
    admin_site.register(models.LearningGoal, LearningGoalAdmin)
 
-The order of ``register()`` calls determines the order in which models appear in the admin
+The order of :meth:`register()` calls determines the order in which models appear in the admin
 sidebar. So, register models in a logical order that makes sense to administrators.
 
 Configuring the Change List
 ...........................
 
 The following admin class attributes control the change list behaviour. Look at other admin
-classes nearby to see how they are typically used and play aroudn with their values to achieve
+classes nearby to see how they are typically used and play around with their values to achieve
 best results.
 
 .. important::
@@ -612,37 +612,37 @@ best results.
    all users. Because, for administrators it really *is* the primary user interface to
    work with the models.
 
-**Visible columns** --- ``list_display`` sets which fields appear as columns. Keep it focused:
+**Visible columns** --- :attr:`list_display` sets which fields appear as columns. Keep it focused:
 show the fields needed to identify and distinguish records at a glance.
 
-**Clickable links** --- ``list_display_links`` specifies which columns act as links to the
+**Clickable links** --- :attr:`list_display_links` specifies which columns act as links to the
 edit page. Without it, only the first column is a link by default. To simplify navigation a
 little, try to make all fields clickable.
 
-**Related field prefetching** --- ``list_select_related`` names the Foreign Key fields
+**Related field prefetching** --- :attr:`list_select_related` names the Foreign Key fields
 that Django should join in the same query as the list, avoiding one extra query per row.
-This usually enhances the performance considerably.
+This usually enhances performance considerably.
 
-**Default sort** --- ``ordering`` sets the default sort order for the change list. Mirror the
-``ordering`` declared in the model's ``Meta`` class to keep behaviour consistent.
+**Default sort** --- :attr:`ordering` sets the default sort order for the change list. Mirror the
+:attr:`ordering` declared in the model's :class:`Meta` class to keep behaviour consistent.
 
-**Full-text search** --- ``search_fields`` drives the DjangoQL search bar. Use double
+**Full-text search** --- :attr:`search_fields` drives the DjangoQL search bar. Use double
 underscore notation to traverse relations: ``"course__name"`` searches the related course's
 name.
 
-**Filter sidebar** --- ``list_filter`` populates the right-hand filter panel. Use plain field
+**Filter sidebar** --- :attr:`list_filter` populates the right-hand filter panel. Use plain field
 names for simple boolean or choice fields, and ``(field, RelatedOnlyFieldListFilter)`` tuples
 for Foreign Key fields where you want to restrict the list to values that are actually in use.
 
-**Read-only fields** --- ``readonly_fields`` marks fields that should be visible in the edit
+**Read-only fields** --- :attr:`readonly_fields` marks fields that should be visible in the edit
 form but cannot be changed by the admin user. Always include the audit trail field names here
 so they are visible but protected from accidental edits.
 
 Audit Trail Integration
 .......................
 
-When a model uses ``CreatedModifiedByMixin``, import the four helper constants from
-``openbook.auth.admin.mixins.audit`` and spread them into the relevant admin class attributes:
+When a model uses :class:`CreatedModifiedByMixin`, import the four helper constants from
+:mod:`openbook.auth.admin.mixins.audit` and spread them into the relevant admin class attributes:
 
 .. code-block:: python
 
@@ -665,31 +665,31 @@ When a model uses ``CreatedModifiedByMixin``, import the four helper constants f
 
 The four constants expand as follows:
 
-**Column names** --- ``created_modified_by_fields`` is a list of four field names:
+**Column names** --- :attr:`created_modified_by_fields` is a list of four field names:
 ``created_by``, ``created_at``, ``modified_by``, and ``modified_at``. Spread it into
-``list_display`` to show audit columns in the change list, and into ``readonly_fields`` to
+:attr:`list_display` to show audit columns in the change list, and into :attr:`readonly_fields` to
 prevent manual edits.
 
-**Prefetch hints** --- ``created_modified_by_related`` lists the two Foreign Key names for the
-user relations. Spread it into ``list_select_related`` to avoid N+1 queries when the list renders.
+**Prefetch hints** --- :attr:`created_modified_by_related` lists the two Foreign Key names for the
+user relations. Spread it into :attr:`list_select_related` to avoid N+1 queries when the list renders.
 
-**Filter sidebar** --- ``created_modified_by_filter`` is a list of filter entries (plain
-strings and ``(field, FilterClass)`` tuples). Spread it into ``list_filter``.
+**Filter sidebar** --- :attr:`created_modified_by_filter` is a list of filter entries (plain
+strings and ``(field, FilterClass)`` tuples). Spread it into :attr:`list_filter`.
 
-**Fieldset** --- ``created_modified_by_fieldset`` is a ready-made fieldset tuple rendered as
-a tab. Always append it as the last entry in ``fieldsets``.
+**Fieldset** --- :attr:`created_modified_by_fieldset` is a ready-made fieldset tuple rendered as
+a tab. Always append it as the last entry in :attr:`fieldsets`.
 
 Organising the Edit Form with Fieldsets
 .......................................
 
 By default Django Admin renders all editable fields in a single unstyled block. Fieldsets
 group fields into named sections and can optionally render as Django Unfold tabs, making
-longer forms easier to navigate. To this end, define ``fieldsets`` for the edit/change view
-and optionally -- when different -- ``add_fieldsets`` for the create view.
+longer forms easier to navigate. To this end, define :attr:`fieldsets` for the edit/change view
+and optionally -- when different -- :attr:`add_fieldsets` for the create view.
 
 .. caution::
 
-   When both ``fieldsets`` and ``add_fieldsets`` are present, the two must not be identical.
+   When both :attr:`fieldsets` and :attr:`add_fieldsets` are present, the two must not be identical.
    The latter must omit auto-populated fields such as the audit trail, because those fields
    do not exist yet on first save and their presence causes a crash.
 
@@ -737,17 +737,17 @@ by side on the same row: ``("course", "level")`` renders both on one line.
 tabs for secondary or less frequently edited groups such as description text, validity
 settings, or audit information.
 
-**Audit fieldset** --- Always end ``fieldsets`` with ``created_modified_by_fieldset`` when the
-model uses ``CreatedModifiedByMixin``. Never include it in ``add_fieldsets``.
+**Audit fieldset** --- Always end :attr:`fieldsets` with :attr:`created_modified_by_fieldset` when the
+model uses :class:`CreatedModifiedByMixin`. Never include it in :attr:`add_fieldsets`.
 
 Inline Views
 ............
 
 Related objects such as translation companion models can be embedded directly in the parent
 model's change page using inline classes. This is more ergonomic than requiring administrators
-to navigate to a separate list to manage translations. To do so, define a ``TabularInline``
-(or ``StackedInline`` for more complex layouts) in the same admin file and reference it in the
-parent admin class via ``inlines``:
+to navigate to a separate list to manage translations. To do so, define a :class:`TabularInline`
+(or :class:`StackedInline` for more complex layouts) in the same admin file and reference it in the
+parent admin class via :attr:`inlines`:
 
 .. code-block:: python
 
@@ -774,14 +774,14 @@ parent admin class via ``inlines``:
 
 Our conventions are:
 
-**No empty placeholder** --- Always set ``extra = 0`` to suppress the empty placeholder rows
+**No empty placeholder** --- Always set :attr:`extra` to ``0`` to suppress the empty placeholder rows
 that Django renders by default.
 
 **Link to full admin page** -- If the inlined model has a proper admin page, set
-``show_change_link = True`` so that administrators can open the inline record on its own page
+:attr:`show_change_link` to ``True`` so that administrators can open the inline record on its own page
 for more detailed work.
 
-**Render as tabs** --- Consider, setting ``tab = True`` to render the inline as a separate Django
+**Render as tabs** --- Consider setting :attr:`tab` to ``True`` to render the inline as a separate Django
 Unfold tab, keeping the main form uncluttered.
 
 **Prefix private classes** --- Prefix inline class names with an underscore to signal that they are
@@ -790,11 +790,11 @@ private implementation details of the file.
 Import/Export Support
 .....................
 
-In OpenBook every admin class should support file-based data import/export so that administrators
+In OpenBook, every admin class should support file-based data import/export so that administrators
 can export data for review, import test data, or migrate entries between environments. This requires
-are resource class that must be derived from ``ImportExportModelResource`` (in ``openbook.admin``)
-and declare the field list in its inner ``Meta`` class. Wire it into the admin class via the
-``resource_classes`` property like so:
+a resource class that must be derived from :class:`ImportExportModelResource` (in :mod:`openbook.admin`)
+and declare the field list in its inner :class:`Meta` class. Wire it into the admin class via the
+:attr:`resource_classes` property like so:
 
 .. code-block:: python
 
@@ -824,14 +824,14 @@ and declare the field list in its inner ``Meta`` class. Wire it into the admin c
 
 .. note::
 
-   Mind the square brackets around the ressource class.
+   Mind the square brackets around the resource class.
 
 Always include ``"id"`` and ``"delete"`` as the first two fields. The ``delete`` column is a
-convention from ``ImportExportModelResource`` that lets users mark rows for deletion (provided
-thw file rows contain valid ids) by setting the value in the file to ``true``.
+convention from :class:`ImportExportModelResource` that lets users mark rows for deletion (provided
+the file rows contain valid IDs) by setting the value in the file to ``true``.
 
 For foreign keys, boolean fields, or many-to-many fields that
-cannot be represented as plain text, add a ``Field()`` declaration with an appropriate widget
+cannot be represented as plain text, add a :class:`Field` declaration with an appropriate widget
 class. The advanced patterns subsection covers this for scope-related fields.
 
 .. seealso::
@@ -842,14 +842,14 @@ class. The advanced patterns subsection covers this for scope-related fields.
 Advanced: Scope-specific Patterns
 ..................................
 
-Models that use ``ScopeMixin`` (i.e. belong to a permission scope) or ``ScopedRolesMixin``
+Models that use :class:`ScopeMixin` (i.e. belong to a permission scope) or :class:`ScopedRolesMixin`
 (i.e. define a permission scope) require additional mixins for the form and resource classes.
-All of these live in ``openbook.auth.admin.mixins.scope``.
+All of these live in :mod:`openbook.auth.admin.mixins.scope`.
 
-**Scope-member models** --- When a model references a scope via ``ScopeMixin``, inherit the
-resource class from ``ScopeResourceMixin`` instead of ``ImportExportModelResource``. This
+**Scope-member models** --- When a model references a scope via :class:`ScopeMixin`, inherit the
+resource class from :class:`ScopeResourceMixin` instead of :class:`ImportExportModelResource`. This
 mixin handles import and export of the scope reference, resolving scope objects by slug during
-import. For the form, inherit from ``ScopeFormMixin`` to replace the raw UUID widget with a
+import. For the form, inherit from :class:`ScopeFormMixin` to replace the raw UUID widget with a
 dynamically loaded select box that shows scope objects by name and restricts scope type choices
 to valid options.
 
@@ -880,9 +880,9 @@ to valid options.
        resource_classes = [EnrollmentMethodResource]
        # ...
 
-**Scope-owner models** --- When a model defines a permission scope via ``ScopedRolesMixin``,
-inherit the resource class from ``ScopedRolesResourceMixin`` to handle export of the owner and
-public permissions fields. For the form, inherit from ``ScopedRolesFormMixin`` to restrict
+**Scope-owner models** --- When a model defines a permission scope via :class:`ScopedRolesMixin`,
+inherit the resource class from :class:`ScopedRolesResourceMixin` to handle export of the owner and
+public permissions fields. For the form, inherit from :class:`ScopedRolesFormMixin` to restrict
 visible permissions to those allowed for the scope type.
 
 .. code-block:: python
@@ -915,13 +915,13 @@ visible permissions to those allowed for the scope type.
 
 .. important::
 
-   Note that ``ScopedRolesResourceMixin`` must come before ``ImportExportModelResource`` in the
+   Note that :class:`ScopedRolesResourceMixin` must come before :class:`ImportExportModelResource` in the
    inheritance chain so that its field declarations take precedence.
 
 **Scope-role fields** --- Models that combine a scope reference with a role field additionally
-need ``ScopeRoleFieldFormMixin`` on the form class to restrict the role choices to roles
+need :class:`ScopeRoleFieldFormMixin` on the form class to restrict the role choices to roles
 defined within the selected scope. The corresponding inline class should inherit
-``ScopeRoleFieldInlineMixin`` to apply the same restriction inside inline forms.
+:class:`ScopeRoleFieldInlineMixin` to apply the same restriction inside inline forms.
 
 .. code-block:: python
 
@@ -950,12 +950,12 @@ defined within the selected scope. The corresponding inline class should inherit
        fields      = ["name", "role", "is_active"]
        extra       = 0
 
-When both ``ScopeFormMixin`` and ``ScopeRoleFieldFormMixin`` are needed, merge their ``Media``
+When both :class:`ScopeFormMixin` and :class:`ScopeRoleFieldFormMixin` are needed, merge their :class:`Media`
 declarations explicitly as shown above. The same form class is then wired into the admin class
-via the ``form`` attribute.
+via the :attr:`form` attribute.
 
-The module also exports the helper constants ``scope_type_filter`` and
-``permissions_fieldset``, which can be spread into ``list_filter`` and ``fieldsets``
+The module also exports the helper constants :attr:`scope_type_filter` and
+:attr:`permissions_fieldset`, which can be spread into :attr:`list_filter` and :attr:`fieldsets`
 respectively, in the same way as the audit trail helpers.
 
 .. code-block:: python
@@ -982,13 +982,13 @@ Checklist Before Moving On
 Before continuing to REST API integration, verify that:
 
 1. The admin file is placed under ``admin/``, mirroring the model file path.
-2. The admin class inherits from ``CustomModelAdmin``.
-3. A resource class is defined and listed in ``resource_classes``.
-4. Audit trail constants are used when ``CreatedModifiedByMixin`` is in the model's MRO.
-5. ``readonly_fields`` includes the audit trail field names.
-6. Both ``fieldsets`` and ``add_fieldsets`` are defined, and ``add_fieldsets`` omits the audit fieldset.
+2. The admin class inherits from :class:`CustomModelAdmin`.
+3. A resource class is defined and listed in :attr:`resource_classes`.
+4. Audit trail constants are used when :class:`CreatedModifiedByMixin` is in the model's MRO.
+5. :attr:`readonly_fields` includes the audit trail field names.
+6. Both :attr:`fieldsets` and :attr:`add_fieldsets` are defined, and :attr:`add_fieldsets` omits the audit fieldset.
 7. Companion models (e.g. translations) are covered by an inline class.
-8. The admin class is registered in ``admin/__init__.py`` in the correct position.
+8. The admin class is registered in :file:`admin/__init__.py` in the correct position.
 
 .. seealso::
 
@@ -1014,7 +1014,7 @@ To pull this off, every model needs three things:
 
 1. a **ViewSet** that handles HTTP requests,
 2. a **Serializer** that translates between Python objects and JSON, and
-3. a **FilterSet class** that enables clients to query the list endpoint.
+3. a **FilterSet** class that enables clients to query the list endpoint.
 
 Building on the previous tutorials, this section explains how to work with Django REST Framework and some
 OpenBook utilities to expose a model through the REST API.
@@ -1023,7 +1023,7 @@ Create the ViewSet
 ..................
 
 In this tutorial we are using the learning goals model from the tutorials above and expose it
-via the REST API. To do so, create a file called ``viewsets/learning_goal.py``, again following
+via the REST API. To do so, create a file called :file:`viewsets/learning_goal.py`, again following
 the convention to mirror the file structure of the ``models/`` and ``admin/`` directories, and
 put the following minimal ViewSet inside:
 
@@ -1055,53 +1055,53 @@ put the following minimal ViewSet inside:
 
 .. note::
 
-   We will cover the ``LearningGoalSerializer`` and ``LearningGoalFilter`` classes soon.
+   We will cover the :class:`LearningGoalSerializer` and :class:`LearningGoalFilter` classes soon.
    They must be defined at the beginning of the same file for the example to work.
 
 From top to bottom, this code snippet does the following:
 
-**OpenAPI schema extension** --- The class decorator ``@extend_schema`` is adds a new section to
-the OpenAPI webservice documentation. This keeps all related endpoints concerning a given model
-nicely together in the API browser. Similarly, the ``__doc__`` attribute defines the long description
+**OpenAPI schema extension** --- The class decorator :func:`@extend_schema` adds a new section to
+the OpenAPI web service documentation. This keeps all related endpoints concerning a given model
+nicely together in the API browser. Similarly, the :attr:`__doc__` attribute defines the long description
 shown in the documentation.
 
-**Flex fields parameters** --- The class decorator ``@with_flex_fields_parameters()`` adds the
+**Flex fields parameters** --- The class decorator :func:`@with_flex_fields_parameters` adds the
 ``_fields``, ``_omit``, and ``_expand`` query parameters to the OpenAPI schema so clients know
 how to request only the fields they need. The implementation is handled by the filterset class.
 
-**Mixin and base class** --- The ViewSet class must inherit from ``ModelViewSetMixin`` and
-``ModelViewSet`` in exactly this order. The order is important so that the mixin can fill and
-validate the model instance before saving, which in turn  allows Django's object-level permission
+**Mixin and base class** --- The ViewSet class must inherit from :class:`ModelViewSetMixin` and
+:class:`ModelViewSet` in exactly this order. The order is important so that the mixin can fill and
+validate the model instance before saving, which in turn allows Django's object-level permission
 checks to run during creation --- when no database record exists yet.
 
-**Queryset** --- ``queryset`` defines the base database query for all actions. Almost always
+**Queryset** --- :attr:`queryset` defines the base database query for all actions. Almost always
 you want to set it to ``<Model>.objects.all()``. This defines the maximum data that someone
-with all permissions can retrieve. Django REST framework automaticalls adds further filters
+with all permissions can retrieve. Django REST Framework automatically adds further filters
 for permissions and more.
 
-**Serializer and FilterSet classes** --- ``serializer_class`` points to the serializer that converts
-model instances to JSON and validates incoming data. ``filterset_class`` points to the filter class
+**Serializer and FilterSet classes** --- :attr:`serializer_class` points to the serializer that converts
+model instances to JSON and validates incoming data. :attr:`filterset_class` points to the filter class
 that parses the URL query parameters and narrows the queryset accordingly. Both are defined in the
 same file and covered in detail in the sections below.
 
-**Ordering** --- ``ordering`` sets the default sort order for list responses. Mirror the
-``ordering`` declared in the model's ``Meta`` class so that the API and the admin behave
+**Ordering** --- :attr:`ordering` sets the default sort order for list responses. Mirror the
+:attr:`ordering` declared in the model's :class:`Meta` class so that the API and the admin behave
 consistently. Clients can override the sort order at request time using the ``ordering`` query
 parameter.
 
-**Search fields** --- ``search_fields`` drives the full-text search available via the ``search``
+**Search fields** --- :attr:`search_fields` drives the full-text search available via the ``search``
 query parameter. Use double-underscore notation to traverse relations, e.g. ``"course__name"``
-top search the name of the related course. Keep this list focused on the fields that are meaningful
+to search the name of the related course. Keep this list focused on the fields that are meaningful
 for users to search by.
 
 .. hint::
 
-   In OpenBook models by default are not accessible without authentication and propper permissions.
+   In OpenBook, models by default are not accessible without authentication and proper permissions.
    This makes sense most of the time, but doesn't work for the landing page and other public areas.
 
-   If your model must be accessible without login,  add ``AllowAnonymousListRetrieveViewSetMixin``
-   before ``ModelViewSetMixin`` in the inheritance chain.
-   This mixin returns ``AllowAny`` permissions for the ``list`` and ``retrieve`` actions while delegating
+   If your model must be accessible without login, add :class:`AllowAnonymousListRetrieveViewSetMixin`
+   before :class:`ModelViewSetMixin` in the inheritance chain.
+   This mixin returns :class:`AllowAny` permissions for the ``list`` and ``retrieve`` actions while delegating
    all other permission checks to the ViewSet's default permission classes.
 
 Create the Serializer
@@ -1113,7 +1113,7 @@ a model instance. These tasks are delegated to Serializer classes.
 
 In OpenBook Serializer classes are tightly coupled to the ViewSets. For this reason we keep both
 in the same file, defining the Serializer first (because in Python a class cannot be used before
-it is defined). As a second peculiarity OpenBook integrates the ``drf-flex-fields2`` library to
+it is defined). As a second peculiarity, OpenBook integrates the :mod:`drf-flex-fields2` library to
 allow clients to request only those fields they need. A basic implementation looks like this:
 
 .. code-block:: python
@@ -1147,20 +1147,20 @@ allow clients to request only those fields they need. A basic implementation loo
                "modified_by": "openbook.auth.viewsets.user.UserSerializer",
            }
 
-As a bare minimum, Serializer classes must contain an inner ``Meta`` class with the ``model`` property.
+As a bare minimum, serializer classes must contain an inner :class:`Meta` class with the :attr:`model` property.
 Everything else is, in theory, optional. Still, we follow the following conventions:
 
-**Explicit field list** --- Always declare ``fields`` explicitly to prevent accidentally exposing
+**Explicit field list** --- Always declare :attr:`fields` explicitly to prevent accidentally exposing
 sensitive model data. Never use ``"__all__"``. Start the list with ``"id"`` and end with the audit
 trail fields so the JSON output is predictable and consistent across all endpoints.
 
-**Explicit read-only fields** --- Declare ``read_only_fields`` for every field that must not be
+**Explicit read-only fields** --- Declare :attr:`read_only_fields` for every field that must not be
 writable via the API. At a minimum this includes ``"id"``, ``"created_at"``, and ``"modified_at"``,
-since they are populated automatically by the database or by ``CreatedModifiedByMixin``.
+since they are populated automatically by the database or by :class:`CreatedModifiedByMixin`.
 
 **Expandable fields** --- By default, foreign keys are returned with their raw database values.
 However, OpenBook allows the client to append something like ``?_expand=course`` to the request
-URL to expand them into full nested objects. This is enabled by ``expandable_fields`` which
+URL to expand them into full nested objects. This is enabled by :attr:`expandable_fields` which
 references the dotted import path string of the respective Serializers. For many-to-many relations,
 use the tuple form with ``{"many": True}`` as the second element:
 
@@ -1172,27 +1172,27 @@ use the tuple form with ``{"many": True}`` as the second element:
 
 .. important::
 
-   Always reference Serializers from other files with dotted import path string, as shown above.
-   Never directly import the Serializers to avoid circular imports, which are not allows in Python.
+   Always reference serializers from other files with dotted import path strings, as shown above.
+   Never directly import the serializers to avoid circular imports, which are not allowed in Python.
 
 **Custom serializer fields** --- For Foreign Key fields where a raw ID is not meaningful to API
-consumers, add custom field classes as shown above with ``created_by`` and ``modified_by``.
+consumers, add custom field classes as shown above with :attr:`created_by` and :attr:`modified_by`.
 The auth app ships several ready-made fields for the most common cases:
 
-- ``UserField`` returns the username,
-- ``RoleField`` returns the role slug, and
-- ``ScopeTypeField`` returns the fully-qualified model string such as ``"openbook_content.course"``.
+- :class:`UserField` returns the username,
+- :class:`RoleField` returns the role slug, and
+- :class:`ScopeTypeField` returns the fully-qualified model string such as ``"openbook_content.course"``.
 
-The same pattern -- a custom field class that overrides ``to_internal_value`` and ``to_representation``
---- can be applied to any foreign key that needs a human-readable representation. But only spend
+The same pattern -- a custom field class that overrides :meth:`to_internal_value` and :meth:`to_representation` --
+can be applied to any foreign key that needs a human-readable representation. But only spend
 the time when it has clear advantages, not just because UUIDs don't look pretty.
 
 .. hint::
 
-   For scope-owner models that implement ``ScopedRolesMixin``, inherit ``ScopedRolesSerializerMixin``
-   before ``FlexFieldsModelSerializer``. This mixin injects the ``owner``, ``public_permissions``,
-   ``role_assignments``, ``enrollment_methods``, and ``access_requests`` fields along with their
-   expandable variants. Spread its ``Meta`` field lists to avoid duplication:
+   For scope-owner models that implement :class:`ScopedRolesMixin`, inherit :class:`ScopedRolesSerializerMixin`
+   before :class:`FlexFieldsModelSerializer`. This mixin injects the :attr:`owner`, :attr:`public_permissions`,
+   :attr:`role_assignments`, :attr:`enrollment_methods`, and :attr:`access_requests` fields along with their
+   expandable variants. Spread its :class:`Meta` field lists to avoid duplication:
 
    .. code-block:: python
 
@@ -1224,12 +1224,12 @@ the time when it has clear advantages, not just because UUIDs don't look pretty.
                   "modified_by": "openbook.auth.viewsets.user.UserSerializer",
             }
 
-Creat the Filter Class
-......................
+Create the Filter Class
+.......................
 
 In OpenBook every ViewSet class references a FilterSet class defined in the same file so clients can
 not only request a list of model entries but search and narrow the list with query parameters. For this
-the FilterSet class inherits one or more optional mixin classes followed by ``FilterSet`` as the very
+the FilterSet class inherits one or more optional mixin classes followed by :class:`FilterSet` as the very
 last base class. Again, the ordering is important.
 
 .. code-block:: python
@@ -1249,29 +1249,29 @@ last base class. Again, the ordering is important.
                **CreatedModifiedByFilterMixin.Meta.fields,
            }
 
-The ``fields`` dictionary maps field names to tuples of supported lookup expressions. Use
+The :attr:`fields` dictionary maps field names to tuples of supported lookup expressions. Use
 ``("exact",)`` for equality checks and ``("exact", "lte", "gte")`` for date or numeric fields that
 benefit from range queries. Try to cover as many fields as makes sense for clients to filter against.
 
 As always, for cross-cutting concerns, the auth app provides mixins. These are roughly identical
 to the mixins used in the model definitions:
 
-**Audit trail filters** --- ``CreatedModifiedByFilterMixin`` adds ``created_by`` and ``modified_by``
-character filters resolved by username, plus date-range lookups for ``created_at`` and ``modified_at``.
-Use it for any model that includes ``CreatedModifiedByMixin``.
+**Audit trail filters** --- :class:`CreatedModifiedByFilterMixin` adds :attr:`created_by` and :attr:`modified_by`
+character filters resolved by username, plus date-range lookups for :attr:`created_at` and :attr:`modified_at`.
+Use it for any model that includes :class:`CreatedModifiedByMixin`.
 
-**Scope-member filters** --- ``ScopeFilterMixin`` adds ``scope_type`` and ``scope_uuid`` filters for
-models that implement ``ScopeMixin``. The ``scope_type`` parameter accepts either a numeric content-type
+**Scope-member filters** --- :class:`ScopeFilterMixin` adds :attr:`scope_type` and :attr:`scope_uuid` filters for
+models that implement :class:`ScopeMixin`. The ``scope_type`` parameter accepts either a numeric content-type
 primary key or a fully-qualified model string such as ``"openbook_content.course"``.
 
-**Scope-owner filters** --- ``ScopedRolesFilterMixin`` adds an ``owner`` filter resolved by username.
-Use it for models that implement ``ScopedRolesMixin``.
+**Scope-owner filters** --- :class:`ScopedRolesFilterMixin` adds an :attr:`owner` filter resolved by username.
+Use it for models that implement :class:`ScopedRolesMixin`.
 
-**Permission filters** --- ``PermissionsFilterMixin`` and ``PermissionFilterMixin`` filter by Django
+**Permission filters** --- :class:`PermissionsFilterMixin` and :class:`PermissionFilterMixin` filter by Django
 permission strings in the form ``"app_label.codename"``. The former targets M2M permission relations;
 the latter targets a single FK permission field.
 
-In some very special cases, a field cannot be mapped to a standard lookup expression. You need then
+In some very special cases, a field cannot be mapped to a standard lookup expression. You then need
 to define a new property for the field and pass it a filter method like so:
 
 .. code-block:: python
@@ -1301,7 +1301,7 @@ for any filter that must traverse a relation or apply logic that standard lookup
 Register API Routes
 ...................
 
-As a final step, edit ``routes.py`` to register the new ViewSet with the Django REST Framework router:
+As a final step, edit :file:`routes.py` to register the new ViewSet with the Django REST Framework router:
 
 .. code-block:: python
 
@@ -1311,20 +1311,20 @@ As a final step, edit ``routes.py`` to register the new ViewSet with the Django 
    def register_api_routes(router, prefix):
        router.register(f"{prefix}/learning_goals", LearningGoalViewSet, basename="learning_goal")
 
-The ``basename`` argument is used to generate the URL names for reverse lookups, such as ``learning_goal-list``
+The :attr:`basename` argument is used to generate the URL names for reverse lookups, such as ``learning_goal-list``
 and ``learning_goal-detail``. Use the model name in ``snake_case`` as the convention throughout OpenBook.
 
 Advanced: Custom Actions
 ........................
 
 Use custom actions when you need endpoints beyond the standard CRUD methods provided by
-``ModelViewSet``. Define them with ``@action`` from ``rest_framework.decorators``.
+:class:`ModelViewSet`. Define them with :func:`@action` from :mod:`rest_framework.decorators`.
 
-The ``detail`` flag controls whether the endpoint targets one object (``True``) or the full
-collection (``False``). ``methods`` defines the allowed HTTP verbs, ``url_path`` defines the
-URL suffix, and ``permission_classes`` can override permissions for that action only.
+The :attr:`detail` flag controls whether the endpoint targets one object (``True``) or the full
+collection (``False``). :attr:`methods` defines the allowed HTTP verbs, :attr:`url_path` defines the
+URL suffix, and :attr:`permission_classes` can override permissions for that action only.
 
-Annotate every custom action with ``@extend_schema`` so the OpenAPI output documents the
+Annotate every custom action with :func:`@extend_schema` so the OpenAPI output documents the
 request and response format correctly.
 
 .. code-block:: python
@@ -1366,14 +1366,14 @@ Checklist Before Moving On
 Before continuing to fixtures and tests, verify that:
 
 1. The ViewSet file is in ``viewsets/``, named after the model file.
-2. The ViewSet inherits ``ModelViewSetMixin`` before ``ModelViewSet``.
-3. The ``@extend_schema()`` and ``@with_flex_fields_parameters()`` decorators are present.
-4. All required attributes are set: ``queryset``, ``serializer_class``, ``filterset_class``, ``search_fields``.
-5. The serializer extends ``FlexFieldsModelSerializer``.
+2. The ViewSet inherits :class:`ModelViewSetMixin` before :class:`ModelViewSet`.
+3. The :func:`@extend_schema` and :func:`@with_flex_fields_parameters` decorators are present.
+4. All required attributes are set: :attr:`queryset`, :attr:`serializer_class`, :attr:`filterset_class`, :attr:`search_fields`.
+5. The serializer extends :class:`FlexFieldsModelSerializer`.
 6. The serializer includes ``"id"`` and audit fields in ``read_only_fields``.
 7. ``expandable_fields`` is declared for all FK and M2M relations.
-8. The filter class has ``FilterSet`` last in its MRO and includes all applicable filter mixins.
-9. The ViewSet is registered in ``routes.py`` (not ``__init__.py``).
+8. The filter class has :class:`FilterSet` last in its MRO and includes all applicable filter mixins.
+9. The ViewSet is registered in :file:`routes.py` (not :file:`__init__.py`).
 
 .. seealso::
 
@@ -1401,7 +1401,7 @@ Use YAML fixtures to keep the data readable, reviewable, and easy to maintain in
 1. Create and prepare the data first in Django Admin or the application UI until it reflects the state you
    want to ship as a fixture.
 
-2. Then export only the data you need into a dedicated files under ``fixtures/<app>/`` using the following
+2. Then export only the data you need into a dedicated file under ``fixtures/<app>/`` using the following
    command --- including natural keys, to avoid unstable references with some of the external models:
 
    .. code-block:: bash
@@ -1413,7 +1413,7 @@ Use YAML fixtures to keep the data readable, reviewable, and easy to maintain in
 
 3. When the fixture is stable, integrate it into the initial data loading workflow so other developers
    can bootstrap a complete project state with one command. The related management command lives in
-   ``src/openbook/core/management/commands/load_initial_data.py``.
+   :file:`src/openbook/core/management/commands/load_initial_data.py`.
 
 .. important::
 
@@ -1425,9 +1425,9 @@ Use YAML fixtures to keep the data readable, reviewable, and easy to maintain in
    Adding natural keys across all models considerably increases model and manager complexity and often
    requires new uniqueness constraints that do not fit the domain model.
 
-   But generic relations remain the deciding limitation. Even with natural keys, ``object_id`` values in
+   But generic relations remain the decisive limitation. Even with natural keys, ``object_id`` values in
    generic relations still point to concrete object identifiers. In practice, this means UUIDs remain part
-   of the fixture data and quite heavy-weight custom serializers would be required to remove them consistently.
+   of the fixture data, and quite heavyweight custom serializers would be required to remove them consistently.
 
    UUIDs keep this trade-off manageable. Unlike auto-increment IDs, UUIDs are stable enough for fixture
    exchange across environments and significantly reduce import collisions.
@@ -1444,17 +1444,17 @@ it raises, the objects it returns, the database state it produces --- and leave 
 it delivers that promise to the implementation.
 
 Tests are usually organized around models where every test module follows the same three-class pattern.
-For a learning goal model, the file would be ``tests/learning_goal.py``, and the class names would be
-``LearningGoal_Test_Mixin``, ``LearningGoal_Model_Tests``, and ``LearningGoal_ViewSet_Tests``.
+For a learning goal model, the file would be :file:`tests/learning_goal.py`, and the class names would be
+:class:`LearningGoal_Test_Mixin`, :class:`LearningGoal_Model_Tests`, and :class:`LearningGoal_ViewSet_Tests`.
 
 .. rst-class:: spaced-list
 
-1. **<Model>_Test_Mixin** holds the shared ``setUp()`` logic: creating users, parent objects, and
+1. **<Model>_Test_Mixin** holds the shared :meth:`setUp` logic: creating users, parent objects, and
    the fixture records required by both test classes below it. It contains no ``test_*`` methods and
    serves purely as a reusable setup provider.
 
 2. **<Model>_Model_Tests** tests low-level model behaviour: validation errors raised by
-   ``clean()``, the return values and side-effects of domain methods, and any permission checks
+   :meth:`clean`, the return values and side-effects of domain methods, and any permission checks
    enforced directly on the model.
 
 3. **<Model>_ViewSet_Tests** tests the HTTP contract of the REST API: status codes, search,
@@ -1466,7 +1466,7 @@ Write the Test Mixin
 Every test class needs a consistent, well-known database state before it can make meaningful
 assertions. Without a shared baseline, each test class would have to recreate the same users,
 parent objects, and fixture records independently, leading to duplication and drift. The test
-mixin solves this by centralising that setup in a single ``setUp()`` method that both
+mixin solves this by centralising that setup in a single :meth:`setUp` method that both
 ``<Model>_Model_Tests`` and ``<Model>_ViewSet_Tests`` inherit.
 
 .. code-block:: python
@@ -1499,7 +1499,7 @@ mixin solves this by centralising that setup in a single ``setUp()`` method that
            )
 
 .. important::
-   Always call ``super().setUp()`` first, then ``reset_current_user()`` to clear the request-scoped
+   Always call :meth:`super().setUp()` first, then :func:`reset_current_user` to clear the request-scoped
    current-user context so that audit-trail fields set in one test do not bleed into another.
 
    Also, keep the mixin free of ``test_*`` methods. Any test logic placed here would run twice ---
@@ -1510,13 +1510,13 @@ Write Model Tests
 .................
 
 The model test class validates the low-level domain logic that lives directly on the model. This
-is where you confirm that the model enforces its own rules: that ``clean()`` rejects invalid data,
+is where you confirm that the model enforces its own rules: that :meth:`clean` rejects invalid data,
 that domain methods return the right objects, that side-effects on related records occur as
 promised, and that the correct exceptions are raised when preconditions are violated. These tests
 run entirely in Python without HTTP --- they are fast, focused, and independent of the REST layer.
 
-Inherit from the mixin first and ``TestCase`` last, so that Python's method resolution order (MRO)
-calls the mixin's ``setUp()`` before Django's test infrastructure:
+Inherit from the mixin first and :class:`TestCase` last, so that Python's method resolution order (MRO)
+calls the mixin's :meth:`setUp` before Django's test infrastructure:
 
 .. code-block:: python
 
@@ -1526,28 +1526,28 @@ calls the mixin's ``setUp()`` before Django's test infrastructure:
 
    class LearningGoal_Model_Tests(LearningGoal_Test_Mixin, TestCase):
        """
-       Tests for the ``LearningGoal`` model.
+      Tests for the :class:`LearningGoal` model.
        """
 
        def test_inactive_goal_raises_on_enroll(self):
            """
-           Enrolling against an inactive goal raises ``ValidationError``.
+           Enrolling against an inactive goal raises :class:`ValidationError`.
            """
            with self.assertRaises(ValidationError):
                self.goal_inactive.enroll(user=self.user)
 
        def test_complete_returns_assignment(self):
            """
-           ``complete()`` returns the created completion record.
+           :meth:`complete` returns the created completion record.
            """
            result = self.goal_active.complete(user=self.user)
            self.assertIsNotNone(result)
            self.assertEqual(result.goal, self.goal_active)
 
-Except for the self-written mixin class, this a straight-forward Django unit test class.
+Except for the self-written mixin class, this is a straightforward Django unit test class.
 Good candidates for tests are:
 
-- ``clean()`` validation rules,
+- :meth:`clean` validation rules,
 - domain method return types and return values,
 - database side-effects (rows created or deleted),
 - exceptions raised under invalid conditions.
@@ -1568,11 +1568,11 @@ check Python-level behaviour, ViewSet tests confirm that the right status codes 
 authentication and authorisation are enforced, that list responses support search, sorting, and
 pagination, and that create, update, and delete operations produce the expected database state.
 Writing these tests by hand for every endpoint would be tedious and error-prone; OpenBook's
-``ModelViewSetTestMixin`` generates the repetitive baseline tests automatically so developers
+:class:`ModelViewSetTestMixin` generates the repetitive baseline tests automatically so developers
 can focus on the edge cases specific to each model.
 
-``LearningGoal_ViewSet_Tests`` tests the REST API layer. The bulk of the work is handled
-automatically by OpenBook's ``ModelViewSetTestMixin``, imported from ``openbook.test``.
+:class:`LearningGoal_ViewSet_Tests` tests the REST API layer. The bulk of the work is handled
+automatically by OpenBook's :class:`ModelViewSetTestMixin`, imported from :mod:`openbook.test`.
 For every configured operation it produces three test methods at class-creation time:
 
 .. rst-class:: spaced-list
@@ -1600,7 +1600,7 @@ enough to activate the entire baseline suite:
 
    class LearningGoal_ViewSet_Tests(ModelViewSetTestMixin, LearningGoal_Test_Mixin, TestCase):
        """
-       Tests for the ``LearningGoalViewSet`` REST API.
+      Tests for the :class:`LearningGoalViewSet` REST API.
        """
        base_name         = "learning_goal"
        model             = LearningGoal
@@ -1612,26 +1612,26 @@ enough to activate the entire baseline suite:
 
 From top to bottom this defines:
 
-**Router base name** --- ``base_name`` is used to reverse URL names such as
+**Router base name** --- :attr:`base_name` is used to reverse URL names such as
 ``learning_goal-list`` and ``learning_goal-detail``. It must match the ``basename`` argument
-passed to the router in ``routes.py``.
+passed to the router in :file:`routes.py`.
 
-**Model class** --- ``model`` lets the mixin derive permission strings automatically, for
+**Model class** --- :attr:`model` lets the mixin derive permission strings automatically, for
 example ``openbook_learning_progress.view_learninggoal``.
 
-**Expected list count** --- ``count`` is the number of results the ``list`` endpoint must return
-when the test user has full permissions. Set it to the number of objects ``setUp()`` creates that
+**Expected list count** --- :attr:`count` is the number of results the ``list`` endpoint must return
+when the test user has full permissions. Set it to the number of objects :meth:`setUp` creates that
 are visible to the requesting user. Use a negative value to skip the count assertion.
 
-**Search configuration** --- ``search_string`` and ``search_count`` configure the search test.
+**Search configuration** --- :attr:`search_string` and :attr:`search_count` configure the search test.
 The mixin calls the ``list`` endpoint with ``?_search=<search_string>`` and asserts that exactly
 ``search_count`` results are returned.
 
-**Sort and pagination field** --- ``sort_field`` names the field used for sort and pagination
+**Sort and pagination field** --- :attr:`sort_field` names the field used for sort and pagination
 tests. The mixin calls the ``list`` endpoint with ``?_sort=<sort_field>`` and verifies the
 results are in order, then runs a pagination test with ``?_page_size=1&_page=1``.
 
-**Expandable relation names** --- ``expandable_fields`` lists the relation names to test with
+**Expandable relation names** --- :attr:`expandable_fields` lists the relation names to test with
 ``?_expand=``. Append ``[]`` to a name for many-relations so the mixin expects a list of objects
 rather than a single object.
 
@@ -1672,7 +1672,7 @@ Provide Request Data and Verify Updates
 .......................................
 
 Operations that write data need request bodies and post-save assertions. Declare these in the
-``operations`` dictionary by overriding only the keys that differ from the defaults:
+:attr:`operations` dictionary by overriding only the keys that differ from the defaults:
 
 .. code-block:: python
 
@@ -1715,13 +1715,13 @@ Operations that write data need request bodies and post-save assertions. Declare
            },
        }
 
-``pk_found`` can be a method returning ``self.goal_active.id`` rather than a hard-coded string,
-so it is evaluated lazily after ``setUp()`` has run. ``request_data`` likewise accepts a method
-so the request body can reference objects created in ``setUp()``.
+:meth:`pk_found` can be a method returning ``self.goal_active.id`` rather than a hard-coded string,
+so it is evaluated lazily after :meth:`setUp` has run. :attr:`request_data` likewise accepts a method
+so the request body can reference objects created in :meth:`setUp`.
 
 The ``"updates"`` dictionary declares the assertions the mixin runs after a write operation
 completes. Only the fields listed here are checked. Any field omitted is not asserted at all.
-Each entry maps a field name to the value that field have in the database after the API call
+Each entry maps a field name to the value that field has in the database after the API call
 returns. Nested dicts traverse relations: ``{"role": {"slug": "student"}}`` follows the ``role``
 foreign key and asserts its ``slug`` field. For cases where this dict-based approach is
 too limited, provide a callable under ``"assertions"`` instead.
@@ -1729,9 +1729,9 @@ too limited, provide a callable under ``"assertions"`` instead.
 Custom Actions and Additional Tests
 ...................................
 
-For anything beyond standard CRUD webservice actions, the ViewSet test class can contain ordinary
+For anything beyond standard CRUD web service actions, the ViewSet test class can contain ordinary
 ``test_*`` methods. Use them for custom ``@action`` endpoints, edge cases, and business rules
-expressed over HTTP. Use the helper methods inherited from ``ModelViewSetTestMixin`` to manage
+expressed over HTTP. Use the helper methods inherited from :class:`ModelViewSetTestMixin` to manage
 authentication:
 
 .. code-block:: python
@@ -1754,16 +1754,16 @@ authentication:
            response = self.client.put(self.url_enroll)
            self.assertIn(response.status_code, [401, 403])
 
-Insidee your test methods you can use the following helpers:
+Inside your test methods you can use the following helpers:
 
 - ``self.login(username, password)`` to authenticate as a specific existing user
 - ``self.create_user_and_login(perm_strings)`` to create a temporary user
-- ``self.logout()`` to return to the unauthenticated state
+- :meth:`self.logout()` to return to the unauthenticated state
 
-Register in ``__init__.py``
-...........................
+Register in :file:`__init__.py`
+...............................
 
-Register the module in ``tests/__init__.py`` so Django's test runner discovers it.
+Register the module in :file:`tests/__init__.py` so Django's test runner discovers it.
 Otherwise the tests won't run when ``manage.py test`` is executed.
 
 .. code-block:: python
@@ -1776,15 +1776,15 @@ Checklist Before Moving On
 Before committing the new feature, verify that:
 
 1. The test file is placed under ``tests/``, named after the model file.
-2. ``tests/__init__.py`` imports the module so the test runner discovers it.
-3. The test mixin calls ``super().setUp()`` and ``reset_current_user()`` an
+2. :file:`tests/__init__.py` imports the module so the test runner discovers it.
+3. The test mixin calls :meth:`super().setUp()` and :func:`reset_current_user`.
 4. The test mixin class contains no ``test_*`` methods.
-5. ``<Model>_Model_Tests`` covers ``clean()`` validation and all domain methods.
-6. ``<Model>_ViewSet_Tests`` inherits ``ModelViewSetTestMixin``, the test mixin and then ``TestCase``.
-7. All required class attributes for ``ModelViewSetTestMixin`` are declared.
-8. The ``operations`` dict contains only the overrides that differ from the defaults.
-9. ``get_create_request_data`` is defined when create is supported.
-10. Likewise, ``get_update_request_data`` is defined when update is supported.
+5. ``<Model>_Model_Tests`` covers :meth:`clean` validation and all domain methods.
+6. ``<Model>_ViewSet_Tests`` inherits :class:`ModelViewSetTestMixin`, the test mixin and then :class:`TestCase`.
+7. All required class attributes for :class:`ModelViewSetTestMixin` are declared.
+8. The :attr:`operations` dict contains only the overrides that differ from the defaults.
+9. :meth:`get_create_request_data` is defined when create is supported.
+10. Likewise, :meth:`get_update_request_data` is defined when update is supported.
 11. Custom ``@action`` endpoints have at least one manual test method each.
 
 .. seealso::

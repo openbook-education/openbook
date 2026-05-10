@@ -26,14 +26,14 @@ if it deeply touches our feature set beyond technical infrastructure, rolling ou
 preferred. Because, of course, code reuse is generally a good idea. But we agree with Joel Spolsky
 when he writes:
 
-   *If it’s a core business function — do it yourself, no matter what.*
+   *If it's a core business function — do it yourself, no matter what.*
 
    -- `Joel on Software: In Defense of the Not-Invented-Here Syndrome
       <https://www.joelonsoftware.com/2001/10/14/in-defense-of-not-invented-here-syndrome/>`_
 
-The linked blog post explains the rational behind this credo. The short version is, that there
+The linked blog post explains the rationale behind this credo. The short version is that there
 needs to be space where you actually add value and, more importantly, you must be in control
-of it. Plus, custom code allows to optimize for your actual requirements.
+of it. Plus, custom code allows us to optimize for actual requirements.
 
 .. seealso::
 
@@ -48,7 +48,7 @@ Baseline Criteria
 .................
 
 Every dependency must satisfy all of the following before any further evaluation takes place.
-If a candidate fails any one criterion, it  must not be integrated in the codebase.
+If a candidate fails any one criterion, it must not be integrated into the codebase.
 
 **License**
   Must carry a clear license statement, and the license must be compatible with
@@ -59,7 +59,7 @@ If a candidate fails any one criterion, it  must not be integrated in the codeba
 
 **Formal Release**
   Must have at least one tagged, versioned release on its package registry (PyPI, npm, etc.).
-  Depending on a git commit or an unreleased ``main`` branch is not acceptable, because this
+  Depending on a git commit or an unreleased ``main`` branch is not acceptable because this
   cannot guarantee maintenance and upgrades.
 
 **Semantic Versioning**
@@ -75,7 +75,7 @@ If a candidate fails any one criterion, it  must not be integrated in the codeba
 **No Active CVEs**
   Must not carry known unpatched security vulnerabilities at the time it is introduced.
   Check the package's advisory database (e.g., `GitHub Advisory Database <https://github.com/advisories>`_,
-  ``pip-audit``, ``npm audit``).
+  :command:`pip-audit`, :command:`npm audit`).
 
 
 ------------------------------
@@ -122,7 +122,7 @@ For example:
 
 **1.3 Search for candidates.** Search the relevant package registries and ecosystems for packages that
 satisfy the must-have criteria. Record every candidate that passes, even if it looks weaker; the
-assessment phase will rank them objectively. The latest now, create an issue in GitHub and write
+assessment phase will rank them objectively. At the latest, create an issue on GitHub and write
 down the search criteria, their rationale, and the resulting candidate list.
 
 
@@ -132,22 +132,22 @@ Phase 2: Assessment
 The assessment phase narrows the candidate list to at most two or three finalists using
 measurable, reproducible metrics.
 
-**2.1 Define Measurable Metrics.** Decide, whether additional metrics beyond the ones
+**2.1 Define Measurable Metrics.** Decide whether additional metrics beyond the ones
 shown below are needed. Typically, the default set is sufficient.
 
 **2.2 Collect data.** For each candidate, collect the following raw data from its public code
 repository (GitHub, GitLab, etc.) and package registry:
 
-=====================  =============================================  =============
-Metric                 What to Measure                                Dimension
-=====================  =============================================  =============
-Project Age            Months since first commit / initial release    Maturity
-Project Size           Lines of source code (use ``cloc``, ``scc``)   Complexity
-Development Activity   Commits ÷ (Age × Lines of Code)                Maintenance
-Release Activity       Released versions ÷ (Age × Lines of Code)      Maintenance
-Community Activity     Contributors ÷ (Age × Lines of Code)           Maintenance
-Issue Handling         Closed issues ÷ Total issues (percentage)      Quality
-=====================  =============================================  =============
+=====================  ===========================================================  =============
+Metric                 What to Measure                                              Dimension
+=====================  ===========================================================  =============
+Project Age            Months since first commit / initial release                  Maturity
+Project Size           Lines of source code (use :command:`cloc`, :command:`scc`)   Complexity
+Development Activity   Commits ÷ (Age × Lines of Code)                              Maintenance
+Release Activity       Released versions ÷ (Age × Lines of Code)                    Maintenance
+Community Activity     Contributors ÷ (Age × Lines of Code)                         Maintenance
+Issue Handling         Closed issues ÷ Total issues (percentage)                    Quality
+=====================  ===========================================================  =============
 
 The maintenance metrics intentionally normalize raw counts by age and size so that older or larger
 projects aren't unfairly penalized for having more commits or releases in absolute terms.
@@ -155,7 +155,7 @@ Supplementary, case-specific metrics (e.g., bundle size, transitive dependency c
 added when the impact factor warrants it.
 
 **2.3 Calculate the assessment score.** For each metric, rank all candidates against one another:
-the best candidate receives ``n`` points (where ``n`` is the number of candidates), the worst
+the best candidate receives :math:`n` points (where :math:`n` is the number of candidates), the worst
 receives one point, and ties share the same rank. The *assessment score* for each candidate is
 the sum of all its partial scores.
 
@@ -184,7 +184,7 @@ expressed numerically or on an ordinal scale:
 - *Package attribute:* e.g. "Does it support Y? No / Yes / Multiple alternatives"
 - *Subjective quality:* e.g. "How readable is the code? Very good / Good / Acceptable / Poor"
 
-There are no default questions. For each evaluation new highly-relevant questions must be defined.
+There are no default questions. For each evaluation, new highly relevant questions must be defined.
 
 **3.2 Build comparable prototypes.** Build a small but representative prototype for each remaining
 candidate. You could choose to create a new git repository for this, so as not to clutter the
@@ -218,8 +218,8 @@ Automated Upgrades
 ..................
 
 OpenBook uses `Renovate <https://docs.renovatebot.com/>`_ to automate version management. A
-scheduled CI job runs every week and scans all package manifests --- ``pyproject.toml``,
-``package.json``, and related lock files --- for outdated dependencies. For every detected update,
+scheduled CI job runs every week and scans all package manifests --- :file:`pyproject.toml`,
+:file:`package.json`, and related lock files --- for outdated dependencies. For every detected update,
 Renovate opens a pull request with the version bump applied.
 
 Each pull request triggers the full test suite matrix across all supported environments. Pull
