@@ -1,7 +1,25 @@
 # AI Coding Agents
 
+Mantra for all AI coding agents:
+    - Keep answers short and on the point, when talking to the user.
+    - Avoid fillers.
+    - Never silently assume. When in doubt: ask
+
 This repository defines custom agents in `.agents/agents/`.
 Choose exactly one primary agent for a task:
+
+## Interactive Guides
+
+These agents guide you through multi-step workflows with a design-first philosophy, asking clarifying questions before implementation:
+
+- `ob-django-backend-feature-guide`
+    - Use when implementing a new backend feature in OpenBook across one or more Django apps. Guides through architecture, model design, admin integration, REST API exposure, unit tests, and fixtures.
+    - Trigger phrases: backend feature, feature implementation, django app design, model design, admin integration, api exposure, fixtures, unit tests.
+    - [Full spec](.agents/agents/ob-django-backend-feature-guide.md)
+
+## Implementation Agents
+
+These agents handle focused, concrete coding tasks and write code directly:
 
 - `ob-frontend-developer`
     - Use when implementing, refactoring, reviewing, or testing TypeScript/Svelte frontend code.

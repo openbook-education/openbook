@@ -1,7 +1,11 @@
 ---
 name: ob-restructured-text-docs-styleguide
-description: 'Style guide for writing and editing documentation pages in RST (ReStructured Text) format in the `docs/` directory'
+description: >
+    Style guide for writing and editing documentation pages in RST
+    (ReStructured Text) format in the `docs/` directory. Used when
+    writing new documentation pages or updating documentation.
 user-invocable: true
+argument-hint: Very(!) detailed outline of the documentation to be written
 ---
 
 When creating or modifying documentation pages in ReStructured Text format (RST),

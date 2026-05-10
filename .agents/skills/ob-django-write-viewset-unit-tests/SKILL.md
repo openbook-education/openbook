@@ -1,6 +1,9 @@
 ---
-name: ob-drf-viewset-unit-tests
-description: 'Generate Django REST Framework ViewSet unit tests with Django TestCase and APIClient.login. Use when creating or updating tests for list/search/sort/pagination, CRUD, authentication, permissions, and 403/404 behavior.'
+name: ob-django-write-viewset-unit-tests
+description: >
+    Generate Django REST Framework ViewSet unit tests with Django TestCase and APIClient.login.
+    Use when creating or updating tests for list/search/sort/pagination, CRUD, authentication,
+    permissions, and 403/404 behavior.
 argument-hint: 'ViewSet path/name plus app label and model permissions (for example: openbook.api.SiteViewSet)'
 user-invocable: true
 ---

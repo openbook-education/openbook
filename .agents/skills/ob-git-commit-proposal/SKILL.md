@@ -1,6 +1,11 @@
 ---
 name: ob-git-commit-proposal
-description: "Analyze staged git changes and propose a conventional commit message with summary. Use when you need a commit message following the pattern type(scope): subject plus change paragraphs. This skill NEVER commits—it only proposes."
+description: >
+    Analyze staged git changes and propose a conventional commit message with summary.
+    Use when you need a commit message following the pattern type(scope): subject plus
+    change paragraphs. This skill NEVER commits—it only proposes.
+argument-hint: Additional hints for the commit message
+user-invocable: true
 ---
 
 # Conventional Commit Proposal

@@ -1,6 +1,9 @@
 ---
-name: ob-django-model-unit-tests
-description: 'Generate Django model unit tests with django.test.TestCase. Use when creating or updating tests for model behavior, validation, defaults, constraints, and model methods (excluding __str__).'
+name: ob-django-write-model-unit-tests
+description: >
+    Generate Django model unit tests with django.test.TestCase. Use when creating or
+    updating tests for model behavior, validation, defaults, constraints, and model
+    methods (excluding __str__).
 argument-hint: 'Model path/name plus app label (for example: openbook.models.Site)'
 user-invocable: true
 ---
