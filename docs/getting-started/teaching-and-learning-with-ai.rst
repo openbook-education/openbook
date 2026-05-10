@@ -10,7 +10,6 @@ ELISA creates a genuinely adaptive learning experience.
 .. contents:: Page Content
    :local:
 
-
 -----------------------
 AI and Modern Education
 -----------------------

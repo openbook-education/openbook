@@ -10,7 +10,6 @@ how to create, import, and enhance learning materials, including with AI assista
 .. contents:: Page Content
    :local:
 
-
 1. Didactic overview of available content types and interactive elements
 2. Importing existing materials (e.g., slide decks, scripts, ...)
 3. Content creation with AI

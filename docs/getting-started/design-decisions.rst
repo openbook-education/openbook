@@ -9,7 +9,6 @@ administrators understand what the project is trying to achieve and why.
 .. contents:: Page Content
    :local:
 
-
 ------------------------------
 Educational Design Decisions
 ------------------------------

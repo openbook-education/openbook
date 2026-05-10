@@ -7,7 +7,6 @@ This page describes the expected repository workflow from issue triage to merge.
 .. contents:: Page Content
    :local:
 
-
 ---------------
 Issue to Branch
 ---------------

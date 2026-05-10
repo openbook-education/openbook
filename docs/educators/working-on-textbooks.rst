@@ -10,7 +10,6 @@ managing pages and content in both the editor and the administration panel.
 .. contents:: Page Content
    :local:
 
-
 1. How to create textbooks
 2. How to manage (rename, delete, etc.) textbooks in the frontend
 3. How to manage textbooks in the admin panel

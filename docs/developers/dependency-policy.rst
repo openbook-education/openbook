@@ -12,7 +12,6 @@ opaque upgrades.
 .. contents:: Page Content
    :local:
 
-
 ---------------------------
 Minimum Acceptance Criteria
 ---------------------------

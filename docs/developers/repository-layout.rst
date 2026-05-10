@@ -8,7 +8,6 @@ like where to find the different parts, what goes where, and why it is structure
 .. contents:: Page Content
    :local:
 
-
 ---------
 Top Level
 ---------

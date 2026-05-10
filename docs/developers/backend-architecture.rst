@@ -8,7 +8,6 @@ developers understand the most important technology and implementation choices.
 .. contents:: Page Content
    :local:
 
-
 ------------------
 Technology Choices
 ------------------

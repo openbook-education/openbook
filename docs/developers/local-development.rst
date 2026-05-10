@@ -9,7 +9,6 @@ documents day-to-day commands.
 .. contents:: Page Content
    :local:
 
-
 --------------------------
 Required Development Tools
 --------------------------

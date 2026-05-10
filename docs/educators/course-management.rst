@@ -10,7 +10,6 @@ settings and how to assign or reuse textbooks across multiple courses.
 .. contents:: Page Content
    :local:
 
-
 1. How to create a new course
 2. How to manage (rename, delete, ...) courses
 3. The most important course settings

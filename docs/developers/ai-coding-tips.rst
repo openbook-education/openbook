@@ -13,7 +13,6 @@ and how to keep the big picture in view across a multi-step session.
    :local:
    :depth: 1
 
-
 -----------------------
 Know When Not to Use AI
 -----------------------

@@ -10,7 +10,6 @@ how to connect external identity providers.
 .. contents:: Page Content
    :local:
 
-
 1. Capabilities of Django Allauth
 2. Signup rules for local users
 3. Customization of remote identity providers

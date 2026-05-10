@@ -8,7 +8,6 @@ release of OpenBook.
 .. contents:: Page Content
    :local:
 
-
 -------------------
 Versioning Strategy
 -------------------

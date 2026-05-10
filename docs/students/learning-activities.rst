@@ -10,7 +10,6 @@ the interactive elements, AI assistance, and learning progress tracking availabl
 .. contents:: Page Content
    :local:
 
-
 1. What is inside a textbook or course
 2. Course onboarding and learning preferences
 3. Working with the AI

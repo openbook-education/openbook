@@ -17,7 +17,6 @@ for each new feature ensures nothing is missed.
 .. contents:: Page Content
    :local:
 
-
 -----------------
 Creating New Apps
 -----------------

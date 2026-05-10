@@ -24,8 +24,13 @@ usually within the `docs/` directory, always apply the following style guide:
 - Use Title Case (APA-style) for all headings.
 - Instead of multiple sub-sections with one paragraph prefer bold-facing the first words (see example below)
 - Prefix incomplete pages or sections with # .
-- Begin each page with a one to three sentences introduction.
-- Add a local table of contents (title: Page Content) before the first top-level section.
+- Begin each page with:
+    - A short introduction, setting the stage
+    - A local table of contents (title: Page Content)
+- Then the sections and subsections follow.
+- Keep the table of contents tight and lucid.
+- No heading if less then five sentences.
+- Prefer sections/subsections with at least two paragraphs.
 
 Heading Syntax:
 

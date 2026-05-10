@@ -10,7 +10,6 @@ for similar projects.
 .. contents:: Page Content
    :local:
 
-
 --------------------------
 GitHub Repository Settings
 --------------------------

@@ -8,7 +8,6 @@ the standards we hold ourselves to and explains how violations are handled.
 .. contents:: Page Content
    :local:
 
-
 ----------
 Our Pledge
 ----------

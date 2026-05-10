@@ -9,7 +9,6 @@ ReDoc browser you can use to explore endpoints and try requests during local dev
 .. contents:: Page Content
    :local:
 
-
 --------
 REST API
 --------

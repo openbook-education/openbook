@@ -5,7 +5,6 @@ Frontend Architecture
 .. contents:: Page Content
    :local:
 
-
 ------------------
 Technology Choices
 ------------------
@@ -35,3 +34,9 @@ now using the following frontend tools and frameworks.
 .. note::
 
    More to come as the UI will be built.
+
+.. figure:: img/ui-application-frame.png
+   :width: 100%
+   :align: center
+
+   Very early frontend layout sketch

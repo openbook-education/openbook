@@ -8,7 +8,6 @@ resources and workflows that keep the project moving forward.
 .. contents:: Page Content
    :local:
 
-
 -------------------
 About our Community
 -------------------
