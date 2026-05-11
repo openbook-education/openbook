@@ -18,7 +18,7 @@ channels = {extras = ["daphne"], version = "^4.3.2"}
 channels-redis = "^4.3.0"
 daphne = "^4.2.1"
 Django = "^6.0.3"
-django-allauth = {extras = ["headless-spec", "saml", "socialaccount"], version = "^65.15.0"}
+django-allauth = {extras = ["headless-spec", "saml", "socialaccount"], version = "^65.16.1"}
 django-cleanup = "^9.0.0"
 django-crispy-forms = "^2.6"
 django-dbbackup = "^5.2.0"
