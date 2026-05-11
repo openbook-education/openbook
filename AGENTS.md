@@ -15,7 +15,7 @@ These agents guide you through multi-step workflows with a design-first philosop
 - `ob-django-backend-feature-guide`
     - Use when implementing a new backend feature in OpenBook across one or more Django apps. Guides through architecture, model design, admin integration, REST API exposure, unit tests, and fixtures.
     - Trigger phrases: backend feature, feature implementation, django app design, model design, admin integration, api exposure, fixtures, unit tests.
-    - [Full spec](.agents/agents/ob-django-backend-feature-guide.md)
+    - [Full spec](.agents/agents/ob-django-backend-feature-guide.agent.md)
 
 ## Implementation Agents
 
