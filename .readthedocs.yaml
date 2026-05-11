@@ -4,10 +4,9 @@ build:
     os: ubuntu-lts-latest
     apt_packages:
         - graphviz
-        - nodejs
-        - npm
     tools:
         python: latest
+        nodejs: latest
     jobs:
         # Poetry requires special attention here, so that the dependencies are
         # actually installed into the automatically created Python environment.
