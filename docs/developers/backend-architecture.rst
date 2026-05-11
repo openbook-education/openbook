@@ -12,6 +12,12 @@ developers understand the most important technology and implementation choices.
 Technology Choices
 ------------------
 
+.. figure:: img/backend-source-modules.svg
+   :width: 100%
+   :align: center
+
+   Layers and modules in the backend source code
+
 The OpenBook Server is built with the following technology:
 
 .. list-table::
@@ -28,16 +34,22 @@ The OpenBook Server is built with the following technology:
      - Authentication, user management, single sign-on
    * - **Django REST Framework**
      - REST API for the frontend and external clients
-   * - **Django Channels**
+   * - **Django Channels + chanx**
      - WebSocket support
    * - **Celery**
      - Background task queue
+   * - **Instructor + MPC Python SDK**
+     - AI integration
 
 The idea is to keep the technical requirements lean to enable easy deployment in custom environments.
 Therefore, the choice of Django might be considered "conservative", but in fact it contains all
 needed functionality, like HTTP request routing, server-side templates, and database access, in a
 single, stable, and well-maintained dependency.
 
+As shown in the figure, these technologies form the technical foundation of the OpenBook backend.
+The implementation is organized as a Django project containing multiple Django apps, whereas the
+apps can be grouped into core apps that provide technical platform functionality and content apps
+that provide user-visible features.
 
 --------------------------
 Architectural Cornerstones
