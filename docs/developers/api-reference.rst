@@ -26,13 +26,13 @@ preview the latest version included in this manual.
      - Online
      - Local Installation
    * - YAML schema
-     - :download:`Download </_static/openapi/openbook.yaml>`
+     - :download:`Download <../_openapi/openbook.yaml>`
      - ``https://<your-openbook-host>/api/schema/``
    * - JSON schema
-     - :download:`Download </_static/openapi/openbook.json>`
+     - :download:`Download <../_openapi/openbook.json>`
      - ``https://<your-openbook-host>/api/schema/?format=json``
    * - Interactive ReDoc UI
-     - `Open </_static/openapi/openbook.html>`_
+     - `Open <../_static/openbook.html>`_
      - ``https://<your-openbook-host>/api/schema/redoc/``
 
 
@@ -51,13 +51,13 @@ The following URLs expose the API schema on your running OpenBook installation:
      - Online
      - Local Installation
    * - YAML schema
-     - :download:`Download </_static/openapi/auth.yaml>`
+     - :download:`Download <../_openapi/auth.yaml>`
      - ``https://<your-openbook-host>/auth-api/openapi.yaml``
    * - JSON schema
-     - :download:`Download </_static/openapi/auth.json>`
+     - :download:`Download <../_openapi/auth.json>`
      - ``https://<your-openbook-host>/auth-api/openapi.json``
    * - Interactive ReDoc UI
-     - `Open </_static/openapi/auth.html>`_
+     - `Open <../_static/auth.html>`_
      - ``https://<your-openbook-host>/auth-api/openapi.html``
 
 .. hint::

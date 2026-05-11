@@ -28,14 +28,11 @@ html_theme_options = {
     "navigation_depth": 4,
     "titles_only": False,
 }
-html_static_path = ["_static"]
+html_static_path = ["_static", "_openapi"]
 html_css_files = ["custom.css"]
 
 # Ensure standalone OpenAPI HTML pages are published on RTD as build artifacts.
 # NOTE: The files need to be manually updated and checked into git.
-html_extra_path = [
-    "_static/openapi/auth.html",
-    "_static/openapi/openbook.html",
-]
+# html_extra_path = ["_openapi"]
 
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+exclude_patterns = ["Thumbs.db", ".DS_Store"]

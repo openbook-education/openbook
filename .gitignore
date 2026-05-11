@@ -89,7 +89,8 @@ instance/
 
 # Sphinx documentation
 docs/_build/
-docs/_static/openapi/
+docs/_openapi/
+docs/_asyncapi/
 
 # SystemD service templates
 openbook.service
