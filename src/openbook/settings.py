@@ -520,7 +520,64 @@ UNFOLD = {
                     "permission": lambda req: req.user.has_perm("openbook_auth.view_roleassignment"),
                 },
             ],
-        }
+        },
+        {
+            "ob_group_name": _("Library Tree"),
+            "models": [
+                "openbook_content.librarygroup",
+                "openbook_content.librarylink",
+            ],
+            "items": [
+                {
+                    "title":      _("Groups"),
+                    "link":       reverse_lazy("admin:openbook_content_librarygroup_changelist"),
+                    "permission": lambda req: req.user.has_perm("openbook_content.view_librarygroup"),
+                },
+                {
+                    "title":      _("Links"),
+                    "link":       reverse_lazy("admin:openbook_content_librarylink_changelist"),
+                    "permission": lambda req: req.user.has_perm("openbook_content.view_librarylink"),
+                },
+            ],
+        },
+        {
+            "ob_group_name": _("Textbooks"),
+            "models": [
+                "openbook_content.textbook",
+                "openbook_content.textbookpage",
+            ],
+            "items": [
+                {
+                    "title":      _("Textbooks"),
+                    "link":       reverse_lazy("admin:openbook_content_textbook_changelist"),
+                    "permission": lambda req: req.user.has_perm("openbook_content.view_textbook"),
+                },
+                {
+                    "title":      _("Pages"),
+                    "link":       reverse_lazy("admin:openbook_content_textbookpage_changelist"),
+                    "permission": lambda req: req.user.has_perm("openbook_content.view_textbookpage"),
+                },
+            ],
+        },
+        {
+            "ob_group_name": _("Courses"),
+            "models": [
+                "openbook_content.course",
+                "openbook_content.coursematerial",
+            ],
+            "items": [
+                {
+                    "title":      _("Courses"),
+                    "link":       reverse_lazy("admin:openbook_content_course_changelist"),
+                    "permission": lambda req: req.user.has_perm("openbook_content.view_course"),
+                },
+                {
+                    "title":      _("Materials"),
+                    "link":       reverse_lazy("admin:openbook_content_coursematerial_changelist"),
+                    "permission": lambda req: req.user.has_perm("openbook_content.view_coursematerial"),
+                },
+            ],
+        },
     ]
 }
 

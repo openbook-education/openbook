@@ -6,6 +6,7 @@
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
 
+from django.contrib.admin                  import TabularInline
 from django.utils.translation              import gettext_lazy as _
 from import_export.fields                  import Field
 
@@ -23,6 +24,16 @@ from openbook.auth.admin.role              import RoleInline
 from openbook.auth.admin.role_assignment   import RoleAssignmentInline
 from openbook.core.import_export.boolean   import BooleanWidget
 from ..models.course                       import Course
+from ..models.course_material              import CourseMaterial
+
+
+class _CourseMaterialInline(TabularInline):
+    model            = CourseMaterial
+    extra            = 0
+    show_change_link = True
+    tab              = True
+    fields           = ["textbook", "position"]
+    ordering         = ["position"]
 
 class CourseResource(ScopedRolesResourceMixin, ImportExportModelResource):
     is_template = Field(attribute="is_template", widget=BooleanWidget())
@@ -32,7 +43,8 @@ class CourseResource(ScopedRolesResourceMixin, ImportExportModelResource):
         fields = [
             "id", "delete",
             "slug", "name",
-            "description", "text_format", 
+            "description", "text_format",
+            "group", "position",
             *ScopedRolesResourceMixin.Meta.fields,
             "is_template"
         ]
@@ -46,16 +58,16 @@ class CourseAdmin(CustomModelAdmin):
     model               = Course
     form                = CourseForm
     resource_classes    = [CourseResource]
-    list_display        = ["name", "slug", "is_template", "owner", *created_modified_by_fields]
-    list_display_links  = ["name", "slug", "owner"]
-    list_filter         = ["name", "is_template", "owner", *created_modified_by_fields]
-    list_select_related = [*created_modified_by_related]
-    search_fields       = ["name", "slug", "owner", "description"]
-    ordering            = ["name", "slug"]
+    list_display        = ["name", "slug", "group", "position", "is_template", *created_modified_by_fields]
+    list_display_links  = ["name", "slug"]
+    list_filter         = ["is_template", "group", *created_modified_by_fields]
+    list_select_related = ["group", *created_modified_by_related]
+    search_fields       = ["name", "slug", "group__name", "description"]
+    ordering            = ["group", "position", "name"]
     readonly_fields     = [*created_modified_by_fields]
     prepopulated_fields = {"slug": ["name"]}
     filter_horizontal   = ["public_permissions",]
-    _inlines            = (RoleInline, RoleAssignmentInline, EnrollmentMethodInline, AccessRequestInline)
+    _inlines            = (_CourseMaterialInline, RoleInline, RoleAssignmentInline, EnrollmentMethodInline, AccessRequestInline)
     _add_inlines        = []
 
     def get_inlines(self, request, obj):
@@ -63,7 +75,7 @@ class CourseAdmin(CustomModelAdmin):
 
     fieldsets = [
         (None, {
-            "fields": [("name", "slug", "is_template")] # License, Image
+            "fields": [("name", "slug"), ("group", "position"), "is_template"]
         }),
         (_("Description"), {
             "classes": ["tab"],
@@ -75,7 +87,7 @@ class CourseAdmin(CustomModelAdmin):
 
     add_fieldsets = [
         (None, {
-            "fields": [("name", "slug", "is_template")] # License, Image
+            "fields": [("name", "slug"), ("group", "position"), "is_template"]
         }),
         (_("Description"), {
             "classes": ["tab"],

@@ -26,115 +26,121 @@ import {
  * 
  * Use this as a default serializer that adds all scope fields.
  * @export
- * @interface PatchedCourse
+ * @interface PatchedLibraryGroup
  */
-export interface PatchedCourse {
+export interface PatchedLibraryGroup {
     /**
      * 
      * @type {string}
-     * @memberof PatchedCourse
+     * @memberof PatchedLibraryGroup
      */
     readonly id?: string;
     /**
      * 
      * @type {string}
-     * @memberof PatchedCourse
+     * @memberof PatchedLibraryGroup
      */
     slug?: string;
     /**
      * 
      * @type {string}
-     * @memberof PatchedCourse
+     * @memberof PatchedLibraryGroup
      */
     name?: string;
     /**
      * 
      * @type {string}
-     * @memberof PatchedCourse
+     * @memberof PatchedLibraryGroup
      */
     description?: string;
     /**
      * 
      * @type {TextFormatEnum}
-     * @memberof PatchedCourse
+     * @memberof PatchedLibraryGroup
      */
     textFormat?: TextFormatEnum;
     /**
      * 
      * @type {string}
-     * @memberof PatchedCourse
+     * @memberof PatchedLibraryGroup
      */
-    group?: string;
-    /**
-     * Sort order inside the library group.
-     * @type {number}
-     * @memberof PatchedCourse
-     */
-    position?: number;
-    /**
-     * Flag that this course is only used for creating other courses.
-     * @type {boolean}
-     * @memberof PatchedCourse
-     */
-    isTemplate?: boolean;
+    parent?: string | null;
     /**
      * 
      * @type {Array<string>}
-     * @memberof PatchedCourse
+     * @memberof PatchedLibraryGroup
      */
-    readonly materials?: Array<string>;
+    readonly children?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof PatchedLibraryGroup
+     */
+    readonly textbooks?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof PatchedLibraryGroup
+     */
+    readonly courses?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof PatchedLibraryGroup
+     */
+    readonly links?: Array<string>;
     /**
      * 
      * @type {string}
-     * @memberof PatchedCourse
+     * @memberof PatchedLibraryGroup
      */
     readonly owner?: string;
     /**
      * 
      * @type {Array<string>}
-     * @memberof PatchedCourse
+     * @memberof PatchedLibraryGroup
      */
     publicPermissions?: Array<string>;
     /**
      * 
      * @type {Array<string>}
-     * @memberof PatchedCourse
+     * @memberof PatchedLibraryGroup
      */
     readonly roleAssignments?: Array<string>;
     /**
      * 
      * @type {Array<string>}
-     * @memberof PatchedCourse
+     * @memberof PatchedLibraryGroup
      */
     readonly enrollmentMethods?: Array<string>;
     /**
      * 
      * @type {Array<string>}
-     * @memberof PatchedCourse
+     * @memberof PatchedLibraryGroup
      */
     readonly accessRequests?: Array<string>;
     /**
      * 
      * @type {string}
-     * @memberof PatchedCourse
+     * @memberof PatchedLibraryGroup
      */
     readonly createdBy?: string;
     /**
      * 
      * @type {Date}
-     * @memberof PatchedCourse
+     * @memberof PatchedLibraryGroup
      */
     readonly createdAt?: Date | null;
     /**
      * 
      * @type {string}
-     * @memberof PatchedCourse
+     * @memberof PatchedLibraryGroup
      */
     readonly modifiedBy?: string;
     /**
      * 
      * @type {Date}
-     * @memberof PatchedCourse
+     * @memberof PatchedLibraryGroup
      */
     readonly modifiedAt?: Date | null;
 }
@@ -142,17 +148,17 @@ export interface PatchedCourse {
 
 
 /**
- * Check if a given object implements the PatchedCourse interface.
+ * Check if a given object implements the PatchedLibraryGroup interface.
  */
-export function instanceOfPatchedCourse(value: object): value is PatchedCourse {
+export function instanceOfPatchedLibraryGroup(value: object): value is PatchedLibraryGroup {
     return true;
 }
 
-export function PatchedCourseFromJSON(json: any): PatchedCourse {
-    return PatchedCourseFromJSONTyped(json, false);
+export function PatchedLibraryGroupFromJSON(json: any): PatchedLibraryGroup {
+    return PatchedLibraryGroupFromJSONTyped(json, false);
 }
 
-export function PatchedCourseFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedCourse {
+export function PatchedLibraryGroupFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedLibraryGroup {
     if (json == null) {
         return json;
     }
@@ -163,10 +169,11 @@ export function PatchedCourseFromJSONTyped(json: any, ignoreDiscriminator: boole
         'name': json['name'] == null ? undefined : json['name'],
         'description': json['description'] == null ? undefined : json['description'],
         'textFormat': json['text_format'] == null ? undefined : TextFormatEnumFromJSON(json['text_format']),
-        'group': json['group'] == null ? undefined : json['group'],
-        'position': json['position'] == null ? undefined : json['position'],
-        'isTemplate': json['is_template'] == null ? undefined : json['is_template'],
-        'materials': json['materials'] == null ? undefined : json['materials'],
+        'parent': json['parent'] == null ? undefined : json['parent'],
+        'children': json['children'] == null ? undefined : json['children'],
+        'textbooks': json['textbooks'] == null ? undefined : json['textbooks'],
+        'courses': json['courses'] == null ? undefined : json['courses'],
+        'links': json['links'] == null ? undefined : json['links'],
         'owner': json['owner'] == null ? undefined : json['owner'],
         'publicPermissions': json['public_permissions'] == null ? undefined : json['public_permissions'],
         'roleAssignments': json['role_assignments'] == null ? undefined : json['role_assignments'],
@@ -179,11 +186,11 @@ export function PatchedCourseFromJSONTyped(json: any, ignoreDiscriminator: boole
     };
 }
 
-export function PatchedCourseToJSON(json: any): PatchedCourse {
-    return PatchedCourseToJSONTyped(json, false);
+export function PatchedLibraryGroupToJSON(json: any): PatchedLibraryGroup {
+    return PatchedLibraryGroupToJSONTyped(json, false);
 }
 
-export function PatchedCourseToJSONTyped(value?: Omit<PatchedCourse, 'id'|'materials'|'owner'|'role_assignments'|'enrollment_methods'|'access_requests'|'created_by'|'created_at'|'modified_by'|'modified_at'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedLibraryGroupToJSONTyped(value?: Omit<PatchedLibraryGroup, 'id'|'children'|'textbooks'|'courses'|'links'|'owner'|'role_assignments'|'enrollment_methods'|'access_requests'|'created_by'|'created_at'|'modified_by'|'modified_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -194,9 +201,7 @@ export function PatchedCourseToJSONTyped(value?: Omit<PatchedCourse, 'id'|'mater
         'name': value['name'],
         'description': value['description'],
         'text_format': TextFormatEnumToJSON(value['textFormat']),
-        'group': value['group'],
-        'position': value['position'],
-        'is_template': value['isTemplate'],
+        'parent': value['parent'],
         'public_permissions': value['publicPermissions'],
     };
 }

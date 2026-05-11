@@ -15,34 +15,34 @@
 
 import * as runtime from '../runtime';
 import type {
-  Course,
-  PaginatedCourseList,
-  PatchedCourse,
+  CourseMaterialPageRange,
+  PaginatedCourseMaterialPageRangeList,
+  PatchedCourseMaterialPageRange,
 } from '../models/index';
 import {
-    CourseFromJSON,
-    CourseToJSON,
-    PaginatedCourseListFromJSON,
-    PaginatedCourseListToJSON,
-    PatchedCourseFromJSON,
-    PatchedCourseToJSON,
+    CourseMaterialPageRangeFromJSON,
+    CourseMaterialPageRangeToJSON,
+    PaginatedCourseMaterialPageRangeListFromJSON,
+    PaginatedCourseMaterialPageRangeListToJSON,
+    PatchedCourseMaterialPageRangeFromJSON,
+    PatchedCourseMaterialPageRangeToJSON,
 } from '../models/index';
 
-export interface ContentCoursesCreateRequest {
-    course: Omit<Course, 'id'|'materials'|'owner'|'role_assignments'|'enrollment_methods'|'access_requests'|'created_by'|'created_at'|'modified_by'|'modified_at'>;
+export interface ContentCourseMaterialPageRangesCreateRequest {
+    courseMaterialPageRange: Omit<CourseMaterialPageRange, 'id'|'created_by'|'created_at'|'modified_by'|'modified_at'>;
     expand?: string;
     fields?: string;
     omit?: string;
 }
 
-export interface ContentCoursesDestroyRequest {
+export interface ContentCourseMaterialPageRangesDestroyRequest {
     id: string;
     expand?: string;
     fields?: string;
     omit?: string;
 }
 
-export interface ContentCoursesListRequest {
+export interface ContentCourseMaterialPageRangesListRequest {
     expand?: string;
     fields?: string;
     omit?: string;
@@ -54,38 +54,36 @@ export interface ContentCoursesListRequest {
     createdAtGte?: Date;
     createdAtLte?: Date;
     createdBy?: string;
-    group?: string;
-    isTemplate?: boolean;
+    endPage?: string;
+    material?: string;
     modifiedAt?: Date;
     modifiedAtGte?: Date;
     modifiedAtLte?: Date;
     modifiedBy?: string;
-    name?: string;
-    owner?: number;
     position?: number;
     positionGte?: number;
     positionLte?: number;
-    slug?: string;
+    startPage?: string;
 }
 
-export interface ContentCoursesPartialUpdateRequest {
+export interface ContentCourseMaterialPageRangesPartialUpdateRequest {
     id: string;
     expand?: string;
     fields?: string;
     omit?: string;
-    patchedCourse?: Omit<PatchedCourse, 'id'|'materials'|'owner'|'role_assignments'|'enrollment_methods'|'access_requests'|'created_by'|'created_at'|'modified_by'|'modified_at'>;
+    patchedCourseMaterialPageRange?: Omit<PatchedCourseMaterialPageRange, 'id'|'created_by'|'created_at'|'modified_by'|'modified_at'>;
 }
 
-export interface ContentCoursesRetrieveRequest {
+export interface ContentCourseMaterialPageRangesRetrieveRequest {
     id: string;
     expand?: string;
     fields?: string;
     omit?: string;
 }
 
-export interface ContentCoursesUpdateRequest {
+export interface ContentCourseMaterialPageRangesUpdateRequest {
     id: string;
-    course: Omit<Course, 'id'|'materials'|'owner'|'role_assignments'|'enrollment_methods'|'access_requests'|'created_by'|'created_at'|'modified_by'|'modified_at'>;
+    courseMaterialPageRange: Omit<CourseMaterialPageRange, 'id'|'created_by'|'created_at'|'modified_by'|'modified_at'>;
     expand?: string;
     fields?: string;
     omit?: string;
@@ -94,17 +92,17 @@ export interface ContentCoursesUpdateRequest {
 /**
  * 
  */
-export class CoursesApi extends runtime.BaseAPI {
+export class CourseMaterialPageRangesApi extends runtime.BaseAPI {
 
     /**
-     * Courses
+     * Course Material Page Ranges
      * Create
      */
-    async contentCoursesCreateRaw(requestParameters: ContentCoursesCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Course>> {
-        if (requestParameters['course'] == null) {
+    async contentCourseMaterialPageRangesCreateRaw(requestParameters: ContentCourseMaterialPageRangesCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CourseMaterialPageRange>> {
+        if (requestParameters['courseMaterialPageRange'] == null) {
             throw new runtime.RequiredError(
-                'course',
-                'Required parameter "course" was null or undefined when calling contentCoursesCreate().'
+                'courseMaterialPageRange',
+                'Required parameter "courseMaterialPageRange" was null or undefined when calling contentCourseMaterialPageRangesCreate().'
             );
         }
 
@@ -131,34 +129,34 @@ export class CoursesApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/content/courses/`,
+            path: `/api/content/course_material_page_ranges/`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: CourseToJSON(requestParameters['course']),
+            body: CourseMaterialPageRangeToJSON(requestParameters['courseMaterialPageRange']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => CourseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => CourseMaterialPageRangeFromJSON(jsonValue));
     }
 
     /**
-     * Courses
+     * Course Material Page Ranges
      * Create
      */
-    async contentCoursesCreate(requestParameters: ContentCoursesCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Course> {
-        const response = await this.contentCoursesCreateRaw(requestParameters, initOverrides);
+    async contentCourseMaterialPageRangesCreate(requestParameters: ContentCourseMaterialPageRangesCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CourseMaterialPageRange> {
+        const response = await this.contentCourseMaterialPageRangesCreateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Courses
+     * Course Material Page Ranges
      * Delete
      */
-    async contentCoursesDestroyRaw(requestParameters: ContentCoursesDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async contentCourseMaterialPageRangesDestroyRaw(requestParameters: ContentCourseMaterialPageRangesDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
-                'Required parameter "id" was null or undefined when calling contentCoursesDestroy().'
+                'Required parameter "id" was null or undefined when calling contentCourseMaterialPageRangesDestroy().'
             );
         }
 
@@ -183,7 +181,7 @@ export class CoursesApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/content/courses/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/api/content/course_material_page_ranges/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -193,18 +191,18 @@ export class CoursesApi extends runtime.BaseAPI {
     }
 
     /**
-     * Courses
+     * Course Material Page Ranges
      * Delete
      */
-    async contentCoursesDestroy(requestParameters: ContentCoursesDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.contentCoursesDestroyRaw(requestParameters, initOverrides);
+    async contentCourseMaterialPageRangesDestroy(requestParameters: ContentCourseMaterialPageRangesDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.contentCourseMaterialPageRangesDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
-     * Courses
+     * Course Material Page Ranges
      * List
      */
-    async contentCoursesListRaw(requestParameters: ContentCoursesListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedCourseList>> {
+    async contentCourseMaterialPageRangesListRaw(requestParameters: ContentCourseMaterialPageRangesListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedCourseMaterialPageRangeList>> {
         const queryParameters: any = {};
 
         if (requestParameters['expand'] != null) {
@@ -251,12 +249,12 @@ export class CoursesApi extends runtime.BaseAPI {
             queryParameters['created_by'] = requestParameters['createdBy'];
         }
 
-        if (requestParameters['group'] != null) {
-            queryParameters['group'] = requestParameters['group'];
+        if (requestParameters['endPage'] != null) {
+            queryParameters['end_page'] = requestParameters['endPage'];
         }
 
-        if (requestParameters['isTemplate'] != null) {
-            queryParameters['is_template'] = requestParameters['isTemplate'];
+        if (requestParameters['material'] != null) {
+            queryParameters['material'] = requestParameters['material'];
         }
 
         if (requestParameters['modifiedAt'] != null) {
@@ -275,14 +273,6 @@ export class CoursesApi extends runtime.BaseAPI {
             queryParameters['modified_by'] = requestParameters['modifiedBy'];
         }
 
-        if (requestParameters['name'] != null) {
-            queryParameters['name'] = requestParameters['name'];
-        }
-
-        if (requestParameters['owner'] != null) {
-            queryParameters['owner'] = requestParameters['owner'];
-        }
-
         if (requestParameters['position'] != null) {
             queryParameters['position'] = requestParameters['position'];
         }
@@ -295,8 +285,8 @@ export class CoursesApi extends runtime.BaseAPI {
             queryParameters['position__lte'] = requestParameters['positionLte'];
         }
 
-        if (requestParameters['slug'] != null) {
-            queryParameters['slug'] = requestParameters['slug'];
+        if (requestParameters['startPage'] != null) {
+            queryParameters['start_page'] = requestParameters['startPage'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -306,33 +296,33 @@ export class CoursesApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/content/courses/`,
+            path: `/api/content/course_material_page_ranges/`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedCourseListFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedCourseMaterialPageRangeListFromJSON(jsonValue));
     }
 
     /**
-     * Courses
+     * Course Material Page Ranges
      * List
      */
-    async contentCoursesList(requestParameters: ContentCoursesListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedCourseList> {
-        const response = await this.contentCoursesListRaw(requestParameters, initOverrides);
+    async contentCourseMaterialPageRangesList(requestParameters: ContentCourseMaterialPageRangesListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedCourseMaterialPageRangeList> {
+        const response = await this.contentCourseMaterialPageRangesListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Courses
+     * Course Material Page Ranges
      * Partial Update
      */
-    async contentCoursesPartialUpdateRaw(requestParameters: ContentCoursesPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Course>> {
+    async contentCourseMaterialPageRangesPartialUpdateRaw(requestParameters: ContentCourseMaterialPageRangesPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CourseMaterialPageRange>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
-                'Required parameter "id" was null or undefined when calling contentCoursesPartialUpdate().'
+                'Required parameter "id" was null or undefined when calling contentCourseMaterialPageRangesPartialUpdate().'
             );
         }
 
@@ -359,34 +349,34 @@ export class CoursesApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/content/courses/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/api/content/course_material_page_ranges/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedCourseToJSON(requestParameters['patchedCourse']),
+            body: PatchedCourseMaterialPageRangeToJSON(requestParameters['patchedCourseMaterialPageRange']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => CourseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => CourseMaterialPageRangeFromJSON(jsonValue));
     }
 
     /**
-     * Courses
+     * Course Material Page Ranges
      * Partial Update
      */
-    async contentCoursesPartialUpdate(requestParameters: ContentCoursesPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Course> {
-        const response = await this.contentCoursesPartialUpdateRaw(requestParameters, initOverrides);
+    async contentCourseMaterialPageRangesPartialUpdate(requestParameters: ContentCourseMaterialPageRangesPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CourseMaterialPageRange> {
+        const response = await this.contentCourseMaterialPageRangesPartialUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Courses
+     * Course Material Page Ranges
      * Retrieve
      */
-    async contentCoursesRetrieveRaw(requestParameters: ContentCoursesRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Course>> {
+    async contentCourseMaterialPageRangesRetrieveRaw(requestParameters: ContentCourseMaterialPageRangesRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CourseMaterialPageRange>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
-                'Required parameter "id" was null or undefined when calling contentCoursesRetrieve().'
+                'Required parameter "id" was null or undefined when calling contentCourseMaterialPageRangesRetrieve().'
             );
         }
 
@@ -411,40 +401,40 @@ export class CoursesApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/content/courses/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/api/content/course_material_page_ranges/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => CourseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => CourseMaterialPageRangeFromJSON(jsonValue));
     }
 
     /**
-     * Courses
+     * Course Material Page Ranges
      * Retrieve
      */
-    async contentCoursesRetrieve(requestParameters: ContentCoursesRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Course> {
-        const response = await this.contentCoursesRetrieveRaw(requestParameters, initOverrides);
+    async contentCourseMaterialPageRangesRetrieve(requestParameters: ContentCourseMaterialPageRangesRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CourseMaterialPageRange> {
+        const response = await this.contentCourseMaterialPageRangesRetrieveRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Courses
+     * Course Material Page Ranges
      * Update
      */
-    async contentCoursesUpdateRaw(requestParameters: ContentCoursesUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Course>> {
+    async contentCourseMaterialPageRangesUpdateRaw(requestParameters: ContentCourseMaterialPageRangesUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CourseMaterialPageRange>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
-                'Required parameter "id" was null or undefined when calling contentCoursesUpdate().'
+                'Required parameter "id" was null or undefined when calling contentCourseMaterialPageRangesUpdate().'
             );
         }
 
-        if (requestParameters['course'] == null) {
+        if (requestParameters['courseMaterialPageRange'] == null) {
             throw new runtime.RequiredError(
-                'course',
-                'Required parameter "course" was null or undefined when calling contentCoursesUpdate().'
+                'courseMaterialPageRange',
+                'Required parameter "courseMaterialPageRange" was null or undefined when calling contentCourseMaterialPageRangesUpdate().'
             );
         }
 
@@ -471,22 +461,22 @@ export class CoursesApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/content/courses/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/api/content/course_material_page_ranges/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: CourseToJSON(requestParameters['course']),
+            body: CourseMaterialPageRangeToJSON(requestParameters['courseMaterialPageRange']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => CourseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => CourseMaterialPageRangeFromJSON(jsonValue));
     }
 
     /**
-     * Courses
+     * Course Material Page Ranges
      * Update
      */
-    async contentCoursesUpdate(requestParameters: ContentCoursesUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Course> {
-        const response = await this.contentCoursesUpdateRaw(requestParameters, initOverrides);
+    async contentCourseMaterialPageRangesUpdate(requestParameters: ContentCourseMaterialPageRangesUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CourseMaterialPageRange> {
+        const response = await this.contentCourseMaterialPageRangesUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

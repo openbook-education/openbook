@@ -17,9 +17,23 @@ from openbook.core.models.mixins.text  import NameDescriptionMixin
 
 class Course(UUIDMixin, NonUniqueSlugMixin, NameDescriptionMixin, ScopedRolesMixin, CreatedModifiedByMixin):
     """
-    Courses support the teachers in the execution of the teaching by bringing together teachers,
-    students, textbooks and other one-off materials.
+    A concrete course for one audience and time frame.
+
+    Courses define a reading order over one or more textbooks/pages and can be reused from templates.
     """
+    group = models.ForeignKey(
+        "openbook_content.LibraryGroup",
+        verbose_name = _("Library Group"),
+        on_delete    = models.PROTECT,
+        related_name = "courses",
+    )
+
+    position = models.PositiveIntegerField(
+        verbose_name = _("Position"),
+        default      = 0,
+        help_text    = _("Sort order inside the library group."),
+    )
+
     # License (via new model in core)
     # Image
     # AI Notes (new mixin)
@@ -34,3 +48,13 @@ class Course(UUIDMixin, NonUniqueSlugMixin, NameDescriptionMixin, ScopedRolesMix
     class Meta():
         verbose_name        = _("Course")
         verbose_name_plural = _("Courses")
+        ordering            = ("group", "position", "name")
+        indexes             = [
+            models.Index(fields=("group", "position")),
+        ]
+        constraints         = [
+            models.UniqueConstraint(
+                fields=("group", "position"),
+                name="openbook_content_unique_course_position_in_group",
+            ),
+        ]

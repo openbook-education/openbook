@@ -15,34 +15,34 @@
 
 import * as runtime from '../runtime';
 import type {
-  Course,
-  PaginatedCourseList,
-  PatchedCourse,
+  LibraryGroup,
+  PaginatedLibraryGroupList,
+  PatchedLibraryGroup,
 } from '../models/index';
 import {
-    CourseFromJSON,
-    CourseToJSON,
-    PaginatedCourseListFromJSON,
-    PaginatedCourseListToJSON,
-    PatchedCourseFromJSON,
-    PatchedCourseToJSON,
+    LibraryGroupFromJSON,
+    LibraryGroupToJSON,
+    PaginatedLibraryGroupListFromJSON,
+    PaginatedLibraryGroupListToJSON,
+    PatchedLibraryGroupFromJSON,
+    PatchedLibraryGroupToJSON,
 } from '../models/index';
 
-export interface ContentCoursesCreateRequest {
-    course: Omit<Course, 'id'|'materials'|'owner'|'role_assignments'|'enrollment_methods'|'access_requests'|'created_by'|'created_at'|'modified_by'|'modified_at'>;
+export interface ContentLibraryGroupsCreateRequest {
+    libraryGroup: Omit<LibraryGroup, 'id'|'children'|'textbooks'|'courses'|'links'|'owner'|'role_assignments'|'enrollment_methods'|'access_requests'|'created_by'|'created_at'|'modified_by'|'modified_at'>;
     expand?: string;
     fields?: string;
     omit?: string;
 }
 
-export interface ContentCoursesDestroyRequest {
+export interface ContentLibraryGroupsDestroyRequest {
     id: string;
     expand?: string;
     fields?: string;
     omit?: string;
 }
 
-export interface ContentCoursesListRequest {
+export interface ContentLibraryGroupsListRequest {
     expand?: string;
     fields?: string;
     omit?: string;
@@ -54,38 +54,34 @@ export interface ContentCoursesListRequest {
     createdAtGte?: Date;
     createdAtLte?: Date;
     createdBy?: string;
-    group?: string;
-    isTemplate?: boolean;
     modifiedAt?: Date;
     modifiedAtGte?: Date;
     modifiedAtLte?: Date;
     modifiedBy?: string;
     name?: string;
     owner?: number;
-    position?: number;
-    positionGte?: number;
-    positionLte?: number;
+    parent?: string;
     slug?: string;
 }
 
-export interface ContentCoursesPartialUpdateRequest {
+export interface ContentLibraryGroupsPartialUpdateRequest {
     id: string;
     expand?: string;
     fields?: string;
     omit?: string;
-    patchedCourse?: Omit<PatchedCourse, 'id'|'materials'|'owner'|'role_assignments'|'enrollment_methods'|'access_requests'|'created_by'|'created_at'|'modified_by'|'modified_at'>;
+    patchedLibraryGroup?: Omit<PatchedLibraryGroup, 'id'|'children'|'textbooks'|'courses'|'links'|'owner'|'role_assignments'|'enrollment_methods'|'access_requests'|'created_by'|'created_at'|'modified_by'|'modified_at'>;
 }
 
-export interface ContentCoursesRetrieveRequest {
+export interface ContentLibraryGroupsRetrieveRequest {
     id: string;
     expand?: string;
     fields?: string;
     omit?: string;
 }
 
-export interface ContentCoursesUpdateRequest {
+export interface ContentLibraryGroupsUpdateRequest {
     id: string;
-    course: Omit<Course, 'id'|'materials'|'owner'|'role_assignments'|'enrollment_methods'|'access_requests'|'created_by'|'created_at'|'modified_by'|'modified_at'>;
+    libraryGroup: Omit<LibraryGroup, 'id'|'children'|'textbooks'|'courses'|'links'|'owner'|'role_assignments'|'enrollment_methods'|'access_requests'|'created_by'|'created_at'|'modified_by'|'modified_at'>;
     expand?: string;
     fields?: string;
     omit?: string;
@@ -94,17 +90,17 @@ export interface ContentCoursesUpdateRequest {
 /**
  * 
  */
-export class CoursesApi extends runtime.BaseAPI {
+export class LibraryGroupsApi extends runtime.BaseAPI {
 
     /**
-     * Courses
+     * Library Groups
      * Create
      */
-    async contentCoursesCreateRaw(requestParameters: ContentCoursesCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Course>> {
-        if (requestParameters['course'] == null) {
+    async contentLibraryGroupsCreateRaw(requestParameters: ContentLibraryGroupsCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<LibraryGroup>> {
+        if (requestParameters['libraryGroup'] == null) {
             throw new runtime.RequiredError(
-                'course',
-                'Required parameter "course" was null or undefined when calling contentCoursesCreate().'
+                'libraryGroup',
+                'Required parameter "libraryGroup" was null or undefined when calling contentLibraryGroupsCreate().'
             );
         }
 
@@ -131,34 +127,34 @@ export class CoursesApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/content/courses/`,
+            path: `/api/content/library_groups/`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: CourseToJSON(requestParameters['course']),
+            body: LibraryGroupToJSON(requestParameters['libraryGroup']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => CourseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => LibraryGroupFromJSON(jsonValue));
     }
 
     /**
-     * Courses
+     * Library Groups
      * Create
      */
-    async contentCoursesCreate(requestParameters: ContentCoursesCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Course> {
-        const response = await this.contentCoursesCreateRaw(requestParameters, initOverrides);
+    async contentLibraryGroupsCreate(requestParameters: ContentLibraryGroupsCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<LibraryGroup> {
+        const response = await this.contentLibraryGroupsCreateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Courses
+     * Library Groups
      * Delete
      */
-    async contentCoursesDestroyRaw(requestParameters: ContentCoursesDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async contentLibraryGroupsDestroyRaw(requestParameters: ContentLibraryGroupsDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
-                'Required parameter "id" was null or undefined when calling contentCoursesDestroy().'
+                'Required parameter "id" was null or undefined when calling contentLibraryGroupsDestroy().'
             );
         }
 
@@ -183,7 +179,7 @@ export class CoursesApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/content/courses/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/api/content/library_groups/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -193,18 +189,18 @@ export class CoursesApi extends runtime.BaseAPI {
     }
 
     /**
-     * Courses
+     * Library Groups
      * Delete
      */
-    async contentCoursesDestroy(requestParameters: ContentCoursesDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.contentCoursesDestroyRaw(requestParameters, initOverrides);
+    async contentLibraryGroupsDestroy(requestParameters: ContentLibraryGroupsDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.contentLibraryGroupsDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
-     * Courses
+     * Library Groups
      * List
      */
-    async contentCoursesListRaw(requestParameters: ContentCoursesListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedCourseList>> {
+    async contentLibraryGroupsListRaw(requestParameters: ContentLibraryGroupsListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedLibraryGroupList>> {
         const queryParameters: any = {};
 
         if (requestParameters['expand'] != null) {
@@ -251,14 +247,6 @@ export class CoursesApi extends runtime.BaseAPI {
             queryParameters['created_by'] = requestParameters['createdBy'];
         }
 
-        if (requestParameters['group'] != null) {
-            queryParameters['group'] = requestParameters['group'];
-        }
-
-        if (requestParameters['isTemplate'] != null) {
-            queryParameters['is_template'] = requestParameters['isTemplate'];
-        }
-
         if (requestParameters['modifiedAt'] != null) {
             queryParameters['modified_at'] = (requestParameters['modifiedAt'] as any).toISOString();
         }
@@ -283,16 +271,8 @@ export class CoursesApi extends runtime.BaseAPI {
             queryParameters['owner'] = requestParameters['owner'];
         }
 
-        if (requestParameters['position'] != null) {
-            queryParameters['position'] = requestParameters['position'];
-        }
-
-        if (requestParameters['positionGte'] != null) {
-            queryParameters['position__gte'] = requestParameters['positionGte'];
-        }
-
-        if (requestParameters['positionLte'] != null) {
-            queryParameters['position__lte'] = requestParameters['positionLte'];
+        if (requestParameters['parent'] != null) {
+            queryParameters['parent'] = requestParameters['parent'];
         }
 
         if (requestParameters['slug'] != null) {
@@ -306,33 +286,33 @@ export class CoursesApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/content/courses/`,
+            path: `/api/content/library_groups/`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedCourseListFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedLibraryGroupListFromJSON(jsonValue));
     }
 
     /**
-     * Courses
+     * Library Groups
      * List
      */
-    async contentCoursesList(requestParameters: ContentCoursesListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedCourseList> {
-        const response = await this.contentCoursesListRaw(requestParameters, initOverrides);
+    async contentLibraryGroupsList(requestParameters: ContentLibraryGroupsListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedLibraryGroupList> {
+        const response = await this.contentLibraryGroupsListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Courses
+     * Library Groups
      * Partial Update
      */
-    async contentCoursesPartialUpdateRaw(requestParameters: ContentCoursesPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Course>> {
+    async contentLibraryGroupsPartialUpdateRaw(requestParameters: ContentLibraryGroupsPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<LibraryGroup>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
-                'Required parameter "id" was null or undefined when calling contentCoursesPartialUpdate().'
+                'Required parameter "id" was null or undefined when calling contentLibraryGroupsPartialUpdate().'
             );
         }
 
@@ -359,34 +339,34 @@ export class CoursesApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/content/courses/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/api/content/library_groups/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedCourseToJSON(requestParameters['patchedCourse']),
+            body: PatchedLibraryGroupToJSON(requestParameters['patchedLibraryGroup']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => CourseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => LibraryGroupFromJSON(jsonValue));
     }
 
     /**
-     * Courses
+     * Library Groups
      * Partial Update
      */
-    async contentCoursesPartialUpdate(requestParameters: ContentCoursesPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Course> {
-        const response = await this.contentCoursesPartialUpdateRaw(requestParameters, initOverrides);
+    async contentLibraryGroupsPartialUpdate(requestParameters: ContentLibraryGroupsPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<LibraryGroup> {
+        const response = await this.contentLibraryGroupsPartialUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Courses
+     * Library Groups
      * Retrieve
      */
-    async contentCoursesRetrieveRaw(requestParameters: ContentCoursesRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Course>> {
+    async contentLibraryGroupsRetrieveRaw(requestParameters: ContentLibraryGroupsRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<LibraryGroup>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
-                'Required parameter "id" was null or undefined when calling contentCoursesRetrieve().'
+                'Required parameter "id" was null or undefined when calling contentLibraryGroupsRetrieve().'
             );
         }
 
@@ -411,40 +391,40 @@ export class CoursesApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/content/courses/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/api/content/library_groups/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => CourseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => LibraryGroupFromJSON(jsonValue));
     }
 
     /**
-     * Courses
+     * Library Groups
      * Retrieve
      */
-    async contentCoursesRetrieve(requestParameters: ContentCoursesRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Course> {
-        const response = await this.contentCoursesRetrieveRaw(requestParameters, initOverrides);
+    async contentLibraryGroupsRetrieve(requestParameters: ContentLibraryGroupsRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<LibraryGroup> {
+        const response = await this.contentLibraryGroupsRetrieveRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Courses
+     * Library Groups
      * Update
      */
-    async contentCoursesUpdateRaw(requestParameters: ContentCoursesUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Course>> {
+    async contentLibraryGroupsUpdateRaw(requestParameters: ContentLibraryGroupsUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<LibraryGroup>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
-                'Required parameter "id" was null or undefined when calling contentCoursesUpdate().'
+                'Required parameter "id" was null or undefined when calling contentLibraryGroupsUpdate().'
             );
         }
 
-        if (requestParameters['course'] == null) {
+        if (requestParameters['libraryGroup'] == null) {
             throw new runtime.RequiredError(
-                'course',
-                'Required parameter "course" was null or undefined when calling contentCoursesUpdate().'
+                'libraryGroup',
+                'Required parameter "libraryGroup" was null or undefined when calling contentLibraryGroupsUpdate().'
             );
         }
 
@@ -471,22 +451,22 @@ export class CoursesApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/content/courses/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/api/content/library_groups/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: CourseToJSON(requestParameters['course']),
+            body: LibraryGroupToJSON(requestParameters['libraryGroup']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => CourseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => LibraryGroupFromJSON(jsonValue));
     }
 
     /**
-     * Courses
+     * Library Groups
      * Update
      */
-    async contentCoursesUpdate(requestParameters: ContentCoursesUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Course> {
-        const response = await this.contentCoursesUpdateRaw(requestParameters, initOverrides);
+    async contentLibraryGroupsUpdate(requestParameters: ContentLibraryGroupsUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<LibraryGroup> {
+        const response = await this.contentLibraryGroupsUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

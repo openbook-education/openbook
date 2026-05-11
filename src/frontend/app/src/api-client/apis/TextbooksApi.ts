@@ -15,34 +15,34 @@
 
 import * as runtime from '../runtime';
 import type {
-  Course,
-  PaginatedCourseList,
-  PatchedCourse,
+  PaginatedTextbookList,
+  PatchedTextbook,
+  Textbook,
 } from '../models/index';
 import {
-    CourseFromJSON,
-    CourseToJSON,
-    PaginatedCourseListFromJSON,
-    PaginatedCourseListToJSON,
-    PatchedCourseFromJSON,
-    PatchedCourseToJSON,
+    PaginatedTextbookListFromJSON,
+    PaginatedTextbookListToJSON,
+    PatchedTextbookFromJSON,
+    PatchedTextbookToJSON,
+    TextbookFromJSON,
+    TextbookToJSON,
 } from '../models/index';
 
-export interface ContentCoursesCreateRequest {
-    course: Omit<Course, 'id'|'materials'|'owner'|'role_assignments'|'enrollment_methods'|'access_requests'|'created_by'|'created_at'|'modified_by'|'modified_at'>;
+export interface ContentTextbooksCreateRequest {
+    textbook: Omit<Textbook, 'id'|'pages'|'used_in_courses'|'library_links'|'created_by'|'created_at'|'modified_by'|'modified_at'>;
     expand?: string;
     fields?: string;
     omit?: string;
 }
 
-export interface ContentCoursesDestroyRequest {
+export interface ContentTextbooksDestroyRequest {
     id: string;
     expand?: string;
     fields?: string;
     omit?: string;
 }
 
-export interface ContentCoursesListRequest {
+export interface ContentTextbooksListRequest {
     expand?: string;
     fields?: string;
     omit?: string;
@@ -55,37 +55,35 @@ export interface ContentCoursesListRequest {
     createdAtLte?: Date;
     createdBy?: string;
     group?: string;
-    isTemplate?: boolean;
     modifiedAt?: Date;
     modifiedAtGte?: Date;
     modifiedAtLte?: Date;
     modifiedBy?: string;
     name?: string;
-    owner?: number;
     position?: number;
     positionGte?: number;
     positionLte?: number;
     slug?: string;
 }
 
-export interface ContentCoursesPartialUpdateRequest {
+export interface ContentTextbooksPartialUpdateRequest {
     id: string;
     expand?: string;
     fields?: string;
     omit?: string;
-    patchedCourse?: Omit<PatchedCourse, 'id'|'materials'|'owner'|'role_assignments'|'enrollment_methods'|'access_requests'|'created_by'|'created_at'|'modified_by'|'modified_at'>;
+    patchedTextbook?: Omit<PatchedTextbook, 'id'|'pages'|'used_in_courses'|'library_links'|'created_by'|'created_at'|'modified_by'|'modified_at'>;
 }
 
-export interface ContentCoursesRetrieveRequest {
+export interface ContentTextbooksRetrieveRequest {
     id: string;
     expand?: string;
     fields?: string;
     omit?: string;
 }
 
-export interface ContentCoursesUpdateRequest {
+export interface ContentTextbooksUpdateRequest {
     id: string;
-    course: Omit<Course, 'id'|'materials'|'owner'|'role_assignments'|'enrollment_methods'|'access_requests'|'created_by'|'created_at'|'modified_by'|'modified_at'>;
+    textbook: Omit<Textbook, 'id'|'pages'|'used_in_courses'|'library_links'|'created_by'|'created_at'|'modified_by'|'modified_at'>;
     expand?: string;
     fields?: string;
     omit?: string;
@@ -94,17 +92,17 @@ export interface ContentCoursesUpdateRequest {
 /**
  * 
  */
-export class CoursesApi extends runtime.BaseAPI {
+export class TextbooksApi extends runtime.BaseAPI {
 
     /**
-     * Courses
+     * Textbooks
      * Create
      */
-    async contentCoursesCreateRaw(requestParameters: ContentCoursesCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Course>> {
-        if (requestParameters['course'] == null) {
+    async contentTextbooksCreateRaw(requestParameters: ContentTextbooksCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Textbook>> {
+        if (requestParameters['textbook'] == null) {
             throw new runtime.RequiredError(
-                'course',
-                'Required parameter "course" was null or undefined when calling contentCoursesCreate().'
+                'textbook',
+                'Required parameter "textbook" was null or undefined when calling contentTextbooksCreate().'
             );
         }
 
@@ -131,34 +129,34 @@ export class CoursesApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/content/courses/`,
+            path: `/api/content/textbooks/`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: CourseToJSON(requestParameters['course']),
+            body: TextbookToJSON(requestParameters['textbook']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => CourseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => TextbookFromJSON(jsonValue));
     }
 
     /**
-     * Courses
+     * Textbooks
      * Create
      */
-    async contentCoursesCreate(requestParameters: ContentCoursesCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Course> {
-        const response = await this.contentCoursesCreateRaw(requestParameters, initOverrides);
+    async contentTextbooksCreate(requestParameters: ContentTextbooksCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Textbook> {
+        const response = await this.contentTextbooksCreateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Courses
+     * Textbooks
      * Delete
      */
-    async contentCoursesDestroyRaw(requestParameters: ContentCoursesDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async contentTextbooksDestroyRaw(requestParameters: ContentTextbooksDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
-                'Required parameter "id" was null or undefined when calling contentCoursesDestroy().'
+                'Required parameter "id" was null or undefined when calling contentTextbooksDestroy().'
             );
         }
 
@@ -183,7 +181,7 @@ export class CoursesApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/content/courses/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/api/content/textbooks/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -193,18 +191,18 @@ export class CoursesApi extends runtime.BaseAPI {
     }
 
     /**
-     * Courses
+     * Textbooks
      * Delete
      */
-    async contentCoursesDestroy(requestParameters: ContentCoursesDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.contentCoursesDestroyRaw(requestParameters, initOverrides);
+    async contentTextbooksDestroy(requestParameters: ContentTextbooksDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.contentTextbooksDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
-     * Courses
+     * Textbooks
      * List
      */
-    async contentCoursesListRaw(requestParameters: ContentCoursesListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedCourseList>> {
+    async contentTextbooksListRaw(requestParameters: ContentTextbooksListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedTextbookList>> {
         const queryParameters: any = {};
 
         if (requestParameters['expand'] != null) {
@@ -255,10 +253,6 @@ export class CoursesApi extends runtime.BaseAPI {
             queryParameters['group'] = requestParameters['group'];
         }
 
-        if (requestParameters['isTemplate'] != null) {
-            queryParameters['is_template'] = requestParameters['isTemplate'];
-        }
-
         if (requestParameters['modifiedAt'] != null) {
             queryParameters['modified_at'] = (requestParameters['modifiedAt'] as any).toISOString();
         }
@@ -277,10 +271,6 @@ export class CoursesApi extends runtime.BaseAPI {
 
         if (requestParameters['name'] != null) {
             queryParameters['name'] = requestParameters['name'];
-        }
-
-        if (requestParameters['owner'] != null) {
-            queryParameters['owner'] = requestParameters['owner'];
         }
 
         if (requestParameters['position'] != null) {
@@ -306,33 +296,33 @@ export class CoursesApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/content/courses/`,
+            path: `/api/content/textbooks/`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedCourseListFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedTextbookListFromJSON(jsonValue));
     }
 
     /**
-     * Courses
+     * Textbooks
      * List
      */
-    async contentCoursesList(requestParameters: ContentCoursesListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedCourseList> {
-        const response = await this.contentCoursesListRaw(requestParameters, initOverrides);
+    async contentTextbooksList(requestParameters: ContentTextbooksListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedTextbookList> {
+        const response = await this.contentTextbooksListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Courses
+     * Textbooks
      * Partial Update
      */
-    async contentCoursesPartialUpdateRaw(requestParameters: ContentCoursesPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Course>> {
+    async contentTextbooksPartialUpdateRaw(requestParameters: ContentTextbooksPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Textbook>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
-                'Required parameter "id" was null or undefined when calling contentCoursesPartialUpdate().'
+                'Required parameter "id" was null or undefined when calling contentTextbooksPartialUpdate().'
             );
         }
 
@@ -359,34 +349,34 @@ export class CoursesApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/content/courses/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/api/content/textbooks/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedCourseToJSON(requestParameters['patchedCourse']),
+            body: PatchedTextbookToJSON(requestParameters['patchedTextbook']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => CourseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => TextbookFromJSON(jsonValue));
     }
 
     /**
-     * Courses
+     * Textbooks
      * Partial Update
      */
-    async contentCoursesPartialUpdate(requestParameters: ContentCoursesPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Course> {
-        const response = await this.contentCoursesPartialUpdateRaw(requestParameters, initOverrides);
+    async contentTextbooksPartialUpdate(requestParameters: ContentTextbooksPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Textbook> {
+        const response = await this.contentTextbooksPartialUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Courses
+     * Textbooks
      * Retrieve
      */
-    async contentCoursesRetrieveRaw(requestParameters: ContentCoursesRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Course>> {
+    async contentTextbooksRetrieveRaw(requestParameters: ContentTextbooksRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Textbook>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
-                'Required parameter "id" was null or undefined when calling contentCoursesRetrieve().'
+                'Required parameter "id" was null or undefined when calling contentTextbooksRetrieve().'
             );
         }
 
@@ -411,40 +401,40 @@ export class CoursesApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/content/courses/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/api/content/textbooks/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => CourseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => TextbookFromJSON(jsonValue));
     }
 
     /**
-     * Courses
+     * Textbooks
      * Retrieve
      */
-    async contentCoursesRetrieve(requestParameters: ContentCoursesRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Course> {
-        const response = await this.contentCoursesRetrieveRaw(requestParameters, initOverrides);
+    async contentTextbooksRetrieve(requestParameters: ContentTextbooksRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Textbook> {
+        const response = await this.contentTextbooksRetrieveRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Courses
+     * Textbooks
      * Update
      */
-    async contentCoursesUpdateRaw(requestParameters: ContentCoursesUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Course>> {
+    async contentTextbooksUpdateRaw(requestParameters: ContentTextbooksUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Textbook>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
-                'Required parameter "id" was null or undefined when calling contentCoursesUpdate().'
+                'Required parameter "id" was null or undefined when calling contentTextbooksUpdate().'
             );
         }
 
-        if (requestParameters['course'] == null) {
+        if (requestParameters['textbook'] == null) {
             throw new runtime.RequiredError(
-                'course',
-                'Required parameter "course" was null or undefined when calling contentCoursesUpdate().'
+                'textbook',
+                'Required parameter "textbook" was null or undefined when calling contentTextbooksUpdate().'
             );
         }
 
@@ -471,22 +461,22 @@ export class CoursesApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/content/courses/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/api/content/textbooks/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: CourseToJSON(requestParameters['course']),
+            body: TextbookToJSON(requestParameters['textbook']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => CourseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => TextbookFromJSON(jsonValue));
     }
 
     /**
-     * Courses
+     * Textbooks
      * Update
      */
-    async contentCoursesUpdate(requestParameters: ContentCoursesUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Course> {
-        const response = await this.contentCoursesUpdateRaw(requestParameters, initOverrides);
+    async contentTextbooksUpdate(requestParameters: ContentTextbooksUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Textbook> {
+        const response = await this.contentTextbooksUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

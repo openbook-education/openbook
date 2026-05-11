@@ -22,119 +22,96 @@ import {
 } from './TextFormatEnum';
 
 /**
- * Provide default scope fields for serializers of models with ScopedRolesMixin.
+ * Reuse full cleaning and validation logic of the models in the REST API.
  * 
- * Use this as a default serializer that adds all scope fields.
+ * Reuse ``full_clean()``, ``clean()``, field validation, and uniqueness checks.
+ * Also make sure that the pre-filled model instance can be accessed in the DRF view.
  * @export
- * @interface Course
+ * @interface Textbook
  */
-export interface Course {
+export interface Textbook {
     /**
      * 
      * @type {string}
-     * @memberof Course
+     * @memberof Textbook
      */
     readonly id: string;
     /**
      * 
      * @type {string}
-     * @memberof Course
+     * @memberof Textbook
      */
     slug: string;
     /**
      * 
      * @type {string}
-     * @memberof Course
+     * @memberof Textbook
      */
     name: string;
     /**
      * 
      * @type {string}
-     * @memberof Course
+     * @memberof Textbook
      */
     description?: string;
     /**
      * 
      * @type {TextFormatEnum}
-     * @memberof Course
+     * @memberof Textbook
      */
     textFormat?: TextFormatEnum;
     /**
      * 
      * @type {string}
-     * @memberof Course
+     * @memberof Textbook
      */
     group: string;
     /**
      * Sort order inside the library group.
      * @type {number}
-     * @memberof Course
+     * @memberof Textbook
      */
     position?: number;
     /**
-     * Flag that this course is only used for creating other courses.
-     * @type {boolean}
-     * @memberof Course
+     * 
+     * @type {Array<string>}
+     * @memberof Textbook
      */
-    isTemplate?: boolean;
+    readonly pages: Array<string>;
     /**
      * 
      * @type {Array<string>}
-     * @memberof Course
+     * @memberof Textbook
      */
-    readonly materials: Array<string>;
+    readonly usedInCourses: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof Textbook
+     */
+    readonly libraryLinks: Array<string>;
     /**
      * 
      * @type {string}
-     * @memberof Course
-     */
-    readonly owner: string;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof Course
-     */
-    publicPermissions: Array<string>;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof Course
-     */
-    readonly roleAssignments: Array<string>;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof Course
-     */
-    readonly enrollmentMethods: Array<string>;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof Course
-     */
-    readonly accessRequests: Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof Course
+     * @memberof Textbook
      */
     readonly createdBy: string;
     /**
      * 
      * @type {Date}
-     * @memberof Course
+     * @memberof Textbook
      */
     readonly createdAt: Date | null;
     /**
      * 
      * @type {string}
-     * @memberof Course
+     * @memberof Textbook
      */
     readonly modifiedBy: string;
     /**
      * 
      * @type {Date}
-     * @memberof Course
+     * @memberof Textbook
      */
     readonly modifiedAt: Date | null;
 }
@@ -142,19 +119,16 @@ export interface Course {
 
 
 /**
- * Check if a given object implements the Course interface.
+ * Check if a given object implements the Textbook interface.
  */
-export function instanceOfCourse(value: object): value is Course {
+export function instanceOfTextbook(value: object): value is Textbook {
     if (!('id' in value) || value['id'] === undefined) return false;
     if (!('slug' in value) || value['slug'] === undefined) return false;
     if (!('name' in value) || value['name'] === undefined) return false;
     if (!('group' in value) || value['group'] === undefined) return false;
-    if (!('materials' in value) || value['materials'] === undefined) return false;
-    if (!('owner' in value) || value['owner'] === undefined) return false;
-    if (!('publicPermissions' in value) || value['publicPermissions'] === undefined) return false;
-    if (!('roleAssignments' in value) || value['roleAssignments'] === undefined) return false;
-    if (!('enrollmentMethods' in value) || value['enrollmentMethods'] === undefined) return false;
-    if (!('accessRequests' in value) || value['accessRequests'] === undefined) return false;
+    if (!('pages' in value) || value['pages'] === undefined) return false;
+    if (!('usedInCourses' in value) || value['usedInCourses'] === undefined) return false;
+    if (!('libraryLinks' in value) || value['libraryLinks'] === undefined) return false;
     if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
     if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
     if (!('modifiedBy' in value) || value['modifiedBy'] === undefined) return false;
@@ -162,11 +136,11 @@ export function instanceOfCourse(value: object): value is Course {
     return true;
 }
 
-export function CourseFromJSON(json: any): Course {
-    return CourseFromJSONTyped(json, false);
+export function TextbookFromJSON(json: any): Textbook {
+    return TextbookFromJSONTyped(json, false);
 }
 
-export function CourseFromJSONTyped(json: any, ignoreDiscriminator: boolean): Course {
+export function TextbookFromJSONTyped(json: any, ignoreDiscriminator: boolean): Textbook {
     if (json == null) {
         return json;
     }
@@ -179,13 +153,9 @@ export function CourseFromJSONTyped(json: any, ignoreDiscriminator: boolean): Co
         'textFormat': json['text_format'] == null ? undefined : TextFormatEnumFromJSON(json['text_format']),
         'group': json['group'],
         'position': json['position'] == null ? undefined : json['position'],
-        'isTemplate': json['is_template'] == null ? undefined : json['is_template'],
-        'materials': json['materials'],
-        'owner': json['owner'],
-        'publicPermissions': json['public_permissions'],
-        'roleAssignments': json['role_assignments'],
-        'enrollmentMethods': json['enrollment_methods'],
-        'accessRequests': json['access_requests'],
+        'pages': json['pages'],
+        'usedInCourses': json['used_in_courses'],
+        'libraryLinks': json['library_links'],
         'createdBy': json['created_by'],
         'createdAt': (json['created_at'] == null ? null : new Date(json['created_at'])),
         'modifiedBy': json['modified_by'],
@@ -193,11 +163,11 @@ export function CourseFromJSONTyped(json: any, ignoreDiscriminator: boolean): Co
     };
 }
 
-export function CourseToJSON(json: any): Course {
-    return CourseToJSONTyped(json, false);
+export function TextbookToJSON(json: any): Textbook {
+    return TextbookToJSONTyped(json, false);
 }
 
-export function CourseToJSONTyped(value?: Omit<Course, 'id'|'materials'|'owner'|'role_assignments'|'enrollment_methods'|'access_requests'|'created_by'|'created_at'|'modified_by'|'modified_at'> | null, ignoreDiscriminator: boolean = false): any {
+export function TextbookToJSONTyped(value?: Omit<Textbook, 'id'|'pages'|'used_in_courses'|'library_links'|'created_by'|'created_at'|'modified_by'|'modified_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -210,8 +180,6 @@ export function CourseToJSONTyped(value?: Omit<Course, 'id'|'materials'|'owner'|
         'text_format': TextFormatEnumToJSON(value['textFormat']),
         'group': value['group'],
         'position': value['position'],
-        'is_template': value['isTemplate'],
-        'public_permissions': value['publicPermissions'],
     };
 }
 

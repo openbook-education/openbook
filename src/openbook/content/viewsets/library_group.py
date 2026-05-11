@@ -1,5 +1,5 @@
 # OpenBook: Interactive Online Textbooks - Server
-# © 2025 Dennis Schulmeister-Zimolong <dennis@wpvs.de>
+# © 2026 Dennis Schulmeister-Zimolong <dennis@wpvs.de>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -10,73 +10,75 @@ from django_filters.filterset               import FilterSet
 from drf_spectacular.utils                  import extend_schema
 from rest_framework.viewsets                import ModelViewSet
 
-from openbook.drf.flex_serializers          import FlexFieldsModelSerializer
-from openbook.drf.viewsets                  import AllowAnonymousListRetrieveViewSetMixin
-from openbook.drf.viewsets                  import ModelViewSetMixin
-from openbook.drf.viewsets                  import with_flex_fields_parameters
 from openbook.auth.filters.mixins.audit     import CreatedModifiedByFilterMixin
 from openbook.auth.filters.mixins.scope     import ScopedRolesFilterMixin
 from openbook.auth.serializers.mixins.scope import ScopedRolesSerializerMixin
 from openbook.auth.serializers.user         import UserField
-from ..models.course                        import Course
+from openbook.drf.flex_serializers          import FlexFieldsModelSerializer
+from openbook.drf.viewsets                  import ModelViewSetMixin
+from openbook.drf.viewsets                  import with_flex_fields_parameters
+from ..models.library_group                 import LibraryGroup
 
-class CourseSerializer(ScopedRolesSerializerMixin, FlexFieldsModelSerializer):
+
+class LibraryGroupSerializer(ScopedRolesSerializerMixin, FlexFieldsModelSerializer):
     created_by  = UserField(read_only=True)
     modified_by = UserField(read_only=True)
 
     class Meta:
-        model = Course
+        model = LibraryGroup
 
         fields = [
             "id", "slug",
             "name", "description", "text_format",
-            "group", "position",
-            "is_template",
-            "materials",
+            "parent",
+            "children", "textbooks", "courses", "links",
             *ScopedRolesSerializerMixin.Meta.fields,
             "created_by", "created_at", "modified_by", "modified_at",
         ]
 
         read_only_fields = [
             "id",
-            "materials",
+            "children", "textbooks", "courses", "links",
             *ScopedRolesSerializerMixin.Meta.read_only_fields,
             "created_at", "modified_at",
         ]
 
         expandable_fields = {
             **ScopedRolesSerializerMixin.Meta.expandable_fields,
-            "group":       "openbook.content.viewsets.library_group.LibraryGroupSerializer",
-            "materials":   ("openbook.content.viewsets.course_material.CourseMaterialSerializer", {"many": True}),
+            "parent":      "openbook.content.viewsets.library_group.LibraryGroupSerializer",
+            "children":    ("openbook.content.viewsets.library_group.LibraryGroupSerializer", {"many": True}),
+            "textbooks":   ("openbook.content.viewsets.textbook.TextbookSerializer", {"many": True}),
+            "courses":     ("openbook.content.viewsets.course.CourseSerializer", {"many": True}),
+            "links":       ("openbook.content.viewsets.library_link.LibraryLinkSerializer", {"many": True}),
             "created_by":  "openbook.auth.viewsets.user.UserSerializer",
             "modified_by": "openbook.auth.viewsets.user.UserSerializer",
         }
 
-class CourseFilter(CreatedModifiedByFilterMixin, ScopedRolesFilterMixin, FilterSet):
+
+class LibraryGroupFilter(CreatedModifiedByFilterMixin, ScopedRolesFilterMixin, FilterSet):
     class Meta:
-        model  = Course
+        model  = LibraryGroup
         fields = {
-            "slug":        ["exact"],
-            "name":        ["exact"],
-            "group":       ["exact"],
-            "position":    ["exact", "lte", "gte"],
-            "is_template": ["exact"],
+            "slug":     ["exact"],
+            "name":     ["exact"],
+            "parent":   ["exact"],
             **ScopedRolesFilterMixin.Meta.fields,
             **CreatedModifiedByFilterMixin.Meta.fields,
         }
 
+
 @extend_schema(
     extensions={
-        "x-app-name":   "Courses",
-        "x-model-name": "Courses",
+        "x-app-name":   "Content",
+        "x-model-name": "Library Groups",
     }
 )
 @with_flex_fields_parameters()
-class CourseViewSet(AllowAnonymousListRetrieveViewSetMixin, ModelViewSetMixin, ModelViewSet):
-    __doc__ = "Courses"
+class LibraryGroupViewSet(ModelViewSetMixin, ModelViewSet):
+    __doc__ = "Library Groups"
 
-    queryset         = Course.objects.all()
-    filterset_class  = CourseFilter
-    serializer_class = CourseSerializer
-    ordering         = ["group", "position", "name"]
+    queryset         = LibraryGroup.objects.all()
+    filterset_class  = LibraryGroupFilter
+    serializer_class = LibraryGroupSerializer
+    ordering         = ["name"]
     search_fields    = ["slug", "name", "description"]

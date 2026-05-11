@@ -22,119 +22,96 @@ import {
 } from './TextFormatEnum';
 
 /**
- * Provide default scope fields for serializers of models with ScopedRolesMixin.
+ * Reuse full cleaning and validation logic of the models in the REST API.
  * 
- * Use this as a default serializer that adds all scope fields.
+ * Reuse ``full_clean()``, ``clean()``, field validation, and uniqueness checks.
+ * Also make sure that the pre-filled model instance can be accessed in the DRF view.
  * @export
- * @interface PatchedCourse
+ * @interface PatchedTextbook
  */
-export interface PatchedCourse {
+export interface PatchedTextbook {
     /**
      * 
      * @type {string}
-     * @memberof PatchedCourse
+     * @memberof PatchedTextbook
      */
     readonly id?: string;
     /**
      * 
      * @type {string}
-     * @memberof PatchedCourse
+     * @memberof PatchedTextbook
      */
     slug?: string;
     /**
      * 
      * @type {string}
-     * @memberof PatchedCourse
+     * @memberof PatchedTextbook
      */
     name?: string;
     /**
      * 
      * @type {string}
-     * @memberof PatchedCourse
+     * @memberof PatchedTextbook
      */
     description?: string;
     /**
      * 
      * @type {TextFormatEnum}
-     * @memberof PatchedCourse
+     * @memberof PatchedTextbook
      */
     textFormat?: TextFormatEnum;
     /**
      * 
      * @type {string}
-     * @memberof PatchedCourse
+     * @memberof PatchedTextbook
      */
     group?: string;
     /**
      * Sort order inside the library group.
      * @type {number}
-     * @memberof PatchedCourse
+     * @memberof PatchedTextbook
      */
     position?: number;
     /**
-     * Flag that this course is only used for creating other courses.
-     * @type {boolean}
-     * @memberof PatchedCourse
+     * 
+     * @type {Array<string>}
+     * @memberof PatchedTextbook
      */
-    isTemplate?: boolean;
+    readonly pages?: Array<string>;
     /**
      * 
      * @type {Array<string>}
-     * @memberof PatchedCourse
+     * @memberof PatchedTextbook
      */
-    readonly materials?: Array<string>;
+    readonly usedInCourses?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof PatchedTextbook
+     */
+    readonly libraryLinks?: Array<string>;
     /**
      * 
      * @type {string}
-     * @memberof PatchedCourse
-     */
-    readonly owner?: string;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof PatchedCourse
-     */
-    publicPermissions?: Array<string>;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof PatchedCourse
-     */
-    readonly roleAssignments?: Array<string>;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof PatchedCourse
-     */
-    readonly enrollmentMethods?: Array<string>;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof PatchedCourse
-     */
-    readonly accessRequests?: Array<string>;
-    /**
-     * 
-     * @type {string}
-     * @memberof PatchedCourse
+     * @memberof PatchedTextbook
      */
     readonly createdBy?: string;
     /**
      * 
      * @type {Date}
-     * @memberof PatchedCourse
+     * @memberof PatchedTextbook
      */
     readonly createdAt?: Date | null;
     /**
      * 
      * @type {string}
-     * @memberof PatchedCourse
+     * @memberof PatchedTextbook
      */
     readonly modifiedBy?: string;
     /**
      * 
      * @type {Date}
-     * @memberof PatchedCourse
+     * @memberof PatchedTextbook
      */
     readonly modifiedAt?: Date | null;
 }
@@ -142,17 +119,17 @@ export interface PatchedCourse {
 
 
 /**
- * Check if a given object implements the PatchedCourse interface.
+ * Check if a given object implements the PatchedTextbook interface.
  */
-export function instanceOfPatchedCourse(value: object): value is PatchedCourse {
+export function instanceOfPatchedTextbook(value: object): value is PatchedTextbook {
     return true;
 }
 
-export function PatchedCourseFromJSON(json: any): PatchedCourse {
-    return PatchedCourseFromJSONTyped(json, false);
+export function PatchedTextbookFromJSON(json: any): PatchedTextbook {
+    return PatchedTextbookFromJSONTyped(json, false);
 }
 
-export function PatchedCourseFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedCourse {
+export function PatchedTextbookFromJSONTyped(json: any, ignoreDiscriminator: boolean): PatchedTextbook {
     if (json == null) {
         return json;
     }
@@ -165,13 +142,9 @@ export function PatchedCourseFromJSONTyped(json: any, ignoreDiscriminator: boole
         'textFormat': json['text_format'] == null ? undefined : TextFormatEnumFromJSON(json['text_format']),
         'group': json['group'] == null ? undefined : json['group'],
         'position': json['position'] == null ? undefined : json['position'],
-        'isTemplate': json['is_template'] == null ? undefined : json['is_template'],
-        'materials': json['materials'] == null ? undefined : json['materials'],
-        'owner': json['owner'] == null ? undefined : json['owner'],
-        'publicPermissions': json['public_permissions'] == null ? undefined : json['public_permissions'],
-        'roleAssignments': json['role_assignments'] == null ? undefined : json['role_assignments'],
-        'enrollmentMethods': json['enrollment_methods'] == null ? undefined : json['enrollment_methods'],
-        'accessRequests': json['access_requests'] == null ? undefined : json['access_requests'],
+        'pages': json['pages'] == null ? undefined : json['pages'],
+        'usedInCourses': json['used_in_courses'] == null ? undefined : json['used_in_courses'],
+        'libraryLinks': json['library_links'] == null ? undefined : json['library_links'],
         'createdBy': json['created_by'] == null ? undefined : json['created_by'],
         'createdAt': json['created_at'] == null ? undefined : (new Date(json['created_at'])),
         'modifiedBy': json['modified_by'] == null ? undefined : json['modified_by'],
@@ -179,11 +152,11 @@ export function PatchedCourseFromJSONTyped(json: any, ignoreDiscriminator: boole
     };
 }
 
-export function PatchedCourseToJSON(json: any): PatchedCourse {
-    return PatchedCourseToJSONTyped(json, false);
+export function PatchedTextbookToJSON(json: any): PatchedTextbook {
+    return PatchedTextbookToJSONTyped(json, false);
 }
 
-export function PatchedCourseToJSONTyped(value?: Omit<PatchedCourse, 'id'|'materials'|'owner'|'role_assignments'|'enrollment_methods'|'access_requests'|'created_by'|'created_at'|'modified_by'|'modified_at'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedTextbookToJSONTyped(value?: Omit<PatchedTextbook, 'id'|'pages'|'used_in_courses'|'library_links'|'created_by'|'created_at'|'modified_by'|'modified_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -196,8 +169,6 @@ export function PatchedCourseToJSONTyped(value?: Omit<PatchedCourse, 'id'|'mater
         'text_format': TextFormatEnumToJSON(value['textFormat']),
         'group': value['group'],
         'position': value['position'],
-        'is_template': value['isTemplate'],
-        'public_permissions': value['publicPermissions'],
     };
 }
 

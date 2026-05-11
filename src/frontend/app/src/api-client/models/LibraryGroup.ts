@@ -26,115 +26,121 @@ import {
  * 
  * Use this as a default serializer that adds all scope fields.
  * @export
- * @interface Course
+ * @interface LibraryGroup
  */
-export interface Course {
+export interface LibraryGroup {
     /**
      * 
      * @type {string}
-     * @memberof Course
+     * @memberof LibraryGroup
      */
     readonly id: string;
     /**
      * 
      * @type {string}
-     * @memberof Course
+     * @memberof LibraryGroup
      */
     slug: string;
     /**
      * 
      * @type {string}
-     * @memberof Course
+     * @memberof LibraryGroup
      */
     name: string;
     /**
      * 
      * @type {string}
-     * @memberof Course
+     * @memberof LibraryGroup
      */
     description?: string;
     /**
      * 
      * @type {TextFormatEnum}
-     * @memberof Course
+     * @memberof LibraryGroup
      */
     textFormat?: TextFormatEnum;
     /**
      * 
      * @type {string}
-     * @memberof Course
+     * @memberof LibraryGroup
      */
-    group: string;
-    /**
-     * Sort order inside the library group.
-     * @type {number}
-     * @memberof Course
-     */
-    position?: number;
-    /**
-     * Flag that this course is only used for creating other courses.
-     * @type {boolean}
-     * @memberof Course
-     */
-    isTemplate?: boolean;
+    parent?: string | null;
     /**
      * 
      * @type {Array<string>}
-     * @memberof Course
+     * @memberof LibraryGroup
      */
-    readonly materials: Array<string>;
+    readonly children: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof LibraryGroup
+     */
+    readonly textbooks: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof LibraryGroup
+     */
+    readonly courses: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof LibraryGroup
+     */
+    readonly links: Array<string>;
     /**
      * 
      * @type {string}
-     * @memberof Course
+     * @memberof LibraryGroup
      */
     readonly owner: string;
     /**
      * 
      * @type {Array<string>}
-     * @memberof Course
+     * @memberof LibraryGroup
      */
     publicPermissions: Array<string>;
     /**
      * 
      * @type {Array<string>}
-     * @memberof Course
+     * @memberof LibraryGroup
      */
     readonly roleAssignments: Array<string>;
     /**
      * 
      * @type {Array<string>}
-     * @memberof Course
+     * @memberof LibraryGroup
      */
     readonly enrollmentMethods: Array<string>;
     /**
      * 
      * @type {Array<string>}
-     * @memberof Course
+     * @memberof LibraryGroup
      */
     readonly accessRequests: Array<string>;
     /**
      * 
      * @type {string}
-     * @memberof Course
+     * @memberof LibraryGroup
      */
     readonly createdBy: string;
     /**
      * 
      * @type {Date}
-     * @memberof Course
+     * @memberof LibraryGroup
      */
     readonly createdAt: Date | null;
     /**
      * 
      * @type {string}
-     * @memberof Course
+     * @memberof LibraryGroup
      */
     readonly modifiedBy: string;
     /**
      * 
      * @type {Date}
-     * @memberof Course
+     * @memberof LibraryGroup
      */
     readonly modifiedAt: Date | null;
 }
@@ -142,14 +148,16 @@ export interface Course {
 
 
 /**
- * Check if a given object implements the Course interface.
+ * Check if a given object implements the LibraryGroup interface.
  */
-export function instanceOfCourse(value: object): value is Course {
+export function instanceOfLibraryGroup(value: object): value is LibraryGroup {
     if (!('id' in value) || value['id'] === undefined) return false;
     if (!('slug' in value) || value['slug'] === undefined) return false;
     if (!('name' in value) || value['name'] === undefined) return false;
-    if (!('group' in value) || value['group'] === undefined) return false;
-    if (!('materials' in value) || value['materials'] === undefined) return false;
+    if (!('children' in value) || value['children'] === undefined) return false;
+    if (!('textbooks' in value) || value['textbooks'] === undefined) return false;
+    if (!('courses' in value) || value['courses'] === undefined) return false;
+    if (!('links' in value) || value['links'] === undefined) return false;
     if (!('owner' in value) || value['owner'] === undefined) return false;
     if (!('publicPermissions' in value) || value['publicPermissions'] === undefined) return false;
     if (!('roleAssignments' in value) || value['roleAssignments'] === undefined) return false;
@@ -162,11 +170,11 @@ export function instanceOfCourse(value: object): value is Course {
     return true;
 }
 
-export function CourseFromJSON(json: any): Course {
-    return CourseFromJSONTyped(json, false);
+export function LibraryGroupFromJSON(json: any): LibraryGroup {
+    return LibraryGroupFromJSONTyped(json, false);
 }
 
-export function CourseFromJSONTyped(json: any, ignoreDiscriminator: boolean): Course {
+export function LibraryGroupFromJSONTyped(json: any, ignoreDiscriminator: boolean): LibraryGroup {
     if (json == null) {
         return json;
     }
@@ -177,10 +185,11 @@ export function CourseFromJSONTyped(json: any, ignoreDiscriminator: boolean): Co
         'name': json['name'],
         'description': json['description'] == null ? undefined : json['description'],
         'textFormat': json['text_format'] == null ? undefined : TextFormatEnumFromJSON(json['text_format']),
-        'group': json['group'],
-        'position': json['position'] == null ? undefined : json['position'],
-        'isTemplate': json['is_template'] == null ? undefined : json['is_template'],
-        'materials': json['materials'],
+        'parent': json['parent'] == null ? undefined : json['parent'],
+        'children': json['children'],
+        'textbooks': json['textbooks'],
+        'courses': json['courses'],
+        'links': json['links'],
         'owner': json['owner'],
         'publicPermissions': json['public_permissions'],
         'roleAssignments': json['role_assignments'],
@@ -193,11 +202,11 @@ export function CourseFromJSONTyped(json: any, ignoreDiscriminator: boolean): Co
     };
 }
 
-export function CourseToJSON(json: any): Course {
-    return CourseToJSONTyped(json, false);
+export function LibraryGroupToJSON(json: any): LibraryGroup {
+    return LibraryGroupToJSONTyped(json, false);
 }
 
-export function CourseToJSONTyped(value?: Omit<Course, 'id'|'materials'|'owner'|'role_assignments'|'enrollment_methods'|'access_requests'|'created_by'|'created_at'|'modified_by'|'modified_at'> | null, ignoreDiscriminator: boolean = false): any {
+export function LibraryGroupToJSONTyped(value?: Omit<LibraryGroup, 'id'|'children'|'textbooks'|'courses'|'links'|'owner'|'role_assignments'|'enrollment_methods'|'access_requests'|'created_by'|'created_at'|'modified_by'|'modified_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -208,9 +217,7 @@ export function CourseToJSONTyped(value?: Omit<Course, 'id'|'materials'|'owner'|
         'name': value['name'],
         'description': value['description'],
         'text_format': TextFormatEnumToJSON(value['textFormat']),
-        'group': value['group'],
-        'position': value['position'],
-        'is_template': value['isTemplate'],
+        'parent': value['parent'],
         'public_permissions': value['publicPermissions'],
     };
 }

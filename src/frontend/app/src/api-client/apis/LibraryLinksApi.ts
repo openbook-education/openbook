@@ -15,34 +15,34 @@
 
 import * as runtime from '../runtime';
 import type {
-  Course,
-  PaginatedCourseList,
-  PatchedCourse,
+  LibraryLink,
+  PaginatedLibraryLinkList,
+  PatchedLibraryLink,
 } from '../models/index';
 import {
-    CourseFromJSON,
-    CourseToJSON,
-    PaginatedCourseListFromJSON,
-    PaginatedCourseListToJSON,
-    PatchedCourseFromJSON,
-    PatchedCourseToJSON,
+    LibraryLinkFromJSON,
+    LibraryLinkToJSON,
+    PaginatedLibraryLinkListFromJSON,
+    PaginatedLibraryLinkListToJSON,
+    PatchedLibraryLinkFromJSON,
+    PatchedLibraryLinkToJSON,
 } from '../models/index';
 
-export interface ContentCoursesCreateRequest {
-    course: Omit<Course, 'id'|'materials'|'owner'|'role_assignments'|'enrollment_methods'|'access_requests'|'created_by'|'created_at'|'modified_by'|'modified_at'>;
+export interface ContentLibraryLinksCreateRequest {
+    libraryLink: Omit<LibraryLink, 'id'|'created_by'|'created_at'|'modified_by'|'modified_at'>;
     expand?: string;
     fields?: string;
     omit?: string;
 }
 
-export interface ContentCoursesDestroyRequest {
+export interface ContentLibraryLinksDestroyRequest {
     id: string;
     expand?: string;
     fields?: string;
     omit?: string;
 }
 
-export interface ContentCoursesListRequest {
+export interface ContentLibraryLinksListRequest {
     expand?: string;
     fields?: string;
     omit?: string;
@@ -50,42 +50,40 @@ export interface ContentCoursesListRequest {
     pageSize?: number;
     search?: string;
     sort?: string;
+    course?: string;
     createdAt?: Date;
     createdAtGte?: Date;
     createdAtLte?: Date;
     createdBy?: string;
     group?: string;
-    isTemplate?: boolean;
     modifiedAt?: Date;
     modifiedAtGte?: Date;
     modifiedAtLte?: Date;
     modifiedBy?: string;
-    name?: string;
-    owner?: number;
     position?: number;
     positionGte?: number;
     positionLte?: number;
-    slug?: string;
+    textbook?: string;
 }
 
-export interface ContentCoursesPartialUpdateRequest {
+export interface ContentLibraryLinksPartialUpdateRequest {
     id: string;
     expand?: string;
     fields?: string;
     omit?: string;
-    patchedCourse?: Omit<PatchedCourse, 'id'|'materials'|'owner'|'role_assignments'|'enrollment_methods'|'access_requests'|'created_by'|'created_at'|'modified_by'|'modified_at'>;
+    patchedLibraryLink?: Omit<PatchedLibraryLink, 'id'|'created_by'|'created_at'|'modified_by'|'modified_at'>;
 }
 
-export interface ContentCoursesRetrieveRequest {
+export interface ContentLibraryLinksRetrieveRequest {
     id: string;
     expand?: string;
     fields?: string;
     omit?: string;
 }
 
-export interface ContentCoursesUpdateRequest {
+export interface ContentLibraryLinksUpdateRequest {
     id: string;
-    course: Omit<Course, 'id'|'materials'|'owner'|'role_assignments'|'enrollment_methods'|'access_requests'|'created_by'|'created_at'|'modified_by'|'modified_at'>;
+    libraryLink: Omit<LibraryLink, 'id'|'created_by'|'created_at'|'modified_by'|'modified_at'>;
     expand?: string;
     fields?: string;
     omit?: string;
@@ -94,17 +92,17 @@ export interface ContentCoursesUpdateRequest {
 /**
  * 
  */
-export class CoursesApi extends runtime.BaseAPI {
+export class LibraryLinksApi extends runtime.BaseAPI {
 
     /**
-     * Courses
+     * Library Links
      * Create
      */
-    async contentCoursesCreateRaw(requestParameters: ContentCoursesCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Course>> {
-        if (requestParameters['course'] == null) {
+    async contentLibraryLinksCreateRaw(requestParameters: ContentLibraryLinksCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<LibraryLink>> {
+        if (requestParameters['libraryLink'] == null) {
             throw new runtime.RequiredError(
-                'course',
-                'Required parameter "course" was null or undefined when calling contentCoursesCreate().'
+                'libraryLink',
+                'Required parameter "libraryLink" was null or undefined when calling contentLibraryLinksCreate().'
             );
         }
 
@@ -131,34 +129,34 @@ export class CoursesApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/content/courses/`,
+            path: `/api/content/library_links/`,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: CourseToJSON(requestParameters['course']),
+            body: LibraryLinkToJSON(requestParameters['libraryLink']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => CourseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => LibraryLinkFromJSON(jsonValue));
     }
 
     /**
-     * Courses
+     * Library Links
      * Create
      */
-    async contentCoursesCreate(requestParameters: ContentCoursesCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Course> {
-        const response = await this.contentCoursesCreateRaw(requestParameters, initOverrides);
+    async contentLibraryLinksCreate(requestParameters: ContentLibraryLinksCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<LibraryLink> {
+        const response = await this.contentLibraryLinksCreateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Courses
+     * Library Links
      * Delete
      */
-    async contentCoursesDestroyRaw(requestParameters: ContentCoursesDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async contentLibraryLinksDestroyRaw(requestParameters: ContentLibraryLinksDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
-                'Required parameter "id" was null or undefined when calling contentCoursesDestroy().'
+                'Required parameter "id" was null or undefined when calling contentLibraryLinksDestroy().'
             );
         }
 
@@ -183,7 +181,7 @@ export class CoursesApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/content/courses/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/api/content/library_links/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -193,18 +191,18 @@ export class CoursesApi extends runtime.BaseAPI {
     }
 
     /**
-     * Courses
+     * Library Links
      * Delete
      */
-    async contentCoursesDestroy(requestParameters: ContentCoursesDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.contentCoursesDestroyRaw(requestParameters, initOverrides);
+    async contentLibraryLinksDestroy(requestParameters: ContentLibraryLinksDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.contentLibraryLinksDestroyRaw(requestParameters, initOverrides);
     }
 
     /**
-     * Courses
+     * Library Links
      * List
      */
-    async contentCoursesListRaw(requestParameters: ContentCoursesListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedCourseList>> {
+    async contentLibraryLinksListRaw(requestParameters: ContentLibraryLinksListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedLibraryLinkList>> {
         const queryParameters: any = {};
 
         if (requestParameters['expand'] != null) {
@@ -235,6 +233,10 @@ export class CoursesApi extends runtime.BaseAPI {
             queryParameters['_sort'] = requestParameters['sort'];
         }
 
+        if (requestParameters['course'] != null) {
+            queryParameters['course'] = requestParameters['course'];
+        }
+
         if (requestParameters['createdAt'] != null) {
             queryParameters['created_at'] = (requestParameters['createdAt'] as any).toISOString();
         }
@@ -255,10 +257,6 @@ export class CoursesApi extends runtime.BaseAPI {
             queryParameters['group'] = requestParameters['group'];
         }
 
-        if (requestParameters['isTemplate'] != null) {
-            queryParameters['is_template'] = requestParameters['isTemplate'];
-        }
-
         if (requestParameters['modifiedAt'] != null) {
             queryParameters['modified_at'] = (requestParameters['modifiedAt'] as any).toISOString();
         }
@@ -275,14 +273,6 @@ export class CoursesApi extends runtime.BaseAPI {
             queryParameters['modified_by'] = requestParameters['modifiedBy'];
         }
 
-        if (requestParameters['name'] != null) {
-            queryParameters['name'] = requestParameters['name'];
-        }
-
-        if (requestParameters['owner'] != null) {
-            queryParameters['owner'] = requestParameters['owner'];
-        }
-
         if (requestParameters['position'] != null) {
             queryParameters['position'] = requestParameters['position'];
         }
@@ -295,8 +285,8 @@ export class CoursesApi extends runtime.BaseAPI {
             queryParameters['position__lte'] = requestParameters['positionLte'];
         }
 
-        if (requestParameters['slug'] != null) {
-            queryParameters['slug'] = requestParameters['slug'];
+        if (requestParameters['textbook'] != null) {
+            queryParameters['textbook'] = requestParameters['textbook'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -306,33 +296,33 @@ export class CoursesApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/content/courses/`,
+            path: `/api/content/library_links/`,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedCourseListFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedLibraryLinkListFromJSON(jsonValue));
     }
 
     /**
-     * Courses
+     * Library Links
      * List
      */
-    async contentCoursesList(requestParameters: ContentCoursesListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedCourseList> {
-        const response = await this.contentCoursesListRaw(requestParameters, initOverrides);
+    async contentLibraryLinksList(requestParameters: ContentLibraryLinksListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedLibraryLinkList> {
+        const response = await this.contentLibraryLinksListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Courses
+     * Library Links
      * Partial Update
      */
-    async contentCoursesPartialUpdateRaw(requestParameters: ContentCoursesPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Course>> {
+    async contentLibraryLinksPartialUpdateRaw(requestParameters: ContentLibraryLinksPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<LibraryLink>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
-                'Required parameter "id" was null or undefined when calling contentCoursesPartialUpdate().'
+                'Required parameter "id" was null or undefined when calling contentLibraryLinksPartialUpdate().'
             );
         }
 
@@ -359,34 +349,34 @@ export class CoursesApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/content/courses/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/api/content/library_links/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
-            body: PatchedCourseToJSON(requestParameters['patchedCourse']),
+            body: PatchedLibraryLinkToJSON(requestParameters['patchedLibraryLink']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => CourseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => LibraryLinkFromJSON(jsonValue));
     }
 
     /**
-     * Courses
+     * Library Links
      * Partial Update
      */
-    async contentCoursesPartialUpdate(requestParameters: ContentCoursesPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Course> {
-        const response = await this.contentCoursesPartialUpdateRaw(requestParameters, initOverrides);
+    async contentLibraryLinksPartialUpdate(requestParameters: ContentLibraryLinksPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<LibraryLink> {
+        const response = await this.contentLibraryLinksPartialUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Courses
+     * Library Links
      * Retrieve
      */
-    async contentCoursesRetrieveRaw(requestParameters: ContentCoursesRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Course>> {
+    async contentLibraryLinksRetrieveRaw(requestParameters: ContentLibraryLinksRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<LibraryLink>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
-                'Required parameter "id" was null or undefined when calling contentCoursesRetrieve().'
+                'Required parameter "id" was null or undefined when calling contentLibraryLinksRetrieve().'
             );
         }
 
@@ -411,40 +401,40 @@ export class CoursesApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/content/courses/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/api/content/library_links/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => CourseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => LibraryLinkFromJSON(jsonValue));
     }
 
     /**
-     * Courses
+     * Library Links
      * Retrieve
      */
-    async contentCoursesRetrieve(requestParameters: ContentCoursesRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Course> {
-        const response = await this.contentCoursesRetrieveRaw(requestParameters, initOverrides);
+    async contentLibraryLinksRetrieve(requestParameters: ContentLibraryLinksRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<LibraryLink> {
+        const response = await this.contentLibraryLinksRetrieveRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
-     * Courses
+     * Library Links
      * Update
      */
-    async contentCoursesUpdateRaw(requestParameters: ContentCoursesUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Course>> {
+    async contentLibraryLinksUpdateRaw(requestParameters: ContentLibraryLinksUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<LibraryLink>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
-                'Required parameter "id" was null or undefined when calling contentCoursesUpdate().'
+                'Required parameter "id" was null or undefined when calling contentLibraryLinksUpdate().'
             );
         }
 
-        if (requestParameters['course'] == null) {
+        if (requestParameters['libraryLink'] == null) {
             throw new runtime.RequiredError(
-                'course',
-                'Required parameter "course" was null or undefined when calling contentCoursesUpdate().'
+                'libraryLink',
+                'Required parameter "libraryLink" was null or undefined when calling contentLibraryLinksUpdate().'
             );
         }
 
@@ -471,22 +461,22 @@ export class CoursesApi extends runtime.BaseAPI {
         }
 
         const response = await this.request({
-            path: `/api/content/courses/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: `/api/content/library_links/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: CourseToJSON(requestParameters['course']),
+            body: LibraryLinkToJSON(requestParameters['libraryLink']),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => CourseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => LibraryLinkFromJSON(jsonValue));
     }
 
     /**
-     * Courses
+     * Library Links
      * Update
      */
-    async contentCoursesUpdate(requestParameters: ContentCoursesUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Course> {
-        const response = await this.contentCoursesUpdateRaw(requestParameters, initOverrides);
+    async contentLibraryLinksUpdate(requestParameters: ContentLibraryLinksUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<LibraryLink> {
+        const response = await this.contentLibraryLinksUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
