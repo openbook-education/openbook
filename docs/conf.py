@@ -28,7 +28,8 @@ html_theme_options = {
     "navigation_depth": 4,
     "titles_only": False,
 }
-html_static_path = ['_static']
+html_static_path = ["_static"]
+html_extra_path = ["_static/openapi"]
 html_css_files = ["custom.css"]
 
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
