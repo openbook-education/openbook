@@ -15,10 +15,10 @@ build:
             - . $READTHEDOCS_VIRTUALENV_PATH/bin/activate;
               pip install poetry;
               poetry config virtualenvs.create false;
-              poetry install --no-interaction --with docs/conf.py
+              poetry install --no-interaction --with docs;
 
-              npm install
-              npm run docs:sync-openapi
+              npm install;
+              npm run docs:sync-openapi;
 
 sphinx:
     configuration: docs/conf.py
