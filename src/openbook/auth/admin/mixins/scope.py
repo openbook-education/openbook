@@ -166,7 +166,7 @@ class ScopeRoleFieldFormMixin(ModelForm):
         css = {"all": ()}
         js  = ["openbook_auth/scope_roles_autoload.js"]
 
-class ScopeRoleFieldInlineMixin(TabularInline):
+class ScopeRoleFieldInlineMixin:
     """
     Restrict inline role choices to the current scope.
     """
