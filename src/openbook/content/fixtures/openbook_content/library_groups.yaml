@@ -1,0 +1,76 @@
+# Playground
+- model: openbook_content.librarygroup
+  pk: 1625902e-28d4-4038-9c7e-51ff1437efba
+  fields:
+    #created_by:
+    #- dennis
+    created_at: 2026-05-12 14:52:42.423840+00:00
+    #modified_by:
+    #- dennis
+    modified_at: 2026-05-12 14:52:42.423874+00:00
+    #owner:
+    #- dennis
+    name: Playground
+    description: Root folder for test content
+    text_format: TEXT
+    slug: playground
+    parent: null
+    public_permissions: []
+
+# Playground / Mechatronics
+- model: openbook_content.librarygroup
+  pk: e46b39c4-7cea-4a1b-a362-fcc45debb343
+  fields:
+    #created_by:
+    #- dennis
+    created_at: 2026-05-12 14:55:33.064281+00:00
+    #modified_by:
+    #- dennis
+    modified_at: 2026-05-12 14:55:33.064302+00:00
+    #owner:
+    #- dennis
+    name: Mechatronics
+    description: "**Study Programe:** Mechatronics"
+    text_format: MD
+    slug: mechatronics
+    parent: 1625902e-28d4-4038-9c7e-51ff1437efba
+    public_permissions: []
+
+# Playground / Business Informatics
+- model: openbook_content.librarygroup
+  pk: d7100793-4e37-40c8-9eed-c8a99699f87e
+  fields:
+    #created_by:
+    #- dennis
+    created_at: 2026-05-12 14:55:03.219541+00:00
+    #modified_by:
+    #- dennis
+    modified_at: 2026-05-12 14:55:03.219562+00:00
+    #owner:
+    #- dennis
+    name: Business Informatics
+    description: "**Study Programe:** Business Informatics"
+    text_format: MD
+    slug: business-informatics
+    parent: 1625902e-28d4-4038-9c7e-51ff1437efba
+    public_permissions: []
+
+# Playground / Business Informatics / Development of Distributed Systems
+- model: openbook_content.librarygroup
+  pk: 2349506c-8cf8-427f-a28f-c1029b742891
+  fields:
+    #created_by:
+    #- dennis
+    created_at: 2026-05-12 14:56:46.707759+00:00
+    #modified_by:
+    #- dennis
+    modified_at: 2026-05-12 14:56:46.707781+00:00
+    #owner:
+    #- dennis
+    name: Development of Distributed Systems
+    description: "**Study Programe:** Business Informatics<br>\r\n**Module:** Development
+      of Distributed Systems (3rd/4th semester)"
+    text_format: MD
+    slug: development-of-distributed-systems
+    parent: d7100793-4e37-40c8-9eed-c8a99699f87e
+    public_permissions: []
