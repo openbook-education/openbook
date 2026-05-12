@@ -128,12 +128,24 @@ This is a shortcut for:
 .. code-block:: bash
 
    cd src
-   poetry run coverage run --rcfile=../pyproject.toml manage.py test
+   poetry run coverage run --rcfile=../pyproject.toml manage.py test --parallel auto
    poetry run coverage report --rcfile=../pyproject.toml -m
 
 If coverage fails, review the ``Missing`` column in the report and add tests for
 the flagged lines or branches before opening a PR.
 
+When hunting down failes tests, it can be useful to run :command:`manage.py test` manually
+with one of the following arguments:
+
+.. list-table::
+   :width: 100%
+
+   * - **Argument**
+     - Description
+   * - ``--failfast``
+     - Immediately abort after the first failed test
+   * - ``openbook_...``
+     - Module path to a single test module or class or method
 
 Quality Checks
 ..............

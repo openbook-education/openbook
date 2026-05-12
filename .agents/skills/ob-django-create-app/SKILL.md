@@ -20,9 +20,10 @@ existing app. Create a new app only for a clearly separate bounded domain.
 
 ## Required App Conventions
 
-- All apps live under `src/openbook/<app_label>/`.
+- All apps live under `src/openbook/<xyz>/`.
+- The Django app name is always `openbook.<xyz>`.
+- The Django app label is always `openbook_<xyz>`.
 - App names and labels use `snake_case`.
-- The Django app name is always `openbook.<app_label>`.
 - Keep app names short, domain-focused, and stable.
 - Register every new app in `INSTALLED_APPS`.
 - Every app must provide:
