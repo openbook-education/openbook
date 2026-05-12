@@ -12,7 +12,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.forms                       import ModelForm
 from django.utils.translation           import gettext_lazy as _
 from import_export.fields               import Field
-from unfold.admin                       import TabularInline
 from unfold.contrib.forms.widgets       import UnfoldAdminSelectWidget
 
 from openbook.admin                     import ImportExportModelResource

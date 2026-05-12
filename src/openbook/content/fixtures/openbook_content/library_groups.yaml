@@ -30,7 +30,7 @@
     #owner:
     #- dennis
     name: Mechatronics
-    description: "**Study Programe:** Mechatronics"
+    description: "**Study Programme:** Mechatronics"
     text_format: MD
     slug: mechatronics
     parent: 1625902e-28d4-4038-9c7e-51ff1437efba
@@ -49,7 +49,7 @@
     #owner:
     #- dennis
     name: Business Informatics
-    description: "**Study Programe:** Business Informatics"
+    description: "**Study Programme:** Business Informatics"
     text_format: MD
     slug: business-informatics
     parent: 1625902e-28d4-4038-9c7e-51ff1437efba
@@ -68,7 +68,7 @@
     #owner:
     #- dennis
     name: Development of Distributed Systems
-    description: "**Study Programe:** Business Informatics<br>\r\n**Module:** Development
+    description: "**Study Programme:** Business Informatics<br>\r\n**Module:** Development
       of Distributed Systems (3rd/4th semester)"
     text_format: MD
     slug: development-of-distributed-systems

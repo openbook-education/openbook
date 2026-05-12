@@ -3,7 +3,7 @@
   pk: 3629d56b-e3ae-41c9-8438-0046e057a69b
   fields:
     name: Web Development
-    description: "**Study Programe:** Business Informatics<br>\r\n**Module:** Development
+    description: "**Study Programme:** Business Informatics<br>\r\n**Module:** Development
       of Distributed Systems (3rd/4th semester)\r\n**Lecture:** Web Development"
     text_format: MD
     slug: wwi-webprog
