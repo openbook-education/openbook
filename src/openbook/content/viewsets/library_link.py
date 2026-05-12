@@ -28,7 +28,6 @@ class LibraryLinkSerializer(FlexFieldsModelSerializer):
         fields = [
             "id",
             "group", "course", "textbook",
-            "position",
             "created_by", "created_at", "modified_by", "modified_at",
         ]
 
@@ -53,7 +52,6 @@ class LibraryLinkFilter(CreatedModifiedByFilterMixin, FilterSet):
             "group":    ["exact"],
             "course":   ["exact"],
             "textbook": ["exact"],
-            "position": ["exact", "lte", "gte"],
             **CreatedModifiedByFilterMixin.Meta.fields,
         }
 

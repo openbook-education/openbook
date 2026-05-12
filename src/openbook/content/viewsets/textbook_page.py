@@ -15,7 +15,7 @@ from openbook.auth.serializers.user     import UserField
 from openbook.drf.flex_serializers      import FlexFieldsModelSerializer
 from openbook.drf.viewsets              import ModelViewSetMixin
 from openbook.drf.viewsets              import with_flex_fields_parameters
-from ..models.textbook                  import TextbookPage
+from ..models.textbook_page             import TextbookPage
 
 
 class TextbookPageSerializer(FlexFieldsModelSerializer):

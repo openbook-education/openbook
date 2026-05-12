@@ -30,8 +30,7 @@ class CourseSerializer(ScopedRolesSerializerMixin, FlexFieldsModelSerializer):
         fields = [
             "id", "slug",
             "name", "description", "text_format",
-            "group", "position",
-            "is_template",
+            "group", "is_template",
             "materials",
             *ScopedRolesSerializerMixin.Meta.fields,
             "created_by", "created_at", "modified_by", "modified_at",
@@ -59,7 +58,6 @@ class CourseFilter(CreatedModifiedByFilterMixin, ScopedRolesFilterMixin, FilterS
             "slug":        ["exact"],
             "name":        ["exact"],
             "group":       ["exact"],
-            "position":    ["exact", "lte", "gte"],
             "is_template": ["exact"],
             **ScopedRolesFilterMixin.Meta.fields,
             **CreatedModifiedByFilterMixin.Meta.fields,

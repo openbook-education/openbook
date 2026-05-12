@@ -12,7 +12,7 @@ from .course_material import CourseMaterialAdmin
 from .library_group   import LibraryGroupAdmin
 from .library_link    import LibraryLinkAdmin
 from .textbook        import TextbookAdmin
-from .textbook        import TextbookPageAdmin
+from .textbook_page   import TextbookPageAdmin
 from ..               import models
 
 admin_site.register(models.LibraryGroup,   LibraryGroupAdmin)

@@ -22,30 +22,30 @@ class LibraryLinkResource(ImportExportModelResource):
         model  = LibraryLink
         fields = [
             "id", "delete",
-            "group", "course", "textbook", "position",
+            "group", "course", "textbook",
         ]
 
 
 class LibraryLinkAdmin(CustomModelAdmin):
     model               = LibraryLink
     resource_classes    = [LibraryLinkResource]
-    list_display        = ["group", "course", "textbook", "position", *created_modified_by_fields]
+    list_display        = ["group", "course", "textbook", *created_modified_by_fields]
     list_display_links  = ["group", "course", "textbook"]
     list_filter         = ["group", "course", "textbook", *created_modified_by_filter]
     list_select_related = ["group", "course", "textbook", *created_modified_by_related]
     search_fields       = ["group__name", "course__name", "textbook__name"]
-    ordering            = ["group", "position"]
+    ordering            = ["group",]
     readonly_fields     = [*created_modified_by_fields]
 
     fieldsets = [
         (None, {
-            "fields": ["group", "course", "textbook", "position"],
+            "fields": ["group", "course", "textbook",],
         }),
         created_modified_by_fieldset,
     ]
 
     add_fieldsets = [
         (None, {
-            "fields": ["group", "course", "textbook", "position"],
+            "fields": ["group", "course", "textbook",],
         }),
     ]

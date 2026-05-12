@@ -47,12 +47,6 @@ export interface LibraryLink {
      */
     textbook?: string | null;
     /**
-     * Sort order inside the group.
-     * @type {number}
-     * @memberof LibraryLink
-     */
-    position?: number;
-    /**
      * 
      * @type {string}
      * @memberof LibraryLink
@@ -105,7 +99,6 @@ export function LibraryLinkFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'group': json['group'],
         'course': json['course'] == null ? undefined : json['course'],
         'textbook': json['textbook'] == null ? undefined : json['textbook'],
-        'position': json['position'] == null ? undefined : json['position'],
         'createdBy': json['created_by'],
         'createdAt': (json['created_at'] == null ? null : new Date(json['created_at'])),
         'modifiedBy': json['modified_by'],
@@ -127,7 +120,6 @@ export function LibraryLinkToJSONTyped(value?: Omit<LibraryLink, 'id'|'created_b
         'group': value['group'],
         'course': value['course'],
         'textbook': value['textbook'],
-        'position': value['position'],
     };
 }
 

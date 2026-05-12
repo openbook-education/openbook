@@ -44,7 +44,7 @@ class CourseResource(ScopedRolesResourceMixin, ImportExportModelResource):
             "id", "delete",
             "slug", "name",
             "description", "text_format",
-            "group", "position",
+            "group",
             *ScopedRolesResourceMixin.Meta.fields,
             "is_template"
         ]
@@ -58,24 +58,20 @@ class CourseAdmin(CustomModelAdmin):
     model               = Course
     form                = CourseForm
     resource_classes    = [CourseResource]
-    list_display        = ["name", "slug", "group", "position", "is_template", *created_modified_by_fields]
+    list_display        = ["name", "slug", "group", "is_template", *created_modified_by_fields]
     list_display_links  = ["name", "slug"]
     list_filter         = ["is_template", "group", *created_modified_by_fields]
     list_select_related = ["group", *created_modified_by_related]
     search_fields       = ["name", "slug", "group__name", "description"]
-    ordering            = ["group", "position", "name"]
+    ordering            = ["group_id", "name"]
     readonly_fields     = [*created_modified_by_fields]
     prepopulated_fields = {"slug": ["name"]}
     filter_horizontal   = ["public_permissions",]
-    _inlines            = (_CourseMaterialInline, RoleInline, RoleAssignmentInline, EnrollmentMethodInline, AccessRequestInline)
-    _add_inlines        = []
-
-    def get_inlines(self, request, obj):
-        return self._inlines if obj else self._add_inlines
+    inlines             = [_CourseMaterialInline, RoleInline, RoleAssignmentInline, EnrollmentMethodInline, AccessRequestInline]
 
     fieldsets = [
         (None, {
-            "fields": [("name", "slug"), ("group", "position"), "is_template"]
+            "fields": [("name", "slug"), ("group", "is_template")]
         }),
         (_("Description"), {
             "classes": ["tab"],
@@ -87,7 +83,7 @@ class CourseAdmin(CustomModelAdmin):
 
     add_fieldsets = [
         (None, {
-            "fields": [("name", "slug"), ("group", "position"), "is_template"]
+            "fields": [("name", "slug"), ("group", "is_template")]
         }),
         (_("Description"), {
             "classes": ["tab"],
