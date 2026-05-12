@@ -26,10 +26,9 @@ jobs:
               with:
                   setup-python: "true"
                   python-version: ${{ matrix.python-version }}
-                  poetry-install-with: ""
-                  poetry-install-only: "dev"
+                  poetry-install-with: "dev"
+                  poetry-install-only: ""
 
             - name: "Run compatibility test matrix"
               run: |
-                  poetry run npm run test
-
+                  npm run test
