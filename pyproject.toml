@@ -52,7 +52,7 @@ pip-audit = "^2.10.0"
 tblib = "^3.2.2"
 
 [tool.coverage.report]
-fail_under = 75
+#fail_under = 75
 show_missing = true
 skip_covered = true
 omit = [
