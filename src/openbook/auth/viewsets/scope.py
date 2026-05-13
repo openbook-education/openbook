@@ -109,8 +109,8 @@ class ScopeTypeViewSet(ViewSet):
                 content_type = ContentType.objects.get(pk=int(scope_type))
             except ValueError:
                 content_type = content_type_for_model_string(scope_type)
-        except Exception:
-            pass
+        except (ContentType.DoesNotExist, ValueError, LookupError):
+            content_type = None
 
         if not content_type:
             return Response(status=status.HTTP_404_NOT_FOUND, data=[])
