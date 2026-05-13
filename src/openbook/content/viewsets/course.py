@@ -76,5 +76,5 @@ class CourseViewSet(AllowAnonymousListRetrieveViewSetMixin, ModelViewSetMixin, M
     queryset         = Course.objects.all()
     filterset_class  = CourseFilter
     serializer_class = CourseSerializer
-    ordering         = ["group", "position", "name"]
+    ordering         = ["group", "name"]
     search_fields    = ["slug", "name", "description"]

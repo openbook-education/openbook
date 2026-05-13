@@ -51,15 +51,19 @@ coverage = "^7.13.5"
 pip-audit = "^2.10.0"
 tblib = "^3.2.2"
 
-[tool.coverage.report]
-#fail_under = 75
-show_missing = true
-skip_covered = true
+[tool.coverage.run]
+parallel = true
+patch = ["execv", "_exit", "subprocess"]
 omit = [
     "*/__pycache__/*",
     "manage.py",
     "openbook/*.py",
 ]
+
+[tool.coverage.report]
+fail_under = 75
+show_missing = true
+skip_covered = true
 
 [build-system]
 requires = ["poetry-core>=1.9.1"]

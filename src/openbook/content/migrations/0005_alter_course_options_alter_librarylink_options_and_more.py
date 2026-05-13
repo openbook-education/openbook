@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
         migrations.AlterModelOptions(
             name="course",
             options={
-                "ordering": ("group", "name"),
+                "ordering": ("group_id", "name"),
                 "verbose_name": "Course",
                 "verbose_name_plural": "Courses",
             },
@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
         migrations.AlterModelOptions(
             name="librarylink",
             options={
-                "ordering": ("group", "id"),
+                "ordering": ("group_id", "id"),
                 "verbose_name": "Library Link",
                 "verbose_name_plural": "Library Links",
             },
@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
         migrations.AlterModelOptions(
             name="textbook",
             options={
-                "ordering": ("group", "name"),
+                "ordering": ("group_id", "name"),
                 "verbose_name": "Textbook",
                 "verbose_name_plural": "Textbooks",
             },

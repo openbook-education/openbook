@@ -69,5 +69,5 @@ class LibraryLinkViewSet(ModelViewSetMixin, ModelViewSet):
     queryset         = LibraryLink.objects.all()
     filterset_class  = LibraryLinkFilter
     serializer_class = LibraryLinkSerializer
-    ordering         = ["group", "position", "id"]
+    ordering         = ["group", "id"]
     search_fields    = ["group__name", "course__name", "textbook__name"]

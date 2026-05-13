@@ -74,5 +74,5 @@ class TextbookViewSet(AllowAnonymousListRetrieveViewSetMixin, ModelViewSetMixin,
     queryset         = Textbook.objects.all()
     filterset_class  = TextbookFilter
     serializer_class = TextbookSerializer
-    ordering         = ["group", "position", "name"]
+    ordering         = ["group", "name"]
     search_fields    = ["slug", "name", "description"]
