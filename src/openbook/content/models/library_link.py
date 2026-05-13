@@ -50,7 +50,7 @@ class LibraryLink(UUIDMixin, CreatedModifiedByMixin):
     class Meta:
         verbose_name = _("Library Link")
         verbose_name_plural = _("Library Links")
-        ordering = ("group_id", "id")
+        ordering = ("group", "id")
         indexes = [
             models.Index(fields=("group",)),
         ]

@@ -243,7 +243,7 @@ DO NOT:
 * Mix unrelated implementation phases
 * Create serializers/viewsets before model semantics are stable
 * Write tests against speculative behavior
-* Passi entire prior conversations into every sub-agent
+* Passing entire prior conversations into every sub-agent
 * Re-implement conventions already covered by specialized skills
 * Move to the next implementation step without letting the user review the changes first
 

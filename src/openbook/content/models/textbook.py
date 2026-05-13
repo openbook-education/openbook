@@ -28,4 +28,4 @@ class Textbook(UUIDMixin, NonUniqueSlugMixin, NameDescriptionMixin, CreatedModif
     class Meta:
         verbose_name = _("Textbook")
         verbose_name_plural = _("Textbooks")
-        ordering = ("group_id", "name")
+        ordering = ("group", "name")

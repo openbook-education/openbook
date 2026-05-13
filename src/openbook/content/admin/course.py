@@ -63,7 +63,7 @@ class CourseAdmin(CustomModelAdmin):
     list_filter         = ["is_template", "group", *created_modified_by_fields]
     list_select_related = ["group", *created_modified_by_related]
     search_fields       = ["name", "slug", "group__name", "description"]
-    ordering            = ["group_id", "name"]
+    ordering            = ["group", "name"]
     readonly_fields     = [*created_modified_by_fields]
     prepopulated_fields = {"slug": ["name"]}
     filter_horizontal   = ["public_permissions",]

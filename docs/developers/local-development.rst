@@ -26,7 +26,7 @@ to install additional packages (see next section).
 - Poetry package manager
 - Node.js and npm (workspace builds)
 - Redis for local integrated runs
-- Java for OpenAPI generator tooling
+- Java Runtime for OpenAPI generator tooling
 
 Using Dev Containers
 ....................
@@ -101,8 +101,8 @@ project root:
 
    npm run init:db
 
-This executes the following commands in sequence, the create the database, load all fixtures,
-install HTML libraries and create a super user with full persmissions.
+This executes the following commands in sequence, to create the database, load all fixtures,
+install HTML libraries and create a super user with full permissions.
 
 .. code-block:: bash
 

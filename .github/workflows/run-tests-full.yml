@@ -8,7 +8,7 @@ permissions:
 
 jobs:
     run-compatibility-matrix:
-        name: "Run compatibility matrix (Python ${{ matrix.python-version }})"
+        name: "Run tests (Python ${{ matrix.python-version }})"
         runs-on: ubuntu-latest
         strategy:
             fail-fast: true
@@ -30,5 +30,25 @@ jobs:
                   poetry-install-only: ""
 
             - name: "Run compatibility test matrix"
-              run: |
-                  npm run test
+              run: npm run test
+
+    code-checks:
+        name: "Run code checks"
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: "Checkout code"
+              uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+              with:
+                  ref: ${{ github.head_ref || github.ref }}
+
+            - name: "Set up CI environment"
+              uses: ./.github/actions/setup-ci-environment
+              with:
+                  setup-python: "true"
+                  python-version: ${{ matrix.python-version }}
+                  poetry-install-with: "dev"
+                  poetry-install-only: ""
+
+            - name: "Run code checks"
+              run: npm run check

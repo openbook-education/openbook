@@ -24,7 +24,7 @@ class _TextbookPageInline(TabularInline):
     extra            = 0
     show_change_link = True
     tab              = True
-    fields           = ["name", "parent",]
+    fields           = ["name", "parent", "position"]
     ordering         = ["parent_id", "position"]
 
 

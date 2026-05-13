@@ -42,4 +42,4 @@ class Course(UUIDMixin, NonUniqueSlugMixin, NameDescriptionMixin, ScopedRolesMix
     class Meta():
         verbose_name        = _("Course")
         verbose_name_plural = _("Courses")
-        ordering            = ("group_id", "name")
+        ordering            = ("group", "name")

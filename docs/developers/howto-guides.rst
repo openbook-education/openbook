@@ -141,7 +141,7 @@ Create the file :file:`apps.py` inside the app directory with the following cont
    Note the pattern for the class attribute values. The app name and label must follow
    conventions similar to Python module names: no spaces, start with a letter,
    ``snake_case`` capitalization, etc. The name is always ``openbook.<app_label>``, and
-   the app label is the ``openbook_`` plus the package name.
+   the app label is ``openbook_`` followed by the package name.
 
    The verbose name is used in the admin and in other places in the UI. So it must be
    marked with :func:`_` as a translatable text.
