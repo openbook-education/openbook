@@ -3741,8 +3741,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-<<<<<<< renovate/pillow-12.x
-content-hash = "628018c07550c65b178088e64b8d59dc1d92277fad0228787d606619625a2a02"
-=======
-content-hash = "79c521df96c4043055f595a23e923e70db5a83f0a804cb4da97e882761638dce"
->>>>>>> main
+content-hash = "0994a79941347ed422098dc61fa07ad8ad21670d3dfbff86ee68b93833777437"
