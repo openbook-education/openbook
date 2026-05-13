@@ -20,7 +20,7 @@ RUN ln -s /usr/bin/python3 /usr/bin/python
 
 RUN npm install -g @mariozechner/pi-coding-agent
 
-RUN echo "cd /workspace; $(poetry env activate)" >> /root/.profile
+RUN echo "cd /workspace; \$(poetry env activate)" >> /root/.profile
 
 WORKDIR /workspace
 

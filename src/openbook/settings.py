@@ -634,7 +634,7 @@ DBBACKUP_STORAGE_OPTIONS = {"location": BASE_DIR / "_backup"}
 try:
     EXTRA_INSTALLED_APPS = []
 
-    from .local_settings import *
+    from .local_settings import * # type: ignore
 
     INSTALLED_APPS = [*INSTALLED_APPS, *EXTRA_INSTALLED_APPS]
 except ImportError:

@@ -7,7 +7,6 @@
 # License, or (at your option) any later version.
 
 from django.contrib.auth.models         import Permission
-from django.contrib.contenttypes.models import ContentType
 from django.test                        import TestCase
 from django.utils.translation           import activate
 from ..                                 import utils

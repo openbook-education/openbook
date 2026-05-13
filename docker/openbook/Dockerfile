@@ -24,8 +24,17 @@ RUN .env/bin/poetry export --format=requirements.txt --output=requirements.txt
 FROM ${NODE_IMAGE} AS nodejs-build
 
 WORKDIR /app
-COPY . .
 
+COPY bin/frontend ./bin
+COPY bin/library ./bin
+COPY bin/_esbuild.js ./bin
+
+COPY package*.json ./
+
+COPY src/libraries ./src
+COPY src/frontend ./src
+
+RUN npm run install
 RUN npm run build:libraries
 RUN npm run build:frontend
 

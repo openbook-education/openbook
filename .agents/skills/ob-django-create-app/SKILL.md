@@ -106,14 +106,14 @@ from django.utils.translation import gettext_lazy as _
 
 class ExampleApp(AppConfig):
     name  = "openbook.example"
-    label = "example"
+    label = "openbook_example"
     verbose_name = _("Example")
 ```
 
 Rules:
 
 * `name` must equal `openbook.<app_label>`.
-* `label` must equal the package name.
+* `label` must equal `openbook_<app_label>`.
 * `verbose_name` must be translatable using `_()`.
 * Do not omit `label`.
 * Use stable identifiers. Renaming labels later is expensive.

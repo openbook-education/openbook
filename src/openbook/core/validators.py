@@ -80,7 +80,8 @@ def validate_version_expression(version_expression: str) -> None:
 
     for operator in operators:
         if version_expression.startswith(operator):
-            return validate_version_number(version_expression[len(operator):])
+            validate_version_number(version_expression[len(operator):])
+            return
 
     validate_version_number(version_expression)
 

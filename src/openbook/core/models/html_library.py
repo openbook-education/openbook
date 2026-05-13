@@ -240,6 +240,8 @@ class HTMLLibrary(UUIDMixin, CreatedModifiedByMixin):
                         dependencies = manifest.dependencies,
                         file_data    = file_data
                     )
+                finally:
+                    file_data.close()
 
         # Create or update HTMLComponent and HTMLComponentDefinition database entries
         if update_components:

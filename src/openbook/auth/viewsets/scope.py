@@ -109,7 +109,7 @@ class ScopeTypeViewSet(ViewSet):
                 content_type = ContentType.objects.get(pk=int(scope_type))
             except ValueError:
                 content_type = content_type_for_model_string(scope_type)
-        except:
+        except Exception:
             pass
 
         if not content_type:

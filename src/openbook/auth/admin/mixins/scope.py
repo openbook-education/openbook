@@ -177,7 +177,6 @@ class ScopeRoleFieldInlineMixin:
         if self.parent_obj and db_field.name == "role":
             scope_type = ContentType.objects.get_for_model(self.parent_obj)
             kwargs["queryset"] = Role.objects.filter(scope_type=scope_type, scope_uuid=self.parent_obj.id)
-            pass
 
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 

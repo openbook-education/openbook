@@ -54,7 +54,7 @@ accept the "Reopen in Container" prompt or run *Remote-Containers: Reopen in
 Container* from the command palette. Be very patient. The first build takes
 quite a while; subsequent starts are fast, though.
 
-All required tools come pre-installed in the containers, including the `Pi Coding Agent <pi.dev>`_
+All required tools come pre-installed in the containers, including the `Pi Coding Agent <https://pi.dev>`_
 as a little extra. The container uses the same ports as the local development environment,
 so you can access the application as usual.
 

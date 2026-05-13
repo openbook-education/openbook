@@ -69,6 +69,8 @@ class ScopeTypeField(RelatedField):
         if not self.read_only:
             return ContentType.objects.all()
 
+        return None
+
     def to_internal_value(self, data):
         if not isinstance(data, str):
             self.fail("invalid")

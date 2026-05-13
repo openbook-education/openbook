@@ -38,7 +38,7 @@ class AuthTokenAdmin(CustomModelAdmin):
     list_display_links  = ["user__username", "name", "is_active", "start_date", "end_date"]
     list_filter         = ["user__username", "is_active", "start_date", "end_date", *created_modified_by_filter]
     list_select_related = ["user", *created_modified_by_related]
-    search_fields       = ["user__username", "token", "name" "description"]
+    search_fields       = ["user__username", "token", "name", "description"]
     readonly_fields     = ["token", *created_modified_by_fields]
 
     fieldsets = [

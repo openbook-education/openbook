@@ -7,7 +7,6 @@
 # License, or (at your option) any later version.
 
 from django.test       import TestCase
-from django.urls       import reverse
 
 from openbook.test     import ModelViewSetTestMixin
 from ..models.language import Language
@@ -34,7 +33,7 @@ class Language_ViewSet_Tests(ModelViewSetTestMixin, TestCase):
 
     def setUp(self):
         super().setUp()
-        
+
         Language.objects.create(language="en", name="English")
         Language.objects.create(language="de", name="Deutsch")
         Language.objects.create(language="fr", name="Français")
