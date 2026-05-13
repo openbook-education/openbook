@@ -66,12 +66,6 @@ export interface PatchedCourse {
      */
     group?: string;
     /**
-     * Sort order inside the library group.
-     * @type {number}
-     * @memberof PatchedCourse
-     */
-    position?: number;
-    /**
      * Flag that this course is only used for creating other courses.
      * @type {boolean}
      * @memberof PatchedCourse
@@ -164,7 +158,6 @@ export function PatchedCourseFromJSONTyped(json: any, ignoreDiscriminator: boole
         'description': json['description'] == null ? undefined : json['description'],
         'textFormat': json['text_format'] == null ? undefined : TextFormatEnumFromJSON(json['text_format']),
         'group': json['group'] == null ? undefined : json['group'],
-        'position': json['position'] == null ? undefined : json['position'],
         'isTemplate': json['is_template'] == null ? undefined : json['is_template'],
         'materials': json['materials'] == null ? undefined : json['materials'],
         'owner': json['owner'] == null ? undefined : json['owner'],
@@ -195,7 +188,6 @@ export function PatchedCourseToJSONTyped(value?: Omit<PatchedCourse, 'id'|'mater
         'description': value['description'],
         'text_format': TextFormatEnumToJSON(value['textFormat']),
         'group': value['group'],
-        'position': value['position'],
         'is_template': value['isTemplate'],
         'public_permissions': value['publicPermissions'],
     };

@@ -29,7 +29,7 @@ class TextbookSerializer(FlexFieldsModelSerializer):
         fields = [
             "id", "slug",
             "name", "description", "text_format",
-            "group", "position",
+            "group",
             "pages", "used_in_courses", "library_links",
             "created_by", "created_at", "modified_by", "modified_at",
         ]
@@ -57,7 +57,6 @@ class TextbookFilter(CreatedModifiedByFilterMixin, FilterSet):
             "slug":     ["exact"],
             "name":     ["exact"],
             "group":    ["exact"],
-            "position": ["exact", "lte", "gte"],
             **CreatedModifiedByFilterMixin.Meta.fields,
         }
 
@@ -75,5 +74,5 @@ class TextbookViewSet(AllowAnonymousListRetrieveViewSetMixin, ModelViewSetMixin,
     queryset         = Textbook.objects.all()
     filterset_class  = TextbookFilter
     serializer_class = TextbookSerializer
-    ordering         = ["group", "position", "name"]
+    ordering         = ["group", "name"]
     search_fields    = ["slug", "name", "description"]

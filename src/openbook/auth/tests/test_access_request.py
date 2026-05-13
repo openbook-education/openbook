@@ -6,22 +6,23 @@
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
 
-from django.core.exceptions           import ValidationError
-from django.core.exceptions           import PermissionDenied
-from django.test                      import TestCase
-from django.utils                     import timezone
-from unittest.mock                    import patch
-from rest_framework.reverse           import reverse
+from django.core.exceptions                import ValidationError
+from django.core.exceptions                import PermissionDenied
+from django.test                           import TestCase
+from django.utils                          import timezone
+from unittest.mock                         import patch
+from rest_framework.reverse                import reverse
 
-from openbook.core.utils.content_type import model_string_for_content_type
-from openbook.content.models.course   import Course
-from openbook.test                    import ModelViewSetTestMixin
-from ..middleware.current_user        import reset_current_user
-from ..models.access_request          import AccessRequest
-from ..models.role                    import Role
-from ..models.role_assignment         import RoleAssignment
-from ..models.user                    import User
-from ..utils                          import permission_for_perm_string
+from openbook.core.utils.content_type      import model_string_for_content_type
+from openbook.content.models.course        import Course
+from openbook.content.models.library_group import LibraryGroup
+from openbook.test                         import ModelViewSetTestMixin
+from ..middleware.current_user             import reset_current_user
+from ..models.access_request               import AccessRequest
+from ..models.role                         import Role
+from ..models.role_assignment              import RoleAssignment
+from ..models.user                         import User
+from ..utils                               import permission_for_perm_string
 
 class AccessRequest_Test_Mixin:
     def setUp(self):
@@ -33,7 +34,8 @@ class AccessRequest_Test_Mixin:
         self.user_assistant = User.objects.create_user(username="assistant", email="assistant@test.com", password="password")
         self.user_owner     = User.objects.create_user(username="owner", email="owner@test.com", password="password")
         self.user_dummy     = User.objects.create_user(username="dummy", email="dummy@test.com", password="password")
-        self.course         = Course.objects.create(name="Test Course", slug="test-course", text_format=Course.TextFormatChoices.MARKDOWN, owner=self.user_owner)
+        self.library_group  = LibraryGroup.objects.create(name="Test", slug="test")
+        self.course         = Course.objects.create(name="Test Course", slug="test-course", owner=self.user_owner, group=self.library_group)
         self.role_student   = Role.from_obj(self.course, name="Student", slug="student", priority=0)
         self.role_assistant = Role.from_obj(self.course, name="Assistant", slug="assistant", priority=1)
         self.role_teacher   = Role.from_obj(self.course, name="Teacher", slug="teacher", priority=2)
@@ -66,7 +68,7 @@ class AccessRequest_Model_Tests(AccessRequest_Test_Mixin, TestCase):
     """Test the AccessRequest model."""
     def test_role_scope(self):
         """Ensure the assigned role belongs to the same scope."""
-        wrong_scope = Course.objects.create(name="Other Course", slug="other-course", text_format=Course.TextFormatChoices.MARKDOWN)
+        wrong_scope = Course.objects.create(name="Other Course", slug="other-course", group=self.library_group)
         wrong_role  = Role.from_obj(wrong_scope, name="Wrong Scope", slug="wrong-scope", priority=0)
         wrong_role.save()
 

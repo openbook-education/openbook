@@ -20,7 +20,8 @@ class Command(BaseCommand):
         "openbook_auth/anonymous_permissions",
         "openbook_auth/groups",
         "openbook_auth/signup_group_assignments",
-        "openbook_content/test_course_1",
+        "openbook_content/library_groups",
+        "openbook_content/courses",
     ]
 
     def handle(self, *args, **options):
