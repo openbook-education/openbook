@@ -6,20 +6,21 @@
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
 
-from django.test                      import TestCase
+from django.test                           import TestCase
 
-from openbook.core.utils.content_type import content_type_for_model_string
-from openbook.core.utils.content_type import model_string_for_content_type
-from openbook.content.models.course   import Course
-from openbook.test                    import ModelViewSetTestMixin
-from ..middleware.current_user        import reset_current_user
-from ..models.access_request          import AccessRequest
-from ..models.allowed_role_permission import AllowedRolePermission
-from ..models.enrollment_method       import EnrollmentMethod
-from ..models.role                    import Role
-from ..models.role_assignment         import RoleAssignment
-from ..models.user                    import User
-from ..utils                          import permission_for_perm_string
+from openbook.core.utils.content_type      import content_type_for_model_string
+from openbook.core.utils.content_type      import model_string_for_content_type
+from openbook.content.models.course        import Course
+from openbook.content.models.library_group import LibraryGroup
+from openbook.test                         import ModelViewSetTestMixin
+from ..middleware.current_user             import reset_current_user
+from ..models.access_request               import AccessRequest
+from ..models.allowed_role_permission      import AllowedRolePermission
+from ..models.enrollment_method            import EnrollmentMethod
+from ..models.role                         import Role
+from ..models.role_assignment              import RoleAssignment
+from ..models.user                         import User
+from ..utils                               import permission_for_perm_string
 
 class Role_ViewSet_Tests(ModelViewSetTestMixin, TestCase):
     """Test the RoleViewSet REST API."""
@@ -34,7 +35,8 @@ class Role_ViewSet_Tests(ModelViewSetTestMixin, TestCase):
         super().setUp()
         reset_current_user()
 
-        self.course         = Course.objects.create(name="Test Course", slug="test-course")
+        self.library_group  = LibraryGroup.objects.create(name="Test", slug="test")
+        self.course         = Course.objects.create(name="Test Course", slug="test-course", group=self.library_group)
         self.role_student   = Role.from_obj(self.course, name="Student", slug="student", priority=0)
         self.role_assistant = Role.from_obj(self.course, name="Assistant", slug="assistant", priority=1)
         self.role_teacher   = Role.from_obj(self.course, name="Teacher", slug="teacher", priority=2)

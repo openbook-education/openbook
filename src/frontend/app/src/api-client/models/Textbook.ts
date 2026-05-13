@@ -67,12 +67,6 @@ export interface Textbook {
      */
     group: string;
     /**
-     * Sort order inside the library group.
-     * @type {number}
-     * @memberof Textbook
-     */
-    position?: number;
-    /**
      * 
      * @type {Array<string>}
      * @memberof Textbook
@@ -152,7 +146,6 @@ export function TextbookFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'description': json['description'] == null ? undefined : json['description'],
         'textFormat': json['text_format'] == null ? undefined : TextFormatEnumFromJSON(json['text_format']),
         'group': json['group'],
-        'position': json['position'] == null ? undefined : json['position'],
         'pages': json['pages'],
         'usedInCourses': json['used_in_courses'],
         'libraryLinks': json['library_links'],
@@ -179,7 +172,6 @@ export function TextbookToJSONTyped(value?: Omit<Textbook, 'id'|'pages'|'used_in
         'description': value['description'],
         'text_format': TextFormatEnumToJSON(value['textFormat']),
         'group': value['group'],
-        'position': value['position'],
     };
 }
 

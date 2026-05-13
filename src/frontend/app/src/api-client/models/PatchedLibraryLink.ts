@@ -47,12 +47,6 @@ export interface PatchedLibraryLink {
      */
     textbook?: string | null;
     /**
-     * Sort order inside the group.
-     * @type {number}
-     * @memberof PatchedLibraryLink
-     */
-    position?: number;
-    /**
      * 
      * @type {string}
      * @memberof PatchedLibraryLink
@@ -99,7 +93,6 @@ export function PatchedLibraryLinkFromJSONTyped(json: any, ignoreDiscriminator: 
         'group': json['group'] == null ? undefined : json['group'],
         'course': json['course'] == null ? undefined : json['course'],
         'textbook': json['textbook'] == null ? undefined : json['textbook'],
-        'position': json['position'] == null ? undefined : json['position'],
         'createdBy': json['created_by'] == null ? undefined : json['created_by'],
         'createdAt': json['created_at'] == null ? undefined : (new Date(json['created_at'])),
         'modifiedBy': json['modified_by'] == null ? undefined : json['modified_by'],
@@ -121,7 +114,6 @@ export function PatchedLibraryLinkToJSONTyped(value?: Omit<PatchedLibraryLink, '
         'group': value['group'],
         'course': value['course'],
         'textbook': value['textbook'],
-        'position': value['position'],
     };
 }
 

@@ -28,12 +28,6 @@ class Course(UUIDMixin, NonUniqueSlugMixin, NameDescriptionMixin, ScopedRolesMix
         related_name = "courses",
     )
 
-    position = models.PositiveIntegerField(
-        verbose_name = _("Position"),
-        default      = 0,
-        help_text    = _("Sort order inside the library group."),
-    )
-
     # License (via new model in core)
     # Image
     # AI Notes (new mixin)
@@ -48,13 +42,4 @@ class Course(UUIDMixin, NonUniqueSlugMixin, NameDescriptionMixin, ScopedRolesMix
     class Meta():
         verbose_name        = _("Course")
         verbose_name_plural = _("Courses")
-        ordering            = ("group", "position", "name")
-        indexes             = [
-            models.Index(fields=("group", "position")),
-        ]
-        constraints         = [
-            models.UniqueConstraint(
-                fields=("group", "position"),
-                name="openbook_content_unique_course_position_in_group",
-            ),
-        ]
+        ordering            = ("group", "name")

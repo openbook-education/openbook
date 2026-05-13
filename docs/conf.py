@@ -30,6 +30,7 @@ html_theme_options = {
 }
 html_static_path = ["_static", "_openapi"]
 html_css_files = ["custom.css"]
+html_logo = "_static/logo.svg"
 
 # Ensure standalone OpenAPI HTML pages are published on RTD as build artifacts.
 # NOTE: The files need to be manually updated and checked into git.

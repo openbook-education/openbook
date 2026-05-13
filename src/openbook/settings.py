@@ -358,7 +358,7 @@ UNFOLD = {
         {
             "icon": "menu_book",
             "title": _("Documentation"),
-            "link": "https://openbook-learning.readthedocs.org",
+            "link": "https://openbook-education.readthedocs.org",
         },
         {
             "icon": "code",

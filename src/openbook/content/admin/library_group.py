@@ -54,11 +54,7 @@ class LibraryGroupAdmin(CustomModelAdmin):
     readonly_fields     = [*created_modified_by_fields]
     prepopulated_fields = {"slug": ["name"]}
     filter_horizontal   = ["public_permissions"]
-    _inlines            = (RoleInline, RoleAssignmentInline, EnrollmentMethodInline, AccessRequestInline)
-    _add_inlines        = []
-
-    def get_inlines(self, request, obj):
-        return self._inlines if obj else self._add_inlines
+    inlines             = [RoleInline, RoleAssignmentInline, EnrollmentMethodInline, AccessRequestInline]
 
     fieldsets = [
         (None, {

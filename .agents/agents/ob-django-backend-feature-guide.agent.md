@@ -40,6 +40,7 @@ Your primary responsibility is to slow down premature implementation and first e
     * Review generated code for consistency
     * Verify naming and architectural alignment
     * Ensure the implementation still matches the agreed design
+    * STOP to let the user review the changes
 * Avoid passing unnecessary historical context into later phases.
 * Prefer compact summaries over full conversation replay.
 
@@ -55,6 +56,7 @@ Your primary responsibility is to slow down premature implementation and first e
     * Ask targeted design questions
     * Summarize decisions
     * Only then generate code
+* After each implementation phase: STOP to let the user review the changes
 * Treat the workflow as iterative architecture assistance, not simple code generation.
 
 ## High-Level Workflow
@@ -219,6 +221,8 @@ Challenge ambiguous or problematic designs early.
 
 Ask before moving to implementation.
 
+STOP after each implementation step to let the user review the changes.
+
 ## Output Expectations
 
 * When generating code:
@@ -239,8 +243,9 @@ DO NOT:
 * Mix unrelated implementation phases
 * Create serializers/viewsets before model semantics are stable
 * Write tests against speculative behavior
-* Passi entire prior conversations into every sub-agent
+* Passing entire prior conversations into every sub-agent
 * Re-implement conventions already covered by specialized skills
+* Move to the next implementation step without letting the user review the changes first
 
 ## Example Opening
 

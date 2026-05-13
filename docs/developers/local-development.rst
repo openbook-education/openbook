@@ -26,7 +26,7 @@ to install additional packages (see next section).
 - Poetry package manager
 - Node.js and npm (workspace builds)
 - Redis for local integrated runs
-- Java for OpenAPI generator tooling
+- Java Runtime for OpenAPI generator tooling
 
 Using Dev Containers
 ....................
@@ -90,6 +90,28 @@ following commands from the repository root:
    :command:`npm run fix:frontend-install`.
 
 
+Initialize Database
+...................
+
+Before starting the development server for the first time, or after deleting the :file:`db.sqlite`
+file, a new database must be set up. This can be done by running the following command from the
+project root:
+
+.. code-block:: bash
+
+   npm run init:db
+
+This executes the following commands in sequence, to create the database, load all fixtures,
+install HTML libraries and create a super user with full permissions.
+
+.. code-block:: bash
+
+   cd src
+   python manage.py migrate
+   python manage.py load_initial_data
+   python manage.py install_html_library
+   python manage.py createsuperuser
+
 Starting the Development Server
 ...............................
 
@@ -128,12 +150,24 @@ This is a shortcut for:
 .. code-block:: bash
 
    cd src
-   poetry run coverage run --rcfile=../pyproject.toml manage.py test
+   poetry run coverage run --rcfile=../pyproject.toml manage.py test --parallel auto
    poetry run coverage report --rcfile=../pyproject.toml -m
 
 If coverage fails, review the ``Missing`` column in the report and add tests for
 the flagged lines or branches before opening a PR.
 
+When hunting down failed tests, it can be useful to run :command:`manage.py test` manually
+with one of the following arguments:
+
+.. list-table::
+   :width: 100%
+
+   * - **Argument**
+     - Description
+   * - ``--failfast``
+     - Immediately abort after the first failed test
+   * - ``openbook_...``
+     - Module path to a single test module or class or method
 
 Quality Checks
 ..............
@@ -176,6 +210,9 @@ What these options do:
 
 ``--keep-going`` is deliberately omitted because it can swallow errors silently.
 
+When working on the documentation with :command:`npm run docs` or :command:`npm run docs:build`,
+the OpenAPI schemas included in the documentation are automatically regenerated. If needed, the
+OpenAPI schemas can also be manually regenerated with :command:`npm run docs:sync-openapi`.
 
 ---------------------
 Other Useful Commands

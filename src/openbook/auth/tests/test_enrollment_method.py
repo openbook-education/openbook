@@ -6,29 +6,31 @@
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
 
-from django.core.exceptions           import PermissionDenied
-from django.core.exceptions           import ValidationError
-from django.urls                      import reverse
-from django.test                      import TestCase
-from unittest.mock                    import patch
+from django.core.exceptions                import PermissionDenied
+from django.core.exceptions                import ValidationError
+from django.urls                           import reverse
+from django.test                           import TestCase
+from unittest.mock                         import patch
 
-from openbook.core.utils.content_type import model_string_for_content_type
-from openbook.content.models.course   import Course
-from openbook.test                    import ModelViewSetTestMixin
-from ..middleware.current_user        import reset_current_user
-from ..models.enrollment_method       import EnrollmentMethod
-from ..models.role                    import Role
-from ..models.role_assignment         import RoleAssignment
-from ..models.user                    import User
-from ..utils                          import permission_for_perm_string
+from openbook.core.utils.content_type      import model_string_for_content_type
+from openbook.content.models.course        import Course
+from openbook.content.models.library_group import LibraryGroup
+from openbook.test                         import ModelViewSetTestMixin
+from ..middleware.current_user             import reset_current_user
+from ..models.enrollment_method            import EnrollmentMethod
+from ..models.role                         import Role
+from ..models.role_assignment              import RoleAssignment
+from ..models.user                         import User
+from ..utils                               import permission_for_perm_string
 
 class EnrollmentMethod_Test_Mixin:
     def setUp(self):
         super().setUp()
         reset_current_user()
 
-        self.user   = User.objects.create_user(username="new", email="new@test.com", password="password")
-        self.course = Course.objects.create(name="Test Course 1", slug="test-course1", text_format=Course.TextFormatChoices.MARKDOWN)
+        self.user          = User.objects.create_user(username="new", email="new@test.com", password="password")
+        self.library_group = LibraryGroup.objects.create(name="Test", slug="test")
+        self.course        = Course.objects.create(name="Test Course 1", slug="test-course1", group=self.library_group)
 
         self.course.public_permissions.add(
             permission_for_perm_string("openbook_auth.view_enrollmentmethod"),
@@ -44,7 +46,7 @@ class EnrollmentMethod_Test_Mixin:
         self.em_no_passphrase = EnrollmentMethod.from_obj(self.course, name="self-enrollment", role=self.role)
         self.em_no_passphrase.save()
 
-        self.course_no_self_enroll = Course.objects.create(name="Test Course 2", slug="test-course2")
+        self.course_no_self_enroll = Course.objects.create(name="Test Course 2", slug="test-course2", group=self.library_group)
         self.em_course_no_self_enroll = EnrollmentMethod.from_obj(self.course_no_self_enroll, name="self-enrollment", role=self.role)
         self.em_course_no_self_enroll.save()
 
@@ -52,7 +54,7 @@ class EnrollmentMethod_Model_Tests(EnrollmentMethod_Test_Mixin, TestCase):
     """Test the EnrollmentMethod model."""
     def test_role_scope(self):
         """Ensure the assigned role belongs to the same scope."""
-        wrong_scope = Course.objects.create(name="Other Course", slug="other-course")
+        wrong_scope = Course.objects.create(name="Other Course", slug="other-course", group=self.library_group)
         wrong_role  = Role.from_obj(wrong_scope, name="Wrong Scope", slug="wrong-scope", priority=0)
         wrong_role.save()
 

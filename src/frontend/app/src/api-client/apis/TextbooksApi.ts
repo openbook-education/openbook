@@ -60,9 +60,6 @@ export interface ContentTextbooksListRequest {
     modifiedAtLte?: Date;
     modifiedBy?: string;
     name?: string;
-    position?: number;
-    positionGte?: number;
-    positionLte?: number;
     slug?: string;
 }
 
@@ -271,18 +268,6 @@ export class TextbooksApi extends runtime.BaseAPI {
 
         if (requestParameters['name'] != null) {
             queryParameters['name'] = requestParameters['name'];
-        }
-
-        if (requestParameters['position'] != null) {
-            queryParameters['position'] = requestParameters['position'];
-        }
-
-        if (requestParameters['positionGte'] != null) {
-            queryParameters['position__gte'] = requestParameters['positionGte'];
-        }
-
-        if (requestParameters['positionLte'] != null) {
-            queryParameters['position__lte'] = requestParameters['positionLte'];
         }
 
         if (requestParameters['slug'] != null) {

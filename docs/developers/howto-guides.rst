@@ -133,7 +133,7 @@ Create the file :file:`apps.py` inside the app directory with the following cont
 
    class ProgressApp(AppConfig):
        name = "openbook.learning_progress"
-       label = "learning_progress"
+       label = "openbook_learning_progress"
        verbose_name = _("Learning Progress")
 
 .. note::
@@ -141,7 +141,7 @@ Create the file :file:`apps.py` inside the app directory with the following cont
    Note the pattern for the class attribute values. The app name and label must follow
    conventions similar to Python module names: no spaces, start with a letter,
    ``snake_case`` capitalization, etc. The name is always ``openbook.<app_label>``, and
-   the app label is the package name.
+   the app label is ``openbook_`` followed by the package name.
 
    The verbose name is used in the admin and in other places in the UI. So it must be
    marked with :func:`_` as a translatable text.
@@ -518,6 +518,51 @@ Example patterns:
          related_name = "learning_goals",
       )
 
+Create Migrations
+.................
+
+After defining or changing models, create a migration file and apply it to the database.
+In OpenBook, do this from the :file:`src/` directory so :file:`manage.py` can discover
+the project settings and app registry correctly.
+
+Run :mod:`makemigrations` for your app label first. Continuing the example from above,
+that label is ``openbook_learning_progress``:
+
+.. code-block:: bash
+
+   cd src
+   python manage.py makemigrations openbook_learning_progress
+
+This creates a new migration file under :file:`migrations/` (for example
+:file:`0002_add_learning_goal_level.py`) whenever Django detects schema changes.
+When you update models later, run the same command again. Django then creates the next
+numbered migration file that captures only the new changes.
+
+Apply all unapplied migrations with :mod:`migrate`:
+
+.. code-block:: bash
+
+   python manage.py migrate
+
+To verify migration state for one app, use:
+
+.. code-block:: bash
+
+   python manage.py showmigrations openbook_learning_progress
+
+The output marks applied migrations with ``[X]`` and pending ones with ``[ ]``.
+
+.. important::
+
+   Do not edit or rewrite existing migration history after it has been shared with
+   other developers. Instead, create a new migration that moves the schema from the
+   current state to the next state.
+
+.. hint::
+
+   Before committing, run :mod:`makemigrations` once more to ensure no model changes
+   are left without a migration file.
+
 Checklist Before Moving On
 ..........................
 
@@ -530,6 +575,7 @@ Before you continue with admin and API integration, verify that:
 5. :class:`Meta` includes at least :attr:`verbose_name` and :attr:`verbose_name_plural`, plus optional ordering/indexes.
 6. :meth:`__str__` returns a concise, human-readable identifier.
 7. The model is imported in :file:`models/__init__.py`.
+8. Migrations have been created and tested.
 
 
 --------------------------
@@ -1405,7 +1451,7 @@ Use YAML fixtures to keep the data readable, reviewable, and easy to maintain in
 
    .. code-block:: bash
 
-      python manage.py dumpdata --format yaml --natural-foreign --natural-primary learning_progress
+      python manage.py dumpdata --format yaml --natural-foreign --natural-primary openbook_learning_progress
 
 2. After export, treat the fixture as source code. Reorder entries logically, remove unnecessary ``null``
    values, and add comments where relationships are not obvious.
