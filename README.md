@@ -13,7 +13,7 @@ Under Construction
 
 <p align="center">
    <!-- https://pixabay.com/photos/screwdriver-background-screw-wooden-1008974/ -->
-   <img src="doc/img/under-construction.jpg" alt="Under Construction" width="300">
+   <img src="docs/under-construction.png" alt="Under Construction" width="300">
 </p>
 
 Hang on. This project is still in early stages, under heavy development. The project is deliberately
