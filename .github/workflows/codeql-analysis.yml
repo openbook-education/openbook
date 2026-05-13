@@ -1,0 +1,11 @@
+# Advanced GitHub CodeQL code quality scanning configuration.
+# Needed to exclude the generated frontend API stubs from scanning.
+name: "CodeQL Config"
+
+paths:
+    - "**/*.py"
+    - "**/*.ts"
+paths-ignore:
+    - "src/frontend/app/src/api-client/**"
+    - "src/frontend/app/src/auth-client/**"
+    - "**/test_*.py"
