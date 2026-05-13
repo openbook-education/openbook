@@ -34,11 +34,12 @@ class ModelAdmin(UnfoldModelAdmin):
         if not change:
             opts = self.opts
             codename = get_permission_codename("add", opts)
+            obj = form.save(commit=False)
 
             if not request.user.has_perm("%s.%s" % (opts.app_label, codename), obj):
                 raise PermissionDenied
 
-        super().safe_form(request, form, change)
+        super().save_form(request, form, change)
 
     def has_view_permission(self, request: HttpRequest, obj: Model = None) -> bool:
         """

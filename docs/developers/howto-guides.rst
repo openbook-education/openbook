@@ -612,7 +612,7 @@ named :file:`admin/learning_goal.py` (like the model file) and have the followin
    from ..models.learning_goal import LearningGoal
 
 
-   class LearningGoalAadmin(CustomModelAdmin):
+   class LearningGoalAdmin(CustomModelAdmin):
        """Admin view for learning goals."""
        model         = LearningGoal
        list_display  = ["name", "course", "level", "is_active"]

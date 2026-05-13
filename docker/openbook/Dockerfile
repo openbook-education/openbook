@@ -25,16 +25,16 @@ FROM ${NODE_IMAGE} AS nodejs-build
 
 WORKDIR /app
 
-COPY bin/frontend ./bin
-COPY bin/library ./bin
-COPY bin/_esbuild.js ./bin
+COPY bin/frontend ./bin/frontend
+COPY bin/library ./bin/library
+COPY bin/_esbuild.js ./bin/
 
 COPY package*.json ./
 
-COPY src/libraries ./src
-COPY src/frontend ./src
+COPY src/libraries ./src/libraries
+COPY src/frontend ./src/frontend
 
-RUN npm run install
+RUN npm ci
 RUN npm run build:libraries
 RUN npm run build:frontend
 
