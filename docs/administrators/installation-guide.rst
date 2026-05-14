@@ -512,9 +512,6 @@ proxy all other connections to the OpenBook backend server.
             SSLEngine On
             # Certbot fills in the certificate paths after issuance.
 
-            # Required for DRF token authentication through the proxy:
-            WSGIPassAuthorization On
-
             # Serve static and uploaded media files directly:
             Alias /static/ /opt/openbook/src/_static/
             Alias /media/  /opt/openbook/src/_media/
