@@ -18,10 +18,12 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
     "sphinx_llm.txt",
+    "sphinx_tabs.tabs",
 ]
 
 llms_txt_build_parallel = False     # Don't spawn subprocess to avoid race-conditions
 autodoc_typehints = "description"   # Include type-hints in API docs
+sphinx_tabs_disable_tab_closing = True
 
 html_theme = "sphinx_rtd_theme"
 html_theme_options = {

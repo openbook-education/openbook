@@ -431,116 +431,120 @@ Verify that all three services are active:
 
    systemctl status redis openbook openbook-worker
 
-Front Web Server: Caddy
-.......................
+Front Web Server
+................
 
-Caddy is a modern and performant alternative to traditional Apache web server setups.
-Advantages are increased throughput, simpler configuration and automatic provisioning
-of Let's Encrypt certificates without any additional tooling.
+Almost any web server can be used as a front web server for OpenBook, provided it can proxy
+HTTP and WebSocket connections. Its main tasks are to terminate TLS, serve static files, and
+proxy all other connections to the OpenBook backend server.
 
-.. seealso::
+.. tabs::
 
-   See the next section, if you prefer Apache.
+   .. tab:: Caddy
 
-Install Caddy directly from the Debian package repository:
+      Caddy is a modern and performant alternative to traditional Apache web server setups.
+      Advantages are increased throughput, simpler configuration and automatic provisioning
+      of Let's Encrypt certificates without any additional tooling.
 
-.. code-block:: bash
+      .. seealso::
 
-   apt-get install -y caddy
+         See the next section, if you prefer Apache.
 
-Replace the default :file:`/etc/caddy/Caddyfile` with the following:
+      Install Caddy directly from the Debian package repository:
 
-.. code-block:: text
+      .. code-block:: bash
 
-   openbook.example.com {
-       # Serve static and uploaded media files directly:
-       handle /static/* {
-           root * /opt/openbook/src
-           file_server
-       }
-       handle /media/* {
-           root * /opt/openbook/src
-           file_server
-       }
+         apt-get install -y caddy
 
-       # Proxy all other requests to Daphne:
-       handle {
-           reverse_proxy localhost:8000
-       }
-   }
+      Replace the default :file:`/etc/caddy/Caddyfile` with the following:
 
-Enable and start Caddy:
+      .. code-block:: text
 
-.. code-block:: bash
+         openbook.example.com {
+            # Serve static and uploaded media files directly:
+            handle /static/* {
+               root * /opt/openbook/src
+               file_server
+            }
+            handle /media/* {
+               root * /opt/openbook/src
+               file_server
+            }
 
-   systemctl enable --now caddy
+            # Proxy all other requests to Daphne:
+            handle {
+               reverse_proxy localhost:8000
+            }
+         }
 
-Caddy detects the configured hostname, requests a certificate from Let's Encrypt on first
-startup, and schedules automatic renewal. No further TLS configuration is required.
+      Enable and start Caddy:
 
-Front Web Server: Apache With Certbot
-......................................
+      .. code-block:: bash
 
-OpenBook runs perfectly fine with the traditional Apache web server. If you prefer this
-option over Caddy, install Apache and the Certbot plugin with the following commands.
+         systemctl enable --now caddy
 
-.. code-block:: bash
+      Caddy detects the configured hostname, requests a certificate from Let's Encrypt on first
+      startup, and schedules automatic renewal. No further TLS configuration is required.
 
-   apt-get install -y apache2 certbot python3-certbot-apache
-   a2enmod proxy proxy_http proxy_wstunnel headers ssl rewrite
+   .. tab:: Apache With Certbot
 
-Next, create a virtual host configuration in
-:file:`/etc/apache2/sites-available/openbook.conf`:
+      OpenBook runs perfectly fine with the traditional Apache web server. If you prefer this
+      option over Caddy, install Apache and the Certbot plugin with the following commands.
 
-.. code-block:: apache
+      .. code-block:: bash
 
-   <VirtualHost *:80>
-       ServerName openbook.example.com
-       RewriteEngine On
-       RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-   </VirtualHost>
+         apt-get install -y apache2 certbot python3-certbot-apache
+         a2enmod proxy proxy_http proxy_wstunnel headers ssl rewrite
 
-   <VirtualHost *:443>
-       ServerName openbook.example.com
-       SSLEngine On
-       # Certbot fills in the certificate paths after issuance.
+      Next, create a virtual host configuration in
+      :file:`/etc/apache2/sites-available/openbook.conf`:
 
-       # Required for DRF token authentication through the proxy:
-       WSGIPassAuthorization On
+      .. code-block:: apache
 
-       # Serve static and uploaded media files directly:
-       Alias /static/ /opt/openbook/src/_static/
-       Alias /media/  /opt/openbook/src/_media/
-       <Directory /opt/openbook/src/_static>
-           Require all granted
-       </Directory>
-       <Directory /opt/openbook/src/_media>
-           Require all granted
-       </Directory>
+         <VirtualHost *:80>
+            ServerName openbook.example.com
+            RewriteEngine On
+            RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+         </VirtualHost>
 
-       # WebSocket upgrade for Django Channels:
-       RewriteEngine On
-       RewriteCond %{HTTP:Upgrade} websocket [NC]
-       RewriteRule /(.*) ws://127.0.0.1:8000/$1 [P,L]
+         <VirtualHost *:443>
+            ServerName openbook.example.com
+            SSLEngine On
+            # Certbot fills in the certificate paths after issuance.
 
-       # Reverse proxy all other requests to Daphne:
-       ProxyPreserveHost On
-       ProxyPass /static/ !
-       ProxyPass /media/  !
-       ProxyPass / http://127.0.0.1:8000/
-       ProxyPassReverse / http://127.0.0.1:8000/
-   </VirtualHost>
+            # Serve static and uploaded media files directly:
+            Alias /static/ /opt/openbook/src/_static/
+            Alias /media/  /opt/openbook/src/_media/
+            <Directory /opt/openbook/src/_static>
+               Require all granted
+            </Directory>
+            <Directory /opt/openbook/src/_media>
+               Require all granted
+            </Directory>
 
-Enable the site and obtain a Let's Encrypt certificate:
+            # WebSocket upgrade for Django Channels:
+            RewriteEngine On
+            RewriteCond %{HTTP:Upgrade} websocket [NC]
+            RewriteRule /(.*) ws://127.0.0.1:8000/$1 [P,L]
 
-.. code-block:: bash
+            # Reverse proxy all other requests to Daphne:
+            ProxyPreserveHost On
+            ProxyPass /static/ !
+            ProxyPass /media/  !
+            ProxyPass / http://127.0.0.1:8000/
+            ProxyPassReverse / http://127.0.0.1:8000/
+         </VirtualHost>
 
-   a2ensite openbook
-   systemctl reload apache2
-   certbot --apache -d openbook.example.com
+      Enable the site and obtain a Let's Encrypt certificate:
 
-Certbot writes the certificate paths into the virtual host and reloads Apache automatically.
-Renewal runs via a pre-installed systemd timer and requires no additional configuration.
+      .. code-block:: bash
+
+         a2ensite openbook
+         systemctl reload apache2
+         certbot --apache -d openbook.example.com
+
+      Certbot writes the certificate paths into the virtual host and reloads Apache automatically.
+      Renewal runs via a pre-installed systemd timer and requires no additional configuration.
 
 Periodic Maintenance With Cron
 ..............................
