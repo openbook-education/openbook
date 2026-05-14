@@ -118,7 +118,7 @@ Verify that all tools are available in your shell:
 
 .. code-block:: bash
 
-   python --version || python3 --version
+   python --version
    poetry --version
    node --version
    npm --version
