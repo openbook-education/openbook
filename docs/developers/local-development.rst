@@ -56,7 +56,7 @@ First you need to install the required tools:
       - `Graphviz <https://graphviz.org/download/>`_
 
       Use the **Python**, **Node.js** and **Graphviz** installers and keep default settings.
-      When installing Python and Graphviz, enable  the option to add each to the :envvar:`PATH`
+      When installing Python and Graphviz, enable the option to add each to the :envvar:`PATH`
       environment variable.
 
       Install **Poetry** in PowerShell:
