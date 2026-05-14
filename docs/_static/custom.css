@@ -2,6 +2,6 @@ img.logo {
     max-width: 5em !important;
 }
 
-.spaced-list > li:not:first-child {
+.spaced-list > li:not(:first-child) {
     margin-top: 0.5em;
 }
