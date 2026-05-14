@@ -22,11 +22,117 @@ build and run the source code. Alternatively, use the provided dev container
 configuration, if you have Docker or Podman installed but cannot or don't want
 to install additional packages (see next section).
 
-- Python
-- Poetry package manager
-- Node.js and npm (workspace builds)
-- Redis for local integrated runs
-- Java Runtime for OpenAPI generator tooling
+.. list-table::
+    :width: 100%
+    :header-rows: 1
+
+    * - Tool
+      - Needed for
+    * - Python
+      - Running the Django backend and management commands
+    * - Poetry
+      - Managing Python dependencies and virtual environments
+    * - Node.js and npm
+      - Workspace orchestration and building frontend assets
+    * - Redis
+      - Task queue and worker communication
+    * - Java Runtime
+      - OpenAPI generator tooling
+    * - Graphviz
+      - Rendering diagrams in the manual
+
+To get from a fresh machine to a working OpenBook setup, use this short workflow.
+First you need to install the required tools:
+
+.. tabs::
+
+   .. tab:: Windows
+
+      Download and install these tools from their official pages:
+
+      - `Python <https://www.python.org/downloads/>`_
+      - `Node.js (LTS) <https://nodejs.org/en/download>`_
+      - `Redis (unofficial Windows port) <https://github.com/redis-windows/redis-windows/releases>`_
+      - `Graphviz <https://graphviz.org/download/>`_
+
+      Use the **Python**, **Node.js** and **Graphviz** installers and keep default settings.
+      When installing Python and Graphviz, enable  the option to add each to the :envvar:`PATH`
+      environment variable.
+
+      Install **Poetry** in PowerShell:
+
+      .. code-block:: powershell
+
+         (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | py -
+
+      Next, add Python's scripts directory to the system :envvar:`PATH` (typically ``%APPDATA%\Python\Scripts``)
+      so you can run :command:`poetry` from any directory:
+
+      1. Open the Start menu and search for ``Edit environment variable``.
+      2. In the *System variables* section, select ``Path`` and click *Edit*.
+      3. Click *New* and add ``%APPDATA%\Python\Scripts``.
+      4. Confirm all dialogs with *OK*, then open a new PowerShell window.
+      5. Verify the setup with :command:`poetry --version`.
+
+      **Redis** has no official open-source Windows port, but an unofficial port is available.
+      Download the ZIP file from the GitHub release page and extract it, for example, to :file:`C:\Program Files\Redis`.
+      Add this directory to the system :envvar:`PATH` variable as described above.
+
+      **Java** can be installed using the Windows Package Manager. First, search for the most recent version
+      of Microsoft OpenJDK:
+
+      .. code-block:: powershell
+
+         winget search Microsoft.OpenJDK
+
+      Then install the latest version (25 in this example), e.g.:
+
+      .. code-block:: powershell
+
+         winget install Microsoft.OpenJDK.25
+
+   .. tab:: macOS
+
+      macOS requires Homebrew for Redis, which has no official native macOS installer.
+      Thus the simplest option is to install the other tools with Homebrew, too.
+
+      .. code-block:: bash
+
+         brew install python@3.12 poetry node redis openjdk@21 graphviz
+         brew services start redis
+
+      If you don't have Homebrew installed, visit `brew.sh <https://brew.sh>`_ for setup instructions.
+
+   .. tab:: Linux
+
+      On Debian/Ubuntu, this is a good baseline setup:
+
+      .. code-block:: bash
+
+         sudo apt update
+         sudo apt install -y python3 python3-poetry nodejs npm redis-server default-jre graphviz
+
+      If you use another distribution, install equivalent packages with your package manager.
+
+Verify that all tools are available in your shell:
+
+.. code-block:: bash
+
+   python --version || python3 --version
+   poetry --version
+   node --version
+   npm --version
+   redis-server --version
+   java -version
+   dot --version
+
+Set up OpenBook dependencies and initial data from the repository root:
+
+.. code-block:: bash
+
+   poetry install --no-interaction --with docs
+   npm install
+   npm run init:db
 
 Using Dev Containers
 ....................
@@ -62,7 +168,6 @@ so you can access the application as usual.
 
    The dev container configuration lives in the :file:`.devcontainer` directory at
    the root of the repository.
-
 
 ------------------------
 Frequently Used Commands
