@@ -55,6 +55,13 @@ First you need to install the required tools:
       - `Redis (unofficial Windows port) <https://github.com/redis-windows/redis-windows/releases>`_
       - `Graphviz <https://graphviz.org/download/>`_
 
+      .. note::
+
+         Note that there is no official Windows port of Redis except for the commercial product
+         `Memurai <https://www.memurai.com/>`_. For development we recommend the unofficial port
+         linked above, which may not receive the same level of support or security updates as
+         official Redis releases on other platforms.
+
       Use the **Python**, **Node.js** and **Graphviz** installers and keep default settings.
       When installing Python and Graphviz, enable the option to add each to the :envvar:`PATH`
       environment variable.
@@ -161,7 +168,8 @@ Container* from the command palette. Be very patient. The first build takes
 quite a while; subsequent starts are fast, though.
 
 All required tools come pre-installed in the containers, including the `Pi Coding Agent <https://pi.dev>`_
-as a little extra. The container uses the same ports as the local development environment,
+as a little extra (bring your own API key and use it as a lightweight alternative to commercial
+AI coding assistants). The container uses the same ports as the local development environment,
 so you can access the application as usual.
 
 .. note::

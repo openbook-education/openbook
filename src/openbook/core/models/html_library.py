@@ -323,7 +323,7 @@ class HTMLLibraryVersion(UUIDMixin, FileUploadMixin, CreatedModifiedByMixin):
 
     @classmethod
     def get_by_library_version(cls, library: str, version: str) -> "HTMLLibraryVersion":
-        organization, name = split_library_fqn(fqn)
+        organization, name = split_library_fqn(library)
         library = HTMLLibrary.objects.get(organization=organization, name=name)
         return HTMLLibraryVersion.objects.get(parent=library, version=version)
 

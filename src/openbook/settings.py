@@ -350,7 +350,7 @@ UNFOLD = {
             "link": reverse_lazy("api-redoc"),
         },
         {
-            # NOTE: Unfortunately. we cannot use reverse_lazy() to resolve the URL defined by Django-Alluth here
+            # NOTE: Unfortunately, we cannot use reverse_lazy() to resolve the URL defined by Django-Allauth here
             "icon": "api",
             "title": _("Auth API Explorer"),
             "link": "/auth-api/openapi.html",
@@ -581,7 +581,7 @@ UNFOLD = {
     ]
 }
 
-# Interlal IPs (required by Django Debug Toolbar)
+# Internal IPs (required by Django Debug Toolbar)
 INTERNAL_IPS = ["127.0.0.1"]
 
 # E-Mail Settings
