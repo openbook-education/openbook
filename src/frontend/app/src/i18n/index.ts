@@ -1,5 +1,5 @@
 /*
- * OpenBook: Interactive Online Textbooks - Server
+ * OpenBook: Interactive Online Textbooks
  * © 2024 Dennis Schulmeister-Zimolong <dennis@wpvs.de>
  *
  * This program is free software: you can redistribute it and/or modify
