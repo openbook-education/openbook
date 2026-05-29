@@ -45,4 +45,4 @@ class ErrorStore extends ReadableStore<ErrorMessage> {
 /**
  * Full-screen error messsage.
  */
-export const error = new ErrorStore();
+export const errorPage = new ErrorStore();

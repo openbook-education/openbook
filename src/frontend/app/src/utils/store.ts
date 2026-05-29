@@ -40,8 +40,8 @@ export class ReadableStore<T> {
      */
     constructor(defaultValue: T) {
         this._store = readable(defaultValue, (set, update) => {
-            this.set    = set;
-            this.update = update;
+            this._set    = set;
+            this._update = update;
         });
     }
 
@@ -72,6 +72,18 @@ export class ReadableStore<T> {
      */
     protected update(fn: Updater<T>) {
         this._update(fn);
+    }
+
+    /**
+     * Internal method for other stores to set a new value.
+     *
+     * Note, even though this class is a readable store, this method is deliberately
+     * publicly exposed. From the view's point of view that store is still read-only,
+     * sine the `set()` method of the store contract is not exposed. But other stores,
+     * using this one internally, get a public API to push new values to the views.
+     */
+    public changeValue(value: T) {
+        this._set(value);
     }
 }
 
@@ -129,5 +141,13 @@ export class WritableStore<T> {
      */
     update(fn: Updater<T>) {
         this._update(fn);
+    }
+
+    /**
+     * Internal method for other stores to set a new value. Kept for compatibility
+     * with the `ReadableStore` class, even though this is writeable store.
+     */
+    public changeValue(value: T) {
+        this._set(value);
     }
 }

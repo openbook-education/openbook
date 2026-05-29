@@ -28,15 +28,15 @@ while (baseUrl.endsWith("/")) {
  * The clients objects automatically use the correct base URL of the server and
  * use all required middlewares like authentication, request deduplication etc.
  */
-const backend = {
+const client = {
     auth:     createClient<authPaths>     ({baseUrl, fetch: fetchWithRetry}),
     openbook: createClient<openbookPaths> ({baseUrl, fetch: fetchWithRetry}),
 };
 
-export default backend;
+export default client;
 
 // Register middlewares
 for (let middleware of middlewares) {
-    backend.auth.use(middleware);
-    backend.openbook.use(middleware);
+    client.auth.use(middleware);
+    client.openbook.use(middleware);
 }

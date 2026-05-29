@@ -31,6 +31,12 @@ export default {
         RequestFailed: {
             Retry:  "Retrying request: $n$ from $m$",
             Failed: "Request failed!",
+        },
+
+        Backend: {
+            NotFound:         "Object Not Found",
+            PermissionDenied: "Permission Denied",
+            OperationFailed:  "Operation Failed",
         }
     }
 };

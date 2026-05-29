@@ -33,6 +33,12 @@ const i18n: I18N = {
             Retry:  "Wiederhole Anfrage: $n$ von $m$",
             Failed: "Anfrage fehlgeschlagen!",
         },
+
+        Backend: {
+            NotFound:         "Objekt nicht gefunden",
+            PermissionDenied: "Zugriff verweigert",
+            OperationFailed:  "Operation fehlgeschlagen",
+        }
     },
 };
 
