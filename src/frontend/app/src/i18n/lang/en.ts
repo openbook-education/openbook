@@ -16,11 +16,20 @@ export default {
         Search: {
             Placeholder: "Search",
         },
-        UserMenu: {
-            AltText:  "User Menu",
-            Profile:  "Profile",
-            Settings: "Settings",
-            Logout:   "Logout",
+        Menu: {
+            Title: "Menu",
+            Theme: {
+                Title: "Theme",
+                Light: "Light",
+                Dark:  "Dark",
+                Nord:  "Nord",
+                Aqua:  "Aqua",
+            },
+            Account: {
+                Title: "User Account",
+                Profile: "Profile",
+                Logout:  "Logout",
+            }
         }
     },
 

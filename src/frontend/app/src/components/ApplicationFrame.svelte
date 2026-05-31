@@ -31,7 +31,7 @@ Root component of the application which defines the global application UI.
 
 <NavigationBar/>
 
-<main class="flex flex-1 flex-col">
+<main class="flex flex-1 flex-col -z-10">
     <svelte:boundary>
         <Router {routes} {onRouteLoaded}/>
 

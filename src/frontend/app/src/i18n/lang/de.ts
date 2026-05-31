@@ -15,11 +15,20 @@ const i18n: I18N = {
         Search: {
             Placeholder: "Suche",
         },
-        UserMenu: {
-            AltText:  "Benutzermenü",
-            Profile:  "Profil",
-            Settings: "Einstellungen",
-            Logout:   "Logout",
+        Menu: {
+            Title: "Menü",
+            Theme: {
+                Title: "Farbschema",
+                Light: "Hell",
+                Dark:  "Dunkel",
+                Nord:  "Nord",
+                Aqua:  "Aqua",
+            },
+            Account: {
+                Title:   "Benutzerkonto",
+                Profile: "Profil bearbeiten",
+                Logout:  "Logout",
+            }
         },
     },
 

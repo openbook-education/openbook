@@ -8,6 +8,8 @@
  * License, or (at your option) any later version.
  */
 
+import "bootstrap-icons/font/bootstrap-icons.min.css";
+
 import "./tailwind.css";
 import "./fonts.css";
 import "./index.css";

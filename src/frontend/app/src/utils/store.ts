@@ -63,7 +63,7 @@ export class ReadableStore<T> {
      * Set new value.
      */
     protected set(value: T) {
-        this._set(value);
+        if (this._set) this._set(value);
     }
 
     /**
@@ -71,7 +71,7 @@ export class ReadableStore<T> {
      * and must return a new value.
      */
     protected update(fn: Updater<T>) {
-        this._update(fn);
+        if (this._update) this._update(fn);
     }
 
     /**
@@ -83,7 +83,7 @@ export class ReadableStore<T> {
      * using this one internally, get a public API to push new values to the views.
      */
     public changeValue(value: T) {
-        this._set(value);
+        if (this._set) this._set(value);
     }
 }
 
@@ -132,7 +132,7 @@ export class WritableStore<T> {
      * Set new value.
      */
     set(value: T) {
-        this._set(value);
+        if (this._set) this._set(value);
     }
 
     /**
@@ -140,7 +140,7 @@ export class WritableStore<T> {
      * and must return a new value.
      */
     update(fn: Updater<T>) {
-        this._update(fn);
+        if (this._update) this._update(fn);
     }
 
     /**
@@ -148,6 +148,6 @@ export class WritableStore<T> {
      * with the `ReadableStore` class, even though this is writeable store.
      */
     public changeValue(value: T) {
-        this._set(value);
+        this.set(value);
     }
 }
