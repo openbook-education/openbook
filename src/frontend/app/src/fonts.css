@@ -18,6 +18,11 @@
  * - Mono: Monospaces font e.g. for code samples
  */
 
+/* TODO: Optimize bundle size
+ *  - Use static fonts for normal, bold, italic instead of variations.
+ *  - Create separate bundle just for fonts?
+ */
+
 /* Normal font: Roboto */
 @font-face {
     font-family: "SansSerif";
@@ -34,6 +39,7 @@
 }
 
 /* Serif font: Roboto Serif */
+/*
 @font-face {
     font-family: "Serif";
     src: url("./fonts/Roboto_Serif/RobotoSerif-VariableFont_GRAD,opsz,wdth,wght.woff2") format(woff2) tech(variations);
@@ -47,6 +53,7 @@
     font-weight: 100 900;
     font-style: italic;
 }
+*/
 
 /* Monospaced font: Roboto Mono */
 @font-face {
