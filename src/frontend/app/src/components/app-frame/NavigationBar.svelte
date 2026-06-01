@@ -14,17 +14,26 @@ Top navigation page of the application frame.
 -->
 
 <script lang="ts">
+    import DropdownMenu      from "../basic/dropdown-menu/DropdownMenu.svelte";
+    import MenuItem          from "../basic/dropdown-menu/MenuItem.svelte";
+    import MenuTitle         from "../basic/dropdown-menu/MenuTitle.svelte";
+    import SubMenu           from "../basic/dropdown-menu/SubMenu.svelte";
+
     import {i18n}            from "../../stores/i18n.js";
     import {availableThemes} from "../../stores/theme.js";
     import {theme}           from "../../stores/theme.js";
+
     import AvatarDefault     from "./img/AvatarDefault.jpg";
 
     let avatar = $state(AvatarDefault);
 
     function switchTheme(event: MouseEvent) {
-        const target = event.target as HTMLAnchorElement;
-        $theme = target.dataset.themeName as string;
-        event.preventDefault();
+        const target = event.currentTarget as HTMLElement | null;
+        const themeName = target?.dataset.themeName;
+
+        if (themeName) {
+            $theme = themeName;
+        }
     }
 </script>
 
@@ -43,67 +52,63 @@ Top navigation page of the application frame.
         <input type="text" placeholder="{$i18n.ApplicationFrame.Search.Placeholder}" class="input input-bordered w-24 md:w-auth"/>
 
         <!-- Menu -->
-        <!-- TODO: Custom element with better keyboard navigation -->
-        <details class="dropdown dropdown-end">
-            <summary class="btn btn-ghost btn-circle avatar">
+        <DropdownMenu
+            align        = "end"
+            summaryClass = "btn btn-ghost btn-circle avatar"
+            contentClass = "menu-sm xl:menu-horizontal bg-base-100/85 backdrop-blur shadow rounded-box lg:min-w-max z-10"
+        >
+            {#snippet trigger()}
                 <div class="w-10 rounded-full">
                     <img src="{avatar}" alt="{$i18n.ApplicationFrame.Menu.Title}"/>
                 </div>
-            </summary>
-            <ul
-                class = "dropdown-content menu menu-sm xl:menu-horizontal bg-base-100/85 backdrop-blur shadow rounded-box lg:min-w-max z-10"
-                role = "menu"
-            >
-                <!-- Theme -->
-                <li class="w-40">
-                    <div class="menu-title">
-                        {$i18n.ApplicationFrame.Menu.Theme.Title}
-                    </div>
-                    <ul>
-                        {#each availableThemes as availableTheme}
-                            <li>
-                                <a
-                                    href            = "#dummy"
-                                    data-theme-name = {availableTheme.name}
-                                    onclick         = {switchTheme}
-                                    role            = "menuitemradio"
-                                    aria-checked    = {$theme === availableTheme.name}
-                                    tabindex        = {$theme === availableTheme.name ? 0 : -1}
-                                >
-                                    {#if $theme === availableTheme.name}
-                                        <i class="bi bi-check-circle"></i>
-                                    {:else}
-                                        <i class="bi bi-circle"></i>
-                                    {/if}
+            {/snippet}
 
-                                    {availableTheme.label}
-                                </a>
-                            </li>
-                        {/each}
-                    </ul>
-                </li>
+            <!-- Theme -->
+            <MenuItem>
+                <MenuTitle>
+                    {$i18n.ApplicationFrame.Menu.Theme.Title}
+                </MenuTitle>
 
-                <!-- Account -->
-                <li class="w-40">
-                    <div class="menu-title">
-                        {$i18n.ApplicationFrame.Menu.Account.Title}
-                    </div>
-                    <ul>
-                        <li>
-                            <a href="#/accounts/profile">
-                                <i class="bi bi-box-arrow-right"></i>
-                                {$i18n.ApplicationFrame.Menu.Account.Profile}
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#/accounts/logout">
-                                <i class="bi bi-person-circle"></i>
-                                {$i18n.ApplicationFrame.Menu.Account.Logout}
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </details>
+                <SubMenu>
+                    {#each availableThemes as availableTheme}
+                        <MenuItem
+                            itemClass       = "justify-start"
+                            data-theme-name = {availableTheme.name}
+                            onclick         = {switchTheme}
+                            role            = "menuitemradio"
+                            aria-checked    = {$theme === availableTheme.name}
+                            tabindex        = {$theme === availableTheme.name ? 0 : -1}
+                        >
+                            {#if $theme === availableTheme.name}
+                                <i class="bi bi-check-circle"></i>
+                            {:else}
+                                <i class="bi bi-circle"></i>
+                            {/if}
+
+                            {availableTheme.label}
+                        </MenuItem>
+                    {/each}
+                </SubMenu>
+            </MenuItem>
+
+            <!-- Account -->
+            <MenuItem>
+                <MenuTitle>
+                    {$i18n.ApplicationFrame.Menu.Account.Title}
+                </MenuTitle>
+
+                <SubMenu>
+                    <MenuItem href="#/accounts/profile">
+                        <i class="bi bi-box-arrow-right"></i>
+                        {$i18n.ApplicationFrame.Menu.Account.Profile}
+                    </MenuItem>
+
+                    <MenuItem href="#/accounts/logout">
+                        <i class="bi bi-person-circle"></i>
+                        {$i18n.ApplicationFrame.Menu.Account.Logout}
+                    </MenuItem>
+                </SubMenu>
+            </MenuItem>
+        </DropdownMenu>
     </div>
 </div>
