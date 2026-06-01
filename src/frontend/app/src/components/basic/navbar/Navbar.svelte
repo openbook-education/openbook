@@ -31,7 +31,6 @@ Semantic navigation bar wrapper based on DaisyUI classes.
         [
             "navbar",
             "border-0",
-            "bg-base-100/85",
             "backdrop-blur-md",
             className,
         ].filter(Boolean).join(" ")

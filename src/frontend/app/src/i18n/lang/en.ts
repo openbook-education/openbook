@@ -45,10 +45,42 @@ export default {
     },
 
     Error: {
-        PageNotFound: {
-            Title:    "Page not found",
-            Message1: "We are terribly sorry, but the requested page <b>$url$</b> cannot be found.",
-            Message2: 'Maybe go back to the <a href="#/">home page</a> and grab some other cheese, instead?',
+        Page: {
+            NetworkError: {
+                Title:    "Network error",
+                Message1: "Looks like the internet decided to take a coffee break.",
+                Message2: "Check your connection and try again — or blame the AI.",
+            },
+
+            NotFound: {
+                Title:    "Page not found",
+                Message1: "It looks like this page took a study break and wandered off.",
+                Message2: "Let's get you back to your learning journey.",
+            },
+
+            OperationFailed: {
+                Title:    "Operation failed",
+                Message1: "Even our AI doesn't understand what went wrong here.",
+                Message2: "Please try again, or contact support if the problem persists.",
+            },
+
+            PermissionDenied: {
+                Title:    "Permission denied",
+                Message1: "Looks like you don't have a VIP pass to this section—yet.",
+                Message2: "Contact your instructor if you think you should have access.",
+            },
+
+            Actions: {
+                Retry:        "Retry",
+                GoToHomepage: "Go to Homepage",
+                GoToLibrary:  "Go to Library",
+            },
+
+            Support: {
+                Title:  "Need help finding something?",
+                Text:   "Our AI assistant can point you in the right direction.",
+                Action: "Ask AI Assistant",
+            },
         },
 
         RequestFailed: {

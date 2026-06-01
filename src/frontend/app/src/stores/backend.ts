@@ -8,12 +8,11 @@
  * License, or (at your option) any later version.
  */
 
-import type {Client} from "openapi-fetch";
+import type {Client}     from "openapi-fetch";
 
-import client        from "../backend";
-import {errorPage}   from "./error";
-import {i18n}        from "./i18n";
-import {toast}       from "./toast";
+import client              from "../backend";
+import { rethrowAppError } from "../utils/error";
+import { toast }           from "./toast";
 
 /**
  * Factory for creating typed API client wrappers for a given OpenAPI client.
@@ -59,18 +58,9 @@ export type ErrorHandling = "error-toast" | "error-page";
  * @template Path The specific path key.
  */
 class ClientWrapper<Paths extends {}, Path extends AllPaths<Paths>> {
-    /**
-     * The OpenAPI client instance.
-     */
-    client:  Client<Paths>;
-    /**
-     * The OpenAPI path to call.
-     */
-    path:    Path;
-    /**
-     * The error handling mode.
-     */
-    errors:  ErrorHandling;
+    client: Client<Paths>;
+    path:   Path;
+    errors: ErrorHandling;
 
     /**
      * Create a new client wrapper for a specific path and error handling mode.
@@ -94,30 +84,41 @@ class ClientWrapper<Paths extends {}, Path extends AllPaths<Paths>> {
     private handleError(error: unknown) {
         if (!error) return;
 
-        let status  = 0;
+        let status = 0;
         let message = "";
 
         if (typeof error === "object" && error !== null && "status" in error) {
-            status  = (error as any).status;
-            message = (error as any).detail || (error as any).message || error.toString();
+            const maybeError  = error as {status?: unknown, detail?: unknown, message?: unknown};
+            const maybeStatus = maybeError.status;
+
+            if (typeof maybeStatus === "number") {
+                status = maybeStatus;
+            }
+
+            if (typeof maybeError.detail === "string") {
+                message = maybeError.detail;
+            } else if (typeof maybeError.message === "string") {
+                message = maybeError.message;
+            } else {
+                message = String(error);
+            }
         } else {
             message = error?.toString?.() ?? String(error);
         }
 
         if (this.errors === "error-toast") {
             toast.show("error", message);
-        } else {
-            switch (status) {
-                case 401:
-                case 403:
-                    errorPage.show("PermissionDenied", i18n.value.Error.Backend.PermissionDenied, message);
-                    break;
-                case 404:
-                    errorPage.show("NotFound", i18n.value.Error.Backend.NotFound, message);
-                    break;
-                default:
-                    errorPage.show("OperationFailed", i18n.value.Error.Backend.OperationFailed, message);
-            }
+            return;
+        }
+
+        switch (status) {
+            case 401:
+            case 403:
+                rethrowAppError("PermissionDenied", error, message);
+            case 404:
+                rethrowAppError("NotFound", error, message);
+            default:
+                rethrowAppError("OperationFailed", error, message);
         }
     }
 

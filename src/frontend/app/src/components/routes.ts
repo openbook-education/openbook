@@ -34,6 +34,6 @@ export default {
     // }),
 
     "*": wrap({
-        asyncComponent: () => import("./pages/errors/NotFoundPage.svelte")
+        asyncComponent: () => import("./pages/errors/NotFoundPage.svelte"),
     }),
 };

@@ -1,6 +1,6 @@
 <!--
 OpenBook: Interactive Online Textbooks
-© 2024 Dennis Schulmeister-Zimolong <dennis@wpvs.de>
+© 2026 Dennis Schulmeister-Zimolong <dennis@wpvs.de>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
@@ -10,34 +10,23 @@ License, or (at your option) any later version.
 
 <!--
 @component
-Simple 404 not found page
+Dedicated full-screen page for not-found errors.
  -->
+
 <script lang="ts">
-    import {i18n, _}  from "../../../stores/i18n.js";
-    import {router} from "svelte-spa-router";
+    import {i18n}    from "../../../stores/i18n.js";
+    import ErrorPage from "./ErrorPage.svelte";
 </script>
 
-<div>
-    <h1>{$i18n.Error.PageNotFound.Title}</h1>
-    <p>
-        {@html _($i18n.Error.PageNotFound.Message1, {url: router.location})}
-    </p>
-    <p>
-        {@html $i18n.Error.PageNotFound.Message2}
-    </p>
-    <img src="page-not-found.png" alt="">
-</div>
-
-<style>
-    div {
-        flex: 1;
-        align-self: center;
-    }
-
-    img {
-        display: block;
-        width: 30em;
-        max-width: 100%;
-        margin-top: 3em;
-    }
-</style>
+<ErrorPage
+    title                = {$i18n.Error.Page.NotFound.Title}
+    messageHtml          = {$i18n.Error.Page.NotFound.Message1}
+    statusCode           = "404"
+    imageSrc             = "error/not-found.png"
+    detailsHtml          = {$i18n.Error.Page.NotFound.Message2}
+    imageAlt             = {$i18n.Error.Page.NotFound.Title}
+    primaryActionLabel   = {$i18n.Error.Page.Actions.GoToLibrary}
+    primaryActionHref    = "#/library"
+    secondaryActionLabel = {$i18n.Error.Page.Actions.GoToHomepage}
+    secondaryActionHref  = "#/"
+/>

@@ -39,7 +39,7 @@ Top navigation page of the application frame.
 </script>
 
 <!-- Navbar -->
-<Navbar class="top-0 sticky">
+<Navbar class="top-0 sticky z-10 bg-base-100/95">
     <!-- Breadcrumb with current location -->
     <div class="flex-1">
         Breadcrumb
@@ -56,7 +56,7 @@ Top navigation page of the application frame.
         <DropdownMenu
             align        = "end"
             triggerClass = "btn btn-ghost btn-circle avatar"
-            contentClass = "menu-sm xl:menu-horizontal bg-base-100/85 backdrop-blur shadow rounded-box lg:min-w-max z-10"
+            contentClass = "menu-sm xl:menu-horizontal bg-base-100/95 backdrop-blur shadow rounded-box lg:min-w-max"
         >
             {#snippet trigger()}
                 <div class="w-10 rounded-full">
