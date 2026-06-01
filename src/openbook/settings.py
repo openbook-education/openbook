@@ -287,7 +287,8 @@ SOCIALACCOUNT_ADAPTER = "openbook.auth.allauth.adapter.SocialAccountAdapter"
 
 # Allauth - Headless API
 # See: https://docs.allauth.org/en/latest/headless/configuration.html
-HEADLESS_ONLY = True
+### HEADLESS_ONLY = True
+HEADLESS_ONLY = False
 HEADLESS_ADAPTER = "allauth.headless.adapter.DefaultHeadlessAdapter"
 HEADLESS_SERVE_SPECIFICATION = True
 HEADLESS_FRONTEND_URLS = {
@@ -298,9 +299,9 @@ HEADLESS_FRONTEND_URLS = {
     "socialaccount_login_error":       f"{OB_ROOT_REDIRECT}#/account/provider/callback",
 }
 
-LOGIN_URL           = f"{OB_ROOT_REDIRECT}#/account/login"
-LOGIN_REDIRECT_URL  = OB_ROOT_REDIRECT
-LOGOUT_REDIRECT_URL = OB_ROOT_REDIRECT
+### LOGIN_URL           = f"{OB_ROOT_REDIRECT}#/account/login"
+### LOGIN_REDIRECT_URL  = OB_ROOT_REDIRECT
+### LOGOUT_REDIRECT_URL = OB_ROOT_REDIRECT
 
 # Recommended settings for SAML behind a reverse proxy
 # See: https://django-allauth.readthedocs.io/en/latest/socialaccount/providers/saml.html#guidelines
