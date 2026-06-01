@@ -22,7 +22,7 @@
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "^2.31.1",
     "@tailwindcss/cli": "^4.2.4",
-    "daisyui": "^5.5.19",
+    "daisyui": "^5.5.20",
     "svelte-spa-router": "^5.0.1",
     "tailwindcss": "^4.2.4"
   }
