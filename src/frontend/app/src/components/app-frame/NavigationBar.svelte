@@ -18,6 +18,7 @@ Top navigation page of the application frame.
     import MenuItem          from "../basic/dropdown-menu/MenuItem.svelte";
     import MenuTitle         from "../basic/dropdown-menu/MenuTitle.svelte";
     import SubMenu           from "../basic/dropdown-menu/SubMenu.svelte";
+    import Navbar            from "../basic/navbar/Navbar.svelte";
 
     import {i18n}            from "../../stores/i18n.js";
     import {availableThemes} from "../../stores/theme.js";
@@ -38,7 +39,7 @@ Top navigation page of the application frame.
 </script>
 
 <!-- Navbar -->
-<div class="navbar border-0 bg-base-100/85 backdrop-blur-md top-0 sticky">
+<Navbar class="top-0 sticky">
     <!-- Breadcrumb with current location -->
     <div class="flex-1">
         Breadcrumb
@@ -111,4 +112,4 @@ Top navigation page of the application frame.
             </MenuItem>
         </DropdownMenu>
     </div>
-</div>
+</Navbar>
