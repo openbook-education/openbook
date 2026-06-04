@@ -147,12 +147,12 @@ Top navigation page of the application frame.
 
                 <SubMenu>
                     <MenuItem href="#/accounts/profile">
-                        <i class="bi bi-box-arrow-right"></i>
+                        <i class="bi bi-person-circle"></i>
                         {$i18n.ApplicationFrame.Menu.Account.Profile}
                     </MenuItem>
 
                     <MenuItem href="#/accounts/logout">
-                        <i class="bi bi-person-circle"></i>
+                        <i class="bi bi-box-arrow-right"></i>
                         {$i18n.ApplicationFrame.Menu.Account.Logout}
                     </MenuItem>
                 </SubMenu>
