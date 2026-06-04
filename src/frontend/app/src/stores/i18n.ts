@@ -20,10 +20,19 @@ export {languages}         from "../i18n/index.js";
 export {defaultLanguage}   from "../i18n/index.js";
 export {fallbackLanguage}  from "../i18n/index.js";
 
-const i18nDefault = await createTranslations(defaultLanguage);
+/**
+ * Module initialization, to avoid top-level import here.
+ */
+export async function initI18n() {
+    const i18nDefault = await createTranslations(defaultLanguage);
+    i18n = new I18nStore(i18nDefault);
+}
 
+/**
+ * Readable store to access the translations of the currently active language.
+ */
 class I18nStore extends ReadableStore<I18N> {
-    constructor() {
+    constructor(i18nDefault: any) {
         super(i18nDefault);
 
         language.subscribe(async newLanguage => {
@@ -43,7 +52,7 @@ export const language = new WritableStore<LanguageCode>(defaultLanguage);
  * This is just a deeply structured key/value object, that can be directly
  * accessed with `$i18n.someKey` in the UI components.
  */
-export const i18n = new I18nStore();
+export let i18n: I18nStore;
 
 /**
  * Utility function to replace placeholders in the form of `$key$` in the given

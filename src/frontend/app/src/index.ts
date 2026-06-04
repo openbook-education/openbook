@@ -8,6 +8,9 @@
  * License, or (at your option) any later version.
  */
 
+import {initI18n} from "./stores/i18n.js";
+await initI18n();
+
 import "bootstrap-icons/font/bootstrap-icons.min.css";
 
 import "./tailwind.css";

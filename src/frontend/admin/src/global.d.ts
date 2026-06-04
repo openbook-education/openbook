@@ -15,7 +15,6 @@
 
 // Side-effect imports
 declare module "*.css";
-declare module "*.svelte";
 
 // Value imports
 declare module "*.css" {

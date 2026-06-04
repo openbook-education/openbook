@@ -8,11 +8,11 @@
  * License, or (at your option) any later version.
  */
 
-import * as esbuild     from "esbuild";
-import path             from "node:path";
-import shelljs          from "shelljs";
-import esbuildSvelte    from "esbuild-svelte";
-import sveltePreprocess from "svelte-preprocess";
+import * as esbuild         from "esbuild";
+import path                 from "node:path";
+import shelljs              from "shelljs";
+import esbuildSvelte        from "esbuild-svelte";
+import { sveltePreprocess } from "svelte-preprocess";
 
 /**
  * Centralized esbuild configuration to build JavaScript assets. This is used
@@ -37,22 +37,26 @@ export async function runEsbuild({infile, outfiles, staticdirs, watch, plugins} 
     let ctx = await esbuild.context({
         entryPoints: [infile],
         bundle:      true,
-        minify:      false, //true,
+        minify:      !watch,
         outfile:     outfiles[0],
         sourcemap:   true,
+        splitting:   false,
         format:      "esm",
 
         mainFields: ["svelte", "browser", "module", "main"],
         conditions: ["svelte", "browser"],
+        logLevel:   "info",
 
         plugins: [
+            // TODO: Different options for frontend app and libraries?
+            // Libraries must emit web components
             esbuildSvelte({
                 preprocess: sveltePreprocess(),
                 compilerOptions: {
                     compatibility: {
-                        componentApi: 4
+                        componentApi: 5
                     },
-                    customElement: true
+                    customElement: true,
                 },
 
                 // Suppress the following warning, relevant only for building real web components:

@@ -9,31 +9,23 @@
  */
 
 import type { BreadcrumbsItem } from "../stores/breadcrumbs.js";
-import type { RouteDetail }     from "svelte-spa-router";
 
-// import {i18n}                   from "../stores/i18n.js";
+import {i18n}                   from "../stores/i18n.js";
 import {breadcrumbs}            from "../stores/breadcrumbs.js";
 import {wrap}                   from "svelte-spa-router/wrap";
-
-const HOME_BREADCRUMB: BreadcrumbsItem = {
-    href:  "#/",
-    label: "Home",
-};
 
 /**
  * Set breadcrumbs for a route when it is matched.
  */
-function setBreadcrumbsLine(items: BreadcrumbsItem[]) {
-    return (_detail: RouteDetail): boolean => {
-        breadcrumbs.set([HOME_BREADCRUMB, ...items]);
-        return true;
-    };
+function setBreadcrumbsLine(items: BreadcrumbsItem[]): boolean {
+    breadcrumbs.set([{href:  "#/", label: i18n.value.Home.Title}, ...items]);
+    return true;
 }
 
 export default {
     "/": wrap({
         asyncComponent: () => import("./pages/home/HomePage.svelte"),
-        conditions: [setBreadcrumbsLine([])],
+        conditions: [() => setBreadcrumbsLine([])],
     }),
 
     // "/book/page/:pageNumber": wrap({
@@ -43,10 +35,10 @@ export default {
 
     "*": wrap({
         asyncComponent: () => import("./pages/errors/NotFoundPage.svelte"),
-        conditions: [setBreadcrumbsLine([
+        conditions: [() => setBreadcrumbsLine([
             {
                 href:  "",
-                label: "Not Found", //i18n.value.Error.Page.NotFound.Title,
+                label: i18n.value.Error.Page.NotFound.Title,
             },
         ])],
     }),

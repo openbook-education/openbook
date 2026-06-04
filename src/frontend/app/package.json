@@ -20,12 +20,12 @@
     "check": "npm run lint && tsc"
   },
   "devDependencies": {
-    "@tailwindcss/cli": "^4.2.4",
+    "@tailwindcss/cli": "^4.3.0",
     "bootstrap-icons": "^1.13.1",
-    "daisyui": "^5.5.19",
+    "daisyui": "^5.5.20",
     "openapi-fetch": "^0.17.0",
     "openapi-typescript": "^7.13.0",
-    "svelte-spa-router": "^5.0.1",
-    "tailwindcss": "^4.2.4"
+    "svelte-spa-router": "^5.1.0",
+    "tailwindcss": "^4.3.0"
   }
 }
