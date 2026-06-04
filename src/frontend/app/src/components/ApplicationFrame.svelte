@@ -13,21 +13,20 @@ License, or (at your option) any later version.
 Root component of the application which defines the global application UI.
 -->
 
-<!-- TODO: Render toasts -->
-
 <script lang="ts">
-    import NavigationBar        from "./app-frame/NavigationBar.svelte";
-    import LoadingAnimation     from "./app-frame/LoadingAnimation.svelte";
+    import NavigationBar             from "./app-frame/NavigationBar.svelte";
+    import LoadingAnimation          from "./app-frame/LoadingAnimation.svelte";
+    import Toast                     from "./basic/toast/Toast.svelte";
+    import Alert                     from "./basic/toast/Alert.svelte";
 
-    import {
-        NetworkError,
-        NotFoundError,
-        OperationFailedError,
-        PermissionDeniedError,
-    } from "../utils/error.js";
+    import { toasts }                from "../stores/toasts";
+    import { NetworkError }          from "../utils/error.js";
+    import { NotFoundError }         from "../utils/error.js";
+    import { OperationFailedError }  from "../utils/error.js";
+    import { PermissionDeniedError } from "../utils/error.js";
 
-    import Router           from "svelte-spa-router";
-    import routes           from "./routes.js";
+    import Router                    from "svelte-spa-router";
+    import routes                    from "./routes.js";
 
     type ErrorPageResolverResult = {
         component: any;
@@ -95,4 +94,10 @@ Root component of the application which defines the global application UI.
             {/await}
         {/snippet}
     </svelte:boundary>
+
+    <Toast>
+        {#each $toasts as toast (toast.id) }
+            <Alert type={toast.type} message={toast.message} />
+        {/each}
+    </Toast>
 </main>

@@ -16,7 +16,7 @@ import type { Client }                           from "openapi-fetch";
 
 import clients                                   from "../api/index.js";
 import { rethrowAppError }                       from "../utils/error.js";
-import { toast }                                 from "./toast.js";
+import { toasts }                                from "./toasts.js";
 
 /**
  * Typed schema components for the authentication API.
@@ -120,7 +120,7 @@ class ClientWrapper<Paths extends {}, Path extends AllPaths<Paths>> {
         }
 
         if (this.errors === "error-toast") {
-            toast.show("error", message);
+            toasts.show("error", message);
             return;
         }
 

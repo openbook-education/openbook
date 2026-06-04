@@ -15,14 +15,14 @@ import { ReadableStore } from "../utils/store.js";
  */
 export type Toast = {
     id:      string;
-    type:    "info" | "warning" | "error";
+    type:    "info" | "warning" | "error" | "success";
     message: string;
 }
 
 /**
  * How long toast messages will be shown.
  */
-const TOAST_DURATION_MS = 5000;
+const TOAST_DURATION_MS = 10_000;
 
 /**
  * Readable store for toast messages, including a method for external clients to
@@ -57,4 +57,4 @@ class ToastStore extends ReadableStore<Toast[]> {
 /**
  * Information, warning and error messages that will be shown as a temporary toast.
  */
-export const toast = new ToastStore();
+export const toasts = new ToastStore();
