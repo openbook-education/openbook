@@ -140,8 +140,9 @@ def parse_font_metadata(
                             result["style"] = "italic"
                         elif "oblique" in subfamily:
                             result["style"] = "oblique"
-                    except Exception:
-                        pass
+                    except (UnicodeDecodeError, LookupError, AttributeError):
+                        # Ignore malformed/unsupported name records and continue best-effort style detection.
+                        continue
 
     return result
 
