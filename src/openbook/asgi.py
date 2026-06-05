@@ -28,7 +28,7 @@ application = ProtocolTypeRouter({
             # From: https://channels.readthedocs.io/en/latest/topics/routing.html#urlrouter
             # "Please note that URLRouter nesting will not work properly with path() routes
             # if inner routers are wrapped by additional middleware. See Issue #1428."
-            # Therefor we define all routes of all Django apps here.
+            # Therefore, we define all routes of all Django apps here.
             URLRouter([
                 ## path("ws/example-websocket-client", ExampleWebsocketClient.as_asgi())
             ]),
