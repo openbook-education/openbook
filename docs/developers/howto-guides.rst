@@ -46,7 +46,7 @@ Imagine we wanted to create a new app for tracking learning progress. The typica
 .. code-block:: bash
 
    cd src
-   python manage.py startapp learning_goals src/openbook/progress
+   python manage.py startapp learning_goals openbook/progress
 
 Then add the app import path to :attr:`INSTALLED_APPS`:
 
