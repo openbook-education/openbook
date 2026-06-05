@@ -6,6 +6,8 @@
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
 
+from __future__ import annotations
+
 from colorfield.fields           import ColorField
 from django.contrib.sites.models import Site as DjangoSite
 from django.db                   import models

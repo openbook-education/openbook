@@ -6,6 +6,8 @@
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
 
+from __future__ import annotations
+
 from collections                import defaultdict
 from drf_spectacular.utils      import extend_schema
 from drf_spectacular.types      import OpenApiTypes

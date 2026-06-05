@@ -6,6 +6,8 @@
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
 
+from __future__ import annotations
+
 from django.core.exceptions                import ValidationError
 from django.core.exceptions                import PermissionDenied
 from django.test                           import TestCase

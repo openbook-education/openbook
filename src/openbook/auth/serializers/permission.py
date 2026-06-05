@@ -6,6 +6,8 @@
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
 
+from __future__ import annotations
+
 from django.contrib.auth.models import Permission
 from django.utils.translation   import gettext_lazy as _
 from drf_spectacular.utils      import extend_schema_field

@@ -6,6 +6,8 @@
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
 
+from __future__ import annotations
+
 from allauth.account                 import admin as account_admin
 from allauth.socialaccount           import admin as socialaccount_admin
 from django                          import forms

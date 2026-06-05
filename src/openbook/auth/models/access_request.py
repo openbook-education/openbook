@@ -6,6 +6,8 @@
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
 
+from __future__ import annotations
+
 from django.conf                          import settings
 from django.contrib.auth.models           import AbstractUser
 from django.db                            import models

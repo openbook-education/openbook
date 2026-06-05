@@ -6,6 +6,8 @@
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
 
+from __future__ import annotations
+
 from django_filters.filterset import FilterSet
 from django_filters.filters   import CharFilter
 

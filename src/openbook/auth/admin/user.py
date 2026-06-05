@@ -6,6 +6,8 @@
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
 
+from __future__ import annotations
+
 from allauth.account.models              import EmailAddress
 from django.contrib.auth.admin           import UserAdmin as DjangoUserAdmin
 from django.utils.translation            import gettext_lazy as _

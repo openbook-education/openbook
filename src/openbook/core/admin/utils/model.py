@@ -6,6 +6,8 @@
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
 
+from __future__ import annotations
+
 from django.contrib.auth    import get_permission_codename
 from django.core.exceptions import PermissionDenied
 from django.db.models       import Model

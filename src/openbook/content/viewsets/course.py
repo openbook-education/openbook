@@ -6,6 +6,8 @@
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
 
+from __future__ import annotations
+
 from django_filters.filterset               import FilterSet
 from drf_spectacular.utils                  import extend_schema
 from rest_framework.viewsets                import ModelViewSet

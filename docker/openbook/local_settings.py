@@ -6,6 +6,9 @@
 # tree of the OpenBook server. See the comments there for details.
 
 # Replace with your own secret key !!
+
+from __future__ import annotations
+
 SECRET_KEY = "django-insecure-jeo+.}_}9(Q.t_IU$WJ!%eL=b:MDbAL.~NY_=a:>D@:W[XPh4["
 DEBUG = False
 ALLOWED_HOSTS = ["*"]

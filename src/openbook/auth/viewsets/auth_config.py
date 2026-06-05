@@ -6,6 +6,8 @@
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
 
+from __future__ import annotations
+
 from openbook.drf.flex_serializers import FlexFieldsModelSerializer
 from ..models.auth_config          import AuthConfig
 from ..models.auth_config          import AuthConfigText

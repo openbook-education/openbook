@@ -6,6 +6,8 @@
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
 
+from __future__ import annotations
+
 from django.http                       import HttpResponse
 from django.http                       import HttpRequest
 from django.utils.translation          import gettext_lazy as _

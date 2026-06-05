@@ -6,6 +6,8 @@
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
 
+from __future__ import annotations
+
 from openbook.admin           import admin_site
 from .access_request          import AccessRequestAdmin
 from .allowed_role_permission import AllowedRolePermissionAdmin

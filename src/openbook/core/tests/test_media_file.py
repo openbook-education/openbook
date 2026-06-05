@@ -6,6 +6,8 @@
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
 
+from __future__ import annotations
+
 from django.contrib.contenttypes.models    import ContentType
 from django.core.files.uploadedfile        import SimpleUploadedFile
 from django.test                           import TestCase

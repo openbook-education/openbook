@@ -6,6 +6,8 @@
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
 
+from __future__ import annotations
+
 from django.utils.translation        import gettext_lazy as _
 from rest_framework.authentication   import BaseAuthentication
 from rest_framework.authentication   import get_authorization_header

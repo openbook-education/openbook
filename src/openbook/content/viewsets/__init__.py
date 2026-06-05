@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .course import CourseViewSet
 from .course_material import CourseMaterialViewSet
 from .course_material_page_range import CourseMaterialPageRangeViewSet

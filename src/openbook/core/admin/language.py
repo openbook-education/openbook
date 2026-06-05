@@ -6,6 +6,8 @@
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
 
+from __future__ import annotations
+
 from openbook.admin    import CustomModelAdmin
 from openbook.admin    import ImportExportModelResource
 from ..models.language import Language

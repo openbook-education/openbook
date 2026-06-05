@@ -6,6 +6,8 @@
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
 
+from __future__ import annotations
+
 from .access_request          import AccessRequest
 from .allowed_role_permission import AllowedRolePermission
 from .anonymous_permission    import AnonymousPermission

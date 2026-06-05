@@ -6,6 +6,8 @@
 # published by the Free Software Foundation, either version 3 of the
 # License, or (at your option) any later version.
 
+from __future__ import annotations
+
 def calc_file_path(object, pk, filename):
     """
     Callable for the `upload_to` property of `model.FileField`. Determines the upload path
