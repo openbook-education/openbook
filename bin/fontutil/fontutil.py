@@ -12,7 +12,7 @@ License, or (at your option) any later version.
 import argparse, os
 
 from fontTools.ttLib import TTFont
-from typing          import Any, Dict, Optional, TypedDict, Union
+from typing          import Any, Optional, TypedDict, Union
 
 class FontMetadata(TypedDict, total=False):
     """
