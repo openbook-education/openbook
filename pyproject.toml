@@ -21,6 +21,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.dependencies]
 channels = {extras = ["daphne"], version = "^4.3.2"}
 channels-redis = "^4.3.0"
+chanx = {extras = ["channels"], version = "^2.7.1"}
 daphne = "^4.2.1"
 Django = "^6.0.3"
 django-allauth = {extras = ["headless-spec", "saml", "socialaccount"], version = "^65.16.1"}

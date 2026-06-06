@@ -63,6 +63,11 @@ def get_endpoints(args: argparse.Namespace) -> list[Endpoint]:
             output_file = "auth.json",
             label       = "Authentication API JSON schema",
         ),
+        Endpoint(
+            url         = f"{args.u}/ws/schema/",
+            output_file = "asyncapi.json",
+            label       = "Asynchronous WebSocket API",
+        ),
     ]
 
 def wait_for_server_ready(health_url: str, server_process: subprocess.Popen[object]) -> None:

@@ -35,11 +35,13 @@ INSTALLED_APPS = [
     # OpenBook Server (order determines order in the Django Admin)
     "openbook.core",
     "openbook.auth",
+    "openbook.ai",
     "openbook.content",
 
     # 3rd-party reusable apps
     "daphne",
     "channels",
+    "chanx.channels",
 
     # Django REST framework
     #"rest_wind",
@@ -141,17 +143,6 @@ DATABASES = {
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Django Channels
-CHANNEL_LAYERS = {
-    "default": {
-        #"BACKEND": "channels.layers.InMemoryChannelLayer",
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("localhost", 6379)],
-        },
-    },
-}
-
 # Django REST framework
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
@@ -190,7 +181,7 @@ REST_FRAMEWORK = {
     "PAGE_SIZE_PARAM": "_page_size",
 }
 
-# Read the OpenBook version to include it in the OpenAPIs. Try the following order:
+# Read the OpenBook version to include it in the API docs. Try the following order:
 #
 #   1. Installed version via importlib
 #   2. Parsing pyproject.toml
@@ -210,7 +201,7 @@ except Exception:
 
 # See: https://drf-spectacular.readthedocs.io/
 SPECTACULAR_SETTINGS = {
-    "TITLE": "OpenBook API",
+    "TITLE": "OpenBook REST API",
     "DESCRIPTION": "Beautiful and Engaging Learning Materials",
     "VERSION": OPENBOOK_VERSION,
     "LICENSE": {
@@ -249,6 +240,27 @@ REST_FLEX_FIELDS2 = {
     "EXPAND_PARAM": "_expand",
     "FIELDS_PARAM": "_fields",
     "OMIT_PARAM": "_omit",
+}
+
+# Django Channels
+CHANNEL_LAYERS = {
+    "default": {
+        #"BACKEND": "channels.layers.InMemoryChannelLayer",
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("localhost", 6379)],
+        },
+    },
+}
+
+CHANX = {
+    "CAMELIZE": True,
+    "SEND_COMPLETION": True,
+    "SEND_AUTHENTICATION_MESSAGE": True,
+    "LOG_WEBSOCKET_MESSAGE": True,
+    "ASYNCAPI_TITLE": "OpenBook WebSocket API",
+    "ASYNCAPI_DESCRIPTION": "Beautiful and Engaging Learning Materials",
+    "ASYNCAPI_VERSION": OPENBOOK_VERSION,
 }
 
 # Password validation
@@ -361,6 +373,11 @@ UNFOLD = {
             "icon": "api",
             "title": _("Auth API Explorer"),
             "link": "/auth-api/openapi.html",
+        },
+        {
+            "icon": "api",
+            "title": _("WebSocket API Explorer"),
+            "link": reverse_lazy("asyncapi-docs'"),
         },
         {
             "icon": "menu_book",

@@ -40,6 +40,9 @@ urlpatterns = [
     path("api/schema/",       SpectacularAPIView.as_view(), name="api-schema"),
     path("api/schema/redoc/", SpectacularRedocView.as_view(url_name="api-schema"), name="api-redoc"),
 
+    # WebSocket API
+    path("ws/",               include("chanx.channels.urls")),
+
     # Admin Panel
     path("admin/",            admin_site.urls),
 
