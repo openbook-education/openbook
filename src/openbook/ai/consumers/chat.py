@@ -8,6 +8,8 @@
 
 from __future__ import annotations
 
+import asyncio
+
 from chanx.channels.websocket import AsyncJsonWebsocketConsumer
 from chanx.core.decorators    import channel, ws_handler
 from chanx.messages.incoming  import PingMessage
@@ -59,6 +61,8 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         """
         Handle incoming chat message sent by the user.
         """
+        # Log user message in the chat history and send it back to the client,
+        # so that the client knows the full message details and that it was received.
         user_message = ChatMessage(
             datetime   = datetime.now(UTC),
             sender     = "user",
@@ -69,8 +73,36 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             content    = message.content,
             finished   = True,
         )
-        self.chat_history.append(user_message)
 
+        self.chat_history.append(user_message)
+        await self.send_message(user_message)
+
+        # Fake streaming LLM response
+        response_string  = f"Fake response: {message.content}"
+        response_tokens  = response_string.split(" ");
+        response_partial = "";
+
+        for response_token in response_tokens:
+            if not response_partial:
+                response_partial = response_token
+            else:
+                response_partial += f" {response_token}"
+
+            response_message = ChatMessage(
+                datetime   = datetime.now(UTC),
+                sender     = "assistant",
+                type       = "normal",
+                severity   = "info",
+                guardRails = {"findings": "none", "explanation": ""},
+                format     = "markdown",
+                content    = response_partial,
+                finished   = False,
+            )
+
+            await self.send_message(response_message)
+            await asyncio.sleep(0.25)
+
+        # Send final response and log it to the chat history
         response_message = ChatMessage(
             datetime   = datetime.now(UTC),
             sender     = "assistant",
@@ -78,7 +110,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             severity   = "info",
             guardRails = {"findings": "none", "explanation": ""},
             format     = "markdown",
-            content    = f"Fake response: {message.content}",
+            content    = response_string,
             finished   = True,
         )
 
