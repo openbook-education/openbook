@@ -84,12 +84,13 @@ export default {
 
     /**
      * Factory method for new WebSocket clients.
-     * @suffix URL suffix, e.g. `/ws/ai/chat`
+     * @param suffix URL suffix (without the `/ws` prefix), e.g. `/ai/chat`
      * @returns A new WebSocket client for the OpenBook WebSocket API
      */
     ws: async <SentMessages extends WebSocketMessage, ReceivedMessages extends WebSocketMessage>(suffix: string) => {
         if (!suffix.startsWith("/")) suffix = `/${suffix}`;
         let url = (await getBaseUrl()) + "/ws" + suffix;
         return new WebSocketClient<SentMessages, ReceivedMessages>(url);
+    },
     },
 };
