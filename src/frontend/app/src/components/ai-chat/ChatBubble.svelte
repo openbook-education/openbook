@@ -18,7 +18,7 @@ Reusable chat message bubble with variants for user, assistant and system messag
     import { i18n }       from "../../stores/i18n.js";
 
     type ChatBubbleVariant = "assistant" | "user" | "system";
-    type ChatBubbleTone = "neutral" | "muted" | "info" | "warning" | "error" | "success";
+    type ChatBubbleTone    = "neutral" | "muted" | "info" | "warning" | "error" | "success";
 
     interface Props {
         class?:    string;

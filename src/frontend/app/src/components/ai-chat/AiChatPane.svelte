@@ -14,19 +14,21 @@ AI chat pane.
 -->
 
 <script lang="ts">
-    import ChatBubble               from "./ChatBubble.svelte";
-    import ChatComposer             from "./ChatComposer.svelte";
-    import ChatMarkdown             from "./ChatMarkdown.svelte";
-    import ChatPanel                from "./ChatPanel.svelte";
-    import Card                     from "../basic/card/Card.svelte";
-    import CardBody                 from "../basic/card/CardBody.svelte";
 
-    import { onMount, tick }        from "svelte";
+    import type { ChatMessagePayload } from "../../stores/ai-chat.js";
+    import type { ChatMessageType }    from "../../stores/ai-chat.js";
 
-    import { AiChatStore }          from "../../stores/ai-chat.js";
-    import type { ChatMessage }     from "../../stores/ai-chat.js";
-    import type { ChatMessageType } from "../../stores/ai-chat.js";
-    import { i18n }                 from "../../stores/i18n.js";
+    import ChatBubble                  from "./ChatBubble.svelte";
+    import ChatComposer                from "./ChatComposer.svelte";
+    import ChatMarkdown                from "./ChatMarkdown.svelte";
+    import ChatPanel                   from "./ChatPanel.svelte";
+    import Card                        from "../basic/card/Card.svelte";
+    import CardBody                    from "../basic/card/CardBody.svelte";
+
+    import { onMount, tick }           from "svelte";
+
+    import { AiChatStore }             from "../../stores/ai-chat.js";
+    import { i18n }                    from "../../stores/i18n.js";
 
     const aiChat = new AiChatStore();
 
@@ -40,13 +42,30 @@ AI chat pane.
     let transcriptElement    = $state<HTMLDivElement | undefined>(undefined);
     let keepTranscriptPinned = $state(true);
 
-    const hasMessages = $derived($aiChat.messages.length > 0);
+    const renderedMessages = $derived.by(() => {
+        const messagesById = new Map<string, ChatMessagePayload>();
+        const order: string[] = [];
 
-    const latestAssistantMessage = $derived(
-        [...$aiChat.messages].reverse().find(message => message.sender === "assistant")
+        for (const message of $aiChat.messages) {
+            if (!messagesById.has(message.id)) {
+                order.push(message.id);
+            }
+
+            messagesById.set(message.id, message);
+        }
+
+        return order
+            .map(id => messagesById.get(id))
+            .filter((message): message is ChatMessagePayload => Boolean(message));
+    });
+
+    const hasMessages = $derived(renderedMessages.length > 0);
+
+    const latestMessage = $derived(renderedMessages[renderedMessages.length - 1]);
+
+    const assistantBusy = $derived(
+        Boolean(latestMessage && latestMessage.sender === "assistant" && !latestMessage.finished)
     );
-
-    const assistantBusy = $derived(Boolean(latestAssistantMessage && !latestAssistantMessage.finished));
 
     const canSend = $derived(
         $aiChat.connection === "connected"
@@ -140,14 +159,14 @@ AI chat pane.
         void submitMessage();
     }
 
-    function formatTimestamp(datetime: ChatMessage["datetime"]): string {
+    function formatTimestamp(datetime: ChatMessagePayload["datetime"]): string {
         const dateValue = normalizeDate(datetime);
         if (!dateValue) return "";
 
         return timeFormatter.format(dateValue);
     }
 
-    function normalizeDate(value: ChatMessage["datetime"] | string | number | null | undefined): Date | null {
+    function normalizeDate(value: Date | ChatMessagePayload["datetime"] | number | null | undefined): Date | null {
         if (!value) return null;
         if (value instanceof Date && !Number.isNaN(value.getTime())) return value;
 
@@ -168,7 +187,7 @@ AI chat pane.
         }
     }
 
-    function getMessageTitle(message: ChatMessage): string {
+    function getMessageTitle(message: ChatMessagePayload): string {
         if (message.type === "status") {
             return message.sender === "assistant"
                 ? $i18n.AiChat.MessageTitle.AssistantStatus
@@ -184,7 +203,7 @@ AI chat pane.
             : $i18n.AiChat.MessageTitle.OpenBookAI;
     }
 
-    function getSystemLabel(severity: ChatMessage["severity"]): string {
+    function getSystemLabel(severity: ChatMessagePayload["severity"]): string {
         switch (severity) {
             case "critical":
                 return $i18n.AiChat.SystemLabel.CriticalNotice;
@@ -197,12 +216,12 @@ AI chat pane.
         }
     }
 
-    function getMessageVariant(message: ChatMessage): "assistant" | "user" | "system" {
+    function getMessageVariant(message: ChatMessagePayload): "assistant" | "user" | "system" {
         if (message.type === "system") return "system";
         return message.sender === "user" ? "user" : "assistant";
     }
 
-    function getMessageTone(message: ChatMessage): "neutral" | "muted" | "info" | "warning" | "error" {
+    function getMessageTone(message: ChatMessagePayload): "neutral" | "muted" | "info" | "warning" | "error" {
         if (message.type === "status") return "muted";
 
         if (message.type === "system") {
@@ -214,7 +233,7 @@ AI chat pane.
         return "neutral";
     }
 
-    function getMessageMeta(message: ChatMessage): string {
+    function getMessageMeta(message: ChatMessagePayload): string {
         const parts = [formatTimestamp(message.datetime)];
 
         if (message.type !== "normal") {
@@ -243,7 +262,7 @@ AI chat pane.
         }
     }
 
-    function getMessageFormatLabel(format: ChatMessage["format"]): string {
+    function getMessageFormatLabel(format: ChatMessagePayload["format"]): string {
         switch (format) {
             case "json":
                 return $i18n.AiChat.MessageFormat.Json;
@@ -254,7 +273,7 @@ AI chat pane.
         }
     }
 
-    function messageHasExpandableThought(message: ChatMessage): boolean {
+    function messageHasExpandableThought(message: ChatMessagePayload): boolean {
         return message.type === "thought";
     }
 
@@ -270,7 +289,7 @@ AI chat pane.
         }
     }
 
-    function getMarkdownTone(message: ChatMessage): "assistant" | "user" | "muted" {
+    function getMarkdownTone(message: ChatMessagePayload): "assistant" | "user" | "muted" {
         if (message.sender === "user") return "user";
         if (message.type === "status" || message.type === "thought") return "muted";
         return "assistant";
@@ -342,7 +361,7 @@ AI chat pane.
             </div>
         {:else}
             <div class="flex flex-col gap-4 pb-4">
-                {#each $aiChat.messages as message (message.id)}
+                {#each renderedMessages as message (message.id)}
                     <ChatBubble
                         variant = {getMessageVariant(message)}
                         tone    = {getMessageTone(message)}
@@ -394,7 +413,7 @@ AI chat pane.
                     bind:value={composerValue}
                     rows        = "3"
                     class       = "min-h-24 w-full resize-none border-0 bg-transparent px-3 py-2 text-sm leading-6 text-base-content outline-none placeholder:text-base-content/40"
-                    disabled    = {$aiChat.connection !== "connected" || assistantBusy || isSending}
+                    aria-busy   = {isSending || assistantBusy}
                     placeholder = {$aiChat.connection === "connected"
                         ? $i18n.AiChat.Composer.PlaceholderOnline
                         : $i18n.AiChat.Composer.PlaceholderOffline}

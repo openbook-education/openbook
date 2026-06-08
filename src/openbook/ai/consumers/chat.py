@@ -15,8 +15,16 @@ from chanx.core.decorators    import channel, ws_handler
 from chanx.messages.incoming  import PingMessage
 from chanx.messages.outgoing  import PongMessage
 from datetime                 import datetime, UTC
+from uuid                     import uuid4
 
-from ..messages.chat          import ChatHistory, ChatInput, ChatMessage, GetChatHistory
+from ..messages.chat          import (
+    ChatHistory,
+    ChatHistoryPayload,
+    ChatInput,
+    ChatMessage,
+    ChatMessagePayload,
+    GetChatHistory,
+)
 
 @channel(
     name        = "chat",
@@ -34,7 +42,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         versions this should be replaced with a persisted chat memory.
         """
         super().__init__(*args, **kwargs)
-        self.chat_history: list[ChatMessage] = []
+        self.chat_history: list[ChatMessagePayload] = []
 
     @ws_handler(
         summary     = "Handle Ping Requests",
@@ -51,7 +59,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         """
         Return the whole chat history to the client.
         """
-        return ChatHistory(messages=self.chat_history)
+        return ChatHistory(payload=ChatHistoryPayload(messages=self.chat_history))
 
     @ws_handler(
         summary     = "Handle Chat Input",
@@ -64,23 +72,26 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         # Log user message in the chat history and send it back to the client,
         # so that the client knows the full message details and that it was received.
         user_message = ChatMessage(
-            datetime   = datetime.now(UTC),
-            sender     = "user",
-            type       = "normal",
-            severity   = "info",
-            guardRails = {"findings": "none", "explanation": ""},
-            format     = message.format,
-            content    = message.content,
-            finished   = True,
+            payload = ChatMessagePayload(
+                datetime   = datetime.now(UTC),
+                sender     = "user",
+                type       = "normal",
+                severity   = "info",
+                guardRails = {"findings": "none", "explanation": ""},
+                format     = message.payload.format,
+                content    = message.payload.content,
+                finished   = True,
+            ),
         )
 
-        self.chat_history.append(user_message)
+        self.chat_history.append(user_message.payload)
         await self.send_message(user_message)
 
         # Fake streaming LLM response
-        response_string  = f"Fake response: {message.content}"
+        response_string  = f"Fake response: {message.payload.content}"
         response_tokens  = response_string.split(" ");
         response_partial = "";
+        response_id      = str(uuid4())
 
         for response_token in response_tokens:
             if not response_partial:
@@ -89,14 +100,17 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                 response_partial += f" {response_token}"
 
             response_message = ChatMessage(
-                datetime   = datetime.now(UTC),
-                sender     = "assistant",
-                type       = "normal",
-                severity   = "info",
-                guardRails = {"findings": "none", "explanation": ""},
-                format     = "markdown",
-                content    = response_partial,
-                finished   = False,
+                payload = ChatMessagePayload(
+                    id         = response_id,
+                    datetime   = datetime.now(UTC),
+                    sender     = "assistant",
+                    type       = "normal",
+                    severity   = "info",
+                    guardRails = {"findings": "none", "explanation": ""},
+                    format     = "markdown",
+                    content    = response_partial,
+                    finished   = False,
+                ),
             )
 
             await self.send_message(response_message)
@@ -104,16 +118,19 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
 
         # Send final response and log it to the chat history
         response_message = ChatMessage(
-            datetime   = datetime.now(UTC),
-            sender     = "assistant",
-            type       = "normal",
-            severity   = "info",
-            guardRails = {"findings": "none", "explanation": ""},
-            format     = "markdown",
-            content    = response_string,
-            finished   = True,
+            payload = ChatMessagePayload(
+                id         = response_id,
+                datetime   = datetime.now(UTC),
+                sender     = "assistant",
+                type       = "normal",
+                severity   = "info",
+                guardRails = {"findings": "none", "explanation": ""},
+                format     = "markdown",
+                content    = response_string,
+                finished   = True,
+            ),
         )
 
-        self.chat_history.append(response_message)
+        self.chat_history.append(response_message.payload)
         return response_message
 

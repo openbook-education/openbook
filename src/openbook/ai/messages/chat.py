@@ -43,22 +43,17 @@ class GuardRailCheckResult(BaseModel):
     findings:    Literal["none", "offensive_language", "dangerous_content", "others"]
     explanation: str
 
-class ChatInput(BaseMessage):
+class ChatInputPayload(BaseModel):
     """
-    Chat input sent by the user to the assistant.
+    Payload for incoming user chat messages.
     """
-    action:  Literal["chat_input"] = "chat_input"
     format:  ChatMessageFormat
     content: str
 
-class ChatMessage(BaseMessage):
+class ChatMessagePayload(BaseModel):
     """
-    A single chat message within a larger chat conversation. This is the data that
-    the server uses internally to drive the AI chat functionality and persist the
-    chat history.
+    Payload for a single chat message.
     """
-    action:     Literal["chat_message"] = "chat_message"
-
     id:         str = Field(default_factory = lambda: str(uuid4()))
     datetime:   datetime
     sender:     ChatMessageSender
@@ -69,15 +64,38 @@ class ChatMessage(BaseMessage):
     content:    str
     finished:   bool
 
+class ChatHistoryPayload(BaseModel):
+    """
+    Payload containing the full chat history.
+    """
+    messages: list[ChatMessagePayload]
+
+class ChatInput(BaseMessage):
+    """
+    Chat input sent by the user to the assistant.
+    """
+    action:  Literal["chat_input"] = "chat_input"
+    payload: ChatInputPayload
+
+class ChatMessage(BaseMessage):
+    """
+    A single chat message within a larger chat conversation. This is the data that
+    the server uses internally to drive the AI chat functionality and persist the
+    chat history.
+    """
+    action:  Literal["chat_message"] = "chat_message"
+    payload: ChatMessagePayload
+
 class GetChatHistory(BaseMessage):
     """
     Message sent by the client to retrieve the full chat history from the server.
     """
-    action: Literal["get_chat_history"] = "get_chat_history"
+    action:  Literal["get_chat_history"] = "get_chat_history"
+    payload: None = None
 
 class ChatHistory(BaseMessage):
     """
     Full chat history.
     """
-    action:   Literal["chat_history"] = "chat_history"
-    messages: list[ChatMessage]
+    action:  Literal["chat_history"] = "chat_history"
+    payload: ChatHistoryPayload

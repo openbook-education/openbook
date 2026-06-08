@@ -35,7 +35,7 @@ export type ChatState = {
     /**
      * Chat history.
      */
-    messages: ChatMessage[];
+    messages: ChatMessagePayload[];
 };
 
 /**
@@ -100,7 +100,7 @@ export class AiChatStore extends ReadableStore<ChatState> {
          */
         this.#ws.setMessageHandler("chat_history", (message: ChatHistory) => {
             this.update(state => {
-                state.messages = message.messages;
+                state.messages = message.payload.messages;
                 return state;
             });
         });
@@ -112,12 +112,13 @@ export class AiChatStore extends ReadableStore<ChatState> {
          */
         this.#ws.setMessageHandler("chat_message", (message: ChatMessage) => {
             this.update(state => {
-                const index = state.messages.findIndex((m) => m.id === message.id);
+                const messagePayload = message.payload;
+                const index = state.messages.findIndex((m) => m.id === messagePayload.id);
 
                 if (index === -1) {
-                    state.messages.push(message);
+                    state.messages.push(messagePayload);
                 } else {
-                    state.messages[index] = message;
+                    state.messages[index] = messagePayload;
                 }
 
                 return state;
@@ -140,7 +141,7 @@ export class AiChatStore extends ReadableStore<ChatState> {
      * once the connection is established.
      */
     async getChatHistory() {
-        const message: GetChatHistory = { action: "get_chat_history" };
+        const message: GetChatHistory = { action: "get_chat_history", payload: null };
         return this.#ws?.send(message);
     }
 
@@ -153,7 +154,10 @@ export class AiChatStore extends ReadableStore<ChatState> {
     async sendChatInput(format: ChatMessageFormat, content: string) {
         // Note: No state update here to add the user message to the chat history,
         // because the server will send the full message back to us!
-        const message: ChatInput = { action: "chat_input", format: format, content: content};
+        const message: ChatInput = {
+            action: "chat_input",
+            payload: { format: format, content: content },
+        };
         return this.#ws?.send(message);
     }
 }
@@ -195,23 +199,19 @@ export type GuardRailCheckResult = {
 }
 
 /**
- * Chat input sent by the user to the assistant.
+ * Payload for incoming user chat messages.
  */
-export type ChatInput = {
-    action:  "chat_input";
+export type ChatInputPayload = {
     format:  ChatMessageFormat
     content: string;
 };
 
 /**
- * A single chat message within a larger chat conversation. This is the data that
- * the server uses internally to drive the AI chat functionality and persist the
- * chat history.
+ * Payload for a single chat message.
  */
-export type ChatMessage = {
-    action:     "chat_message";
+export type ChatMessagePayload = {
     id:         string;
-    datetime:   Date;
+    datetime:   string;
     sender:     ChatMessageSender;
     type:       ChatMessageType;
     severity:   ChatMessageSeverity;
@@ -222,16 +222,40 @@ export type ChatMessage = {
 };
 
 /**
+ * Payload containing the full chat history.
+ */
+export type ChatHistoryPayload = {
+    messages: ChatMessagePayload[];
+};
+
+/**
+ * Chat input sent by the user to the assistant.
+ */
+export type ChatInput = {
+    action:  "chat_input";
+    payload: ChatInputPayload;
+};
+
+/**
+ * A single chat message within a larger chat conversation.
+ */
+export type ChatMessage = {
+    action:  "chat_message";
+    payload: ChatMessagePayload;
+};
+
+/**
  * Message sent by the client to retrieve the full chat history from the server.
  */
 export type GetChatHistory = {
-    action: "get_chat_history";
+    action:  "get_chat_history";
+    payload: null;
 };
 
 /**
  * Full chat history.
  */
 export type ChatHistory = {
-    action:   "chat_history";
-    messages: ChatMessage[];
+    action:  "chat_history";
+    payload: ChatHistoryPayload;
 };

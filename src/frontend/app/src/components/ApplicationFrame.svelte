@@ -77,7 +77,6 @@ Root component of the application which defines the global application UI.
     }
 
     const chatPaneClass = $derived([
-        "-z-1",
         "min-h-0",
         "overflow-y-auto",
         mobilePaneMode === "chat" ? "flex flex-1" : "hidden",
@@ -110,48 +109,50 @@ Root component of the application which defines the global application UI.
     ].filter(Boolean).join(" "));
 </script>
 
-<NavigationBar
-    bind:mobilePaneMode
-    bind:desktopPaneMode
-/>
+<div class="flex h-dvh min-h-0 flex-col overflow-hidden">
+    <NavigationBar
+        bind:mobilePaneMode
+        bind:desktopPaneMode
+    />
 
-<main class="flex flex-1 flex-col">
-    <svelte:boundary>
-        <div class="flex flex-1 min-h-0 flex-col lg:flex-row">
-            <div class={chatPaneClass}>
-                <div class={chatPaneInnerClass}>
-                    <AiChatPane/>
+    <main class="flex min-h-0 flex-1 flex-col overflow-hidden">
+        <svelte:boundary>
+            <div class="flex flex-1 min-h-0 flex-col overflow-hidden lg:flex-row">
+                <div class={chatPaneClass}>
+                    <div class={chatPaneInnerClass}>
+                        <AiChatPane/>
+                    </div>
+                </div>
+
+                <div class={mainPaneClass}>
+                    <Router {routes} />
                 </div>
             </div>
 
-            <div class={mainPaneClass}>
-                <Router {routes} />
-            </div>
-        </div>
+            {#snippet pending()}
+                <LoadingAnimation/>
+            {/snippet}
 
-        {#snippet pending()}
-            <LoadingAnimation/>
-        {/snippet}
+            {#snippet failed(error, reset)}
+                {#await resolveErrorPage(error) then resolved}
+                    {@const ResolvedComponent = resolved.component}
+                    {#if resolved.retryable}
+                        <ResolvedComponent onRetry={reset}/>
+                    {:else}
+                        <ResolvedComponent/>
+                    {/if}
+                {:catch error}
+                    <div class="flex flex-1 items-center justify-center p-8 text-center text-base-content/70">
+                        {error}
+                    </div>
+                {/await}
+            {/snippet}
+        </svelte:boundary>
 
-        {#snippet failed(error, reset)}
-            {#await resolveErrorPage(error) then resolved}
-                {@const ResolvedComponent = resolved.component}
-                {#if resolved.retryable}
-                    <ResolvedComponent onRetry={reset}/>
-                {:else}
-                    <ResolvedComponent/>
-                {/if}
-            {:catch error}
-                <div class="flex flex-1 items-center justify-center p-8 text-center text-base-content/70">
-                    {error}
-                </div>
-            {/await}
-        {/snippet}
-    </svelte:boundary>
-
-    <Toast>
-        {#each $toasts as toast (toast.id) }
-            <Alert type={toast.type} message={toast.message} />
-        {/each}
-    </Toast>
-</main>
+        <Toast>
+            {#each $toasts as toast (toast.id) }
+                <Alert type={toast.type} message={toast.message} />
+            {/each}
+        </Toast>
+    </main>
+</div>
