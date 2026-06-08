@@ -102,7 +102,7 @@ export class WebSocketClient<SentMessages extends WebSocketMessage, ReceivedMess
      * @throws `Error`, when the connection cannot be established
      */
     async connect() {
-        if (!["disconnected", "connection_lost"].includes(this.#status)) return;
+        if (this.#status !== "disconnected") return;
 
         let lastError: unknown = null;
         let delayMs = BASE_DELAY_MS;
@@ -210,7 +210,7 @@ export class WebSocketClient<SentMessages extends WebSocketMessage, ReceivedMess
                 lastError = error;
             }
 
-            if (this.#status === "connected") return;
+            if ((this.#status as WSConnectionStatus) === "connected") return;
 
             await this.#setConnectionStatus("wait_before_retry", delayMs / 1000);
             await new Promise(resolve => setTimeout(resolve, delayMs));
@@ -247,7 +247,7 @@ export class WebSocketClient<SentMessages extends WebSocketMessage, ReceivedMess
      */
     async send(message: SentMessages) {
         if (this.#status === "connected" && this.#socket) {
-            this.#send(message);
+            await this.#send(message);
         } else {
             this.#messageQueue.push(message);
         }

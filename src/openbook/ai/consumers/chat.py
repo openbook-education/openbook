@@ -89,8 +89,8 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
 
         # Fake streaming LLM response
         response_string  = f"Fake response: {message.payload.content}"
-        response_tokens  = response_string.split(" ");
-        response_partial = "";
+        response_tokens  = response_string.split(" ")
+        response_partial = ""
         response_id      = str(uuid4())
 
         for response_token in response_tokens:
