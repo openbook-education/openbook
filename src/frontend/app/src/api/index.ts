@@ -89,8 +89,12 @@ export default {
      */
     ws: async <SentMessages extends WebSocketMessage, ReceivedMessages extends WebSocketMessage>(suffix: string) => {
         if (!suffix.startsWith("/")) suffix = `/${suffix}`;
-        let url = (await getBaseUrl()) + "/ws" + suffix;
-        return new WebSocketClient<SentMessages, ReceivedMessages>(url);
+
+        const wsUrl = new URL(`/ws${suffix}`, await getBaseUrl());
+        if (wsUrl.protocol === "http:") wsUrl.protocol = "ws:";
+        if (wsUrl.protocol === "https:") wsUrl.protocol = "wss:";
+
+        return new WebSocketClient<SentMessages, ReceivedMessages>(wsUrl.toString());
     },
     },
 };
