@@ -96,9 +96,8 @@ Root component of the application which defines the global application UI.
         desktopPaneMode === "chat"
             ? "lg:hidden"
             : desktopPaneMode === "both"
-                ? "lg:flex lg:flex-2"
+                ? "lg:flex lg:flex-[2]"
                 : "lg:flex lg:flex-1",
-    ].join(" "));
 
     const chatPaneInnerClass = $derived([
         "flex",
