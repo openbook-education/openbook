@@ -155,9 +155,14 @@ export class WebSocketClient<SentMessages extends WebSocketMessage, ReceivedMess
                         // the current task here) to reconnect.
                         window.setTimeout(async () => {
                             await this.#setConnectionStatus("disconnected");
-                            this.connect();
+
+                            try {
+                                await this.connect();
+                            } catch (error) {
+                                console.error(error);
+                                if (this.#errorHandler) await this.#errorHandler(error as Error);
+                            }
                         }, 0);
-                    });
 
                     /**
                      * Generic WebSocket error. Will be logged and passed to the error handler.
