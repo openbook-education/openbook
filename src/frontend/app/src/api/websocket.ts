@@ -94,10 +94,8 @@ export class WebSocketClient<SentMessages extends WebSocketMessage, ReceivedMess
     }
 
     /**
-     * Try to connect or reconnect to the WebSocket server. In case of an error, the
      * method tries to reconnect up to `MAX_ATTEMPTS` times with increasing delays
-     * based on the `BASE_DELAY_WS` constant.
-     *
+     * based on the `BASE_DELAY_MS` constant.
      * When the method returns, the connection is either established or has failed
      * for good. In the latter case an exception is thrown.
      *
