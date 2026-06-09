@@ -14,7 +14,7 @@ const i18n: I18N = {
     ApplicationFrame: {
         PaneVisibility: {
             AriaLabel: "Sichtbare Bereiche",
-            Chat:      "Chat",
+            Chat:      "Elisa",
             Content:   "Inhalt",
             Both:      "Beide",
         },
@@ -50,13 +50,13 @@ const i18n: I18N = {
     },
 
     AiChat: {
-        PanelAriaLabel: "KI-Chat",
+        PanelAriaLabel: "Elisa KI-Chat",
         StreamingResponseAriaLabel: "Antwort wird übertragen",
-        MessageImageAlt: "Antwort des Assistenten",
+        MessageImageAlt: "Antwort von Elisa",
         StreamingUpdate: "Laufende Aktualisierung",
 
         Header: {
-            Title:           "KI-Assistent",
+            Title:           "Elisa KI-Assistent",
             Description:     "Stelle Fragen, sammle Ideen oder entwirf Inhalte.",
             MessageSingular: "Nachricht",
             MessagePlural:   "Nachrichten",
@@ -80,12 +80,12 @@ const i18n: I18N = {
         },
 
         MessageTitle: {
-            AssistantStatus: "Status des Assistenten",
+            AssistantStatus: "Status von Elisa",
             Status:          "Status",
             ReasoningNote:   "Denknotiz",
             Action:          "Aktion",
             You:             "Du",
-            OpenBookAI:      "OpenBook AI",
+            OpenBookAI:      "Elisa",
         },
 
         MessageType: {
@@ -117,8 +117,8 @@ const i18n: I18N = {
         },
 
         Composer: {
-            Label:              "Nachricht an den KI-Assistenten",
-            PlaceholderOnline:  "Bitte den Assistenten, etwas zu erklären, zusammenzufassen oder zu entwerfen...",
+            Label:              "Nachricht an den Elisa KI-Assistenten",
+            PlaceholderOnline:  "Bitte Elisa, etwas zu erklären, zusammenzufassen oder zu entwerfen...",
             PlaceholderOffline: "Der Chat ist offline. Stelle die Verbindung wieder her, um weiterzumachen.",
             HintWaiting:        "Warte, bis die aktuelle Antwort fertig ist.",
             HintReady:          "Drücke Enter zum Senden, Umschalt+Enter für eine neue Zeile.",
