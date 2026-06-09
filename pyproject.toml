@@ -38,7 +38,7 @@ drf-flex-fields2 = "^2.0.2"
 drf-spectacular = {extras = ["sidecar"], version = "^0.29.0"}
 markdown = "^3.10.2"
 pillow = "^12.2.0"
-pygments = "^2.19.2"
+pygments = "^2.20.0"
 python = "^3.12"
 pyyaml = "^6.0.3"
 semver = "^3.0.4"
