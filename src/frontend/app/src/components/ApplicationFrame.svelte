@@ -79,13 +79,22 @@ Root component of the application which defines the global application UI.
     const chatPaneClass = $derived([
         "min-h-0",
         "overflow-y-auto",
+        "border-base-300/80",
         mobilePaneMode === "chat" ? "flex flex-1" : "hidden",
         desktopPaneMode === "main"
             ? "lg:hidden"
             : desktopPaneMode === "both"
-                ? "lg:flex lg:flex-1"
+                ? "lg:flex lg:flex-1 border-r"
                 : "lg:flex lg:flex-1 lg:justify-center",
     ].join(" "));
+
+    const chatPaneInnerClass = $derived([
+        "flex",
+        "min-h-0",
+        "flex-1",
+        // "w-full",
+        // desktopPaneMode === "chat" ? "lg:max-w-[96rem]" : "",
+    ].filter(Boolean).join(" "));
 
     const mainPaneClass = $derived([
         "relative",
@@ -98,14 +107,6 @@ Root component of the application which defines the global application UI.
             : desktopPaneMode === "both"
                 ? "lg:flex lg:flex-[2]"
                 : "lg:flex lg:flex-1",
-    ].filter(Boolean).join(" "));
-
-    const chatPaneInnerClass = $derived([
-        "flex",
-        "min-h-0",
-        "flex-1",
-        "w-full",
-        desktopPaneMode === "chat" ? "lg:max-w-[96rem]" : "",
     ].filter(Boolean).join(" "));
 </script>
 
