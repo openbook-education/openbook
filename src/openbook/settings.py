@@ -657,9 +657,13 @@ DBBACKUP_STORAGE_OPTIONS = {"location": BASE_DIR / "_backup"}
 # Import deployment-specific local settings which can override single values here
 try:
     EXTRA_INSTALLED_APPS = []
+    CHANX_OVERRIDE = {}
 
     from .local_settings import * # type: ignore
 
     INSTALLED_APPS = [*INSTALLED_APPS, *EXTRA_INSTALLED_APPS]
+
+    for key, value in CHANX_OVERRIDE.items():
+        CHANX[key] = value
 except ImportError:
     pass

@@ -53,7 +53,9 @@ CHANNEL_LAYERS = {
 }
 
 # Don't log WebSocket messages on the console
-CHANX["LOG_WEBSOCKET_MESSAGE"] = False
+CHANX_OVERRIDE = {
+    "LOG_WEBSOCKET_MESSAGE": False,
+}
 
 # E-Mail Settings
 # See: https://docs.djangoproject.com/en/5.0/ref/settings/#std-setting-EMAIL_BACKEND

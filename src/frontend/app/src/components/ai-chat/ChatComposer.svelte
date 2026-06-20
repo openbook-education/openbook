@@ -37,6 +37,8 @@ Semantic surface for chat input controls with dedicated hint and action slots.
         "bg-base-100",
         "p-2",
         "shadow-sm",
+        "flex-1",
+        "lg:max-w-4xl",
         className,
     ].filter(Boolean).join(" "));
 </script>
