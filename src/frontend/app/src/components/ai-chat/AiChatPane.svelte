@@ -300,7 +300,9 @@ AI chat pane.
     }
 </script>
 
-<ChatPanel class="border-r border-base-300/80 bg-[linear-gradient(180deg,rgba(249,250,251,0.96),rgba(236,244,255,0.92))]">
+<!-- TODO: Use theme colors for the gradient -->
+<ChatPanel class="bg-[linear-gradient(180deg,rgba(249,250,251,0.96),rgba(236,244,255,0.92))]">
+    <!-- TODO: More compact header-->
     {#snippet header()}
         <div class="flex items-start justify-between gap-4">
             <div class="flex min-w-0 items-start gap-3">
@@ -361,6 +363,8 @@ AI chat pane.
             </div>
         {:else}
             <div class="flex flex-col gap-4 pb-4">
+                <!-- TODO: Render messages with full width and more subtle background (if any) -->
+                <!-- TODO: Action buttons for each message (hover effect): Copy, reedit, feedback -->
                 {#each renderedMessages as message (message.id)}
                     <ChatBubble
                         variant = {getMessageVariant(message)}
@@ -405,7 +409,7 @@ AI chat pane.
     </div>
 
     {#snippet footer()}
-        <form class="space-y-3" onsubmit={handleSubmit}>
+        <form class="space-y-3 flex justify-center" onsubmit={handleSubmit}>
             <ChatComposer>
                 <label class="sr-only" for="ai-chat-composer">{$i18n.AiChat.Composer.Label}</label>
                 <textarea

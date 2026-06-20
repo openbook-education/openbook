@@ -22,7 +22,7 @@ build-backend = "poetry.core.masonry.api"
 channels = {extras = ["daphne"], version = "^4.3.2"}
 channels-redis = "^4.3.0"
 chanx = {extras = ["channels"], version = "^2.7.1"}
-daphne = "^4.2.1"
+daphne = "^4.2.2"
 Django = "^6.0.6"
 django-allauth = {extras = ["headless-spec", "saml", "socialaccount"], version = "^65.16.1"}
 django-cleanup = "^9.0.0"
@@ -38,7 +38,7 @@ drf-flex-fields2 = "^2.0.2"
 drf-spectacular = {extras = ["sidecar"], version = "^0.29.0"}
 markdown = "^3.10.2"
 pillow = "^12.2.0"
-pygments = "^2.19.2"
+pygments = "^2.20.0"
 python = "^3.12"
 pyyaml = "^6.0.3"
 semver = "^3.0.4"
@@ -47,7 +47,7 @@ django-colorfield = "^0.14.0"
 
 # Documentation dependencies
 [tool.poetry.group.docs.dependencies]
-sphinx = "^9.0.0"
+sphinx = "^9.1.0"
 sphinx-rtd-theme = "^3.1.0"
 sphinx-autoapi = "^3.8.0"
 sphinx-autobuild = "^2025.08.25"

@@ -13,7 +13,7 @@ export default {
     ApplicationFrame: {
         PaneVisibility: {
             AriaLabel: "Visible panes",
-            Chat:      "Chat",
+            Chat:      "Elisa",
             Content:   "Content",
             Both:      "Both",
         },
@@ -49,13 +49,13 @@ export default {
     },
 
     AiChat: {
-        PanelAriaLabel: "AI chat",
+        PanelAriaLabel: "Elisa AI chat",
         StreamingResponseAriaLabel: "Streaming response",
-        MessageImageAlt: "Assistant response",
+        MessageImageAlt: "Elisa's response",
         StreamingUpdate: "Streaming update",
 
         Header: {
-            Title:           "AI Assistant",
+            Title:           "Elisa AI Assistant",
             Description:     "Ask questions, explore ideas, or draft content.",
             MessageSingular: "message",
             MessagePlural:   "messages",
@@ -79,12 +79,12 @@ export default {
         },
 
         MessageTitle: {
-            AssistantStatus: "Assistant status",
+            AssistantStatus: "Elisa status",
             Status:          "Status",
             ReasoningNote:   "Reasoning note",
             Action:          "Action",
             You:             "You",
-            OpenBookAI:      "OpenBook AI",
+            OpenBookAI:      "Elisa",
         },
 
         MessageType: {
@@ -116,8 +116,8 @@ export default {
         },
 
         Composer: {
-            Label:              "Message the AI assistant",
-            PlaceholderOnline:  "Ask the assistant to explain, summarize, or draft something...",
+            Label:              "Message the Elisa AI assistant",
+            PlaceholderOnline:  "Ask Elisa to explain, summarize, or draft something...",
             PlaceholderOffline: "Chat is offline. Reconnect to continue.",
             HintWaiting:        "Wait for the current reply to finish.",
             HintReady:          "Press Enter to send, Shift+Enter for a new line.",
