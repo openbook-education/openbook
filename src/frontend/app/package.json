@@ -30,6 +30,6 @@
     "tailwindcss": "^4.3.0"
   },
   "dependencies": {
-    "markdown-it": "^14.2.0"
+    "markdown-it": "^14.3.2"
   }
 }
