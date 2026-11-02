@@ -79,7 +79,7 @@ services:
     # Make sure to forward all other HTTP requests to the OpenBook server.
     #---------------------------------------------------------------------------
     webserver:
-        image: caddy:2-alpine@sha256:77c07d5ebfa5be9fd6c820d2094ae662c9e7eeb9bf98346b7f639900263ee2a2
+        image: caddy:2-alpine@sha256:e70b164da81ef698b3ad19af799ea6086ce6d9e48ed4079eb9fe26f6fbf14ee5
         restart: unless-stopped
         cap_add:
             - NET_ADMIN
