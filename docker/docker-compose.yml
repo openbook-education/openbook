@@ -17,7 +17,7 @@ services:
         # migrate the data (for example via `pg_upgrade` or dump/restore) or
         # delete and recreate the `openbook_postgres` volume for a clean start
         # before running `docker compose up`.
-        image: postgres:18-alpine@sha256:1b1689b20d16a014a3d195653381cf2caa75a41a92d93b255a9d6ea29fd353aa
+        image: postgres:18-alpine@sha256:0115267ab5a509022df9319c77be365cef335adb71556c75f60f5360ee247e71
         restart: unless-stopped
         shm_size: 256mb
         environment:
